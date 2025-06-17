@@ -1,0 +1,8 @@
+mssql-init.sql/
+init.sql/
+.idea/
+.idea
+**/idea/
+openapi.json
+.vscode/
+/*.sh

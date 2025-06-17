@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Đơn hàng đã được trả hàng</title>
+</head>
+<body>
+  <h2 th:text="'Xin chào ' + ${orderEmailInfo.customerName} + ','"></h2>
+
+  <p>
+    Chúng tôi xin xác nhận rằng đơn hàng của bạn đã được trả hàng thành công vào ngày
+    <strong th:text="${orderEmailInfo.returnDate}"></strong>.
+  </p>
+
+  <p>
+    Chúng tôi đang tiến hành kiểm tra và xử lý hoàn tiền theo chính sách hoàn trả của
+    <span th:text="${orderEmailInfo.applicationName}"></span>. Quá trình này có thể mất từ
+    3–5 ngày làm việc tùy thuộc vào phương thức thanh toán của bạn.
+  </p>
+
+  <h3>Thông tin đơn hàng:</h3>
+  <ul>
+    <li><strong>Địa chỉ giao hàng:</strong> <span th:text="${orderEmailInfo.address}"></span></li>
+    <li><strong>Tổng thanh toán:</strong> <span th:text="${orderEmailInfo.totalPrice}"></span></li>
+    <!-- <li><strong>Lý do trả hàng:</strong> <span th:text="${orderEmailInfo.returnReason}"></span></li> -->
+  </ul>
+
+  <p>Nếu bạn cần hỗ trợ thêm, vui lòng liên hệ với đội ngũ chăm sóc khách hàng của chúng tôi.</p>
+
+  <p>Cảm ơn bạn đã tin tưởng và mua sắm tại <strong th:text="${orderEmailInfo.applicationName}"></strong>.</p>
+
+  <p>Trân trọng,</p>
+  <p><strong th:text="${orderEmailInfo.applicationName}"></strong></p>
+</body>
+</html>

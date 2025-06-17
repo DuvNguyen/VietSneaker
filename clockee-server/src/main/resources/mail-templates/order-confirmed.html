@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Đơn hàng đã được xác nhận</title>
+</head>
+<body>
+  <h2 th:text="'Xin chào ' + ${orderEmailInfo.customerName} + ','"></h2>
+
+  <p>
+    Đơn hàng của bạn đã được <strong>xác nhận</strong> vào lúc
+    <strong th:text="${orderEmailInfo.confirmedDate}"></strong>.
+  </p>
+
+  <p>Chúng tôi đang chuẩn bị hàng và sẽ gửi đi trong thời gian sớm nhất.</p>
+
+  <h3>Thông tin đơn hàng:</h3>
+  <ul>
+    <li><strong>Tên khách hàng:</strong> <span th:text="${orderEmailInfo.customerName}"></span></li>
+    <li><strong>Địa chỉ giao hàng:</strong> <span th:text="${orderEmailInfo.address}"></span></li>
+    <li><strong>Số điện thoại:</strong> <span th:text="${orderEmailInfo.phone}"></span></li>
+    <li><strong>Tổng tiền:</strong> <span th:text="${orderEmailInfo.totalPrice}"></span></li>
+  </ul>
+
+  <p>Bạn sẽ nhận được thông báo tiếp theo khi đơn hàng được giao cho đơn vị vận chuyển.</p>
+
+  <p>Cảm ơn bạn đã mua sắm tại <strong th:text="${orderEmailInfo.applicationName}"></strong>!</p>
+</body>
+</html>

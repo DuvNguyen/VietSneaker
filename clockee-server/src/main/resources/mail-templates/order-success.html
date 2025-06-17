@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Đơn hàng đã giao thành công</title>
+</head>
+<body>
+  <h2 th:text="'Xin chào ' + ${orderEmailInfo.customerName} + ','"></h2>
+
+  <p>
+    Chúng tôi rất vui được thông báo rằng đơn hàng của bạn đã được giao thành công vào lúc
+    <strong th:text="${orderEmailInfo.deliveredDate}"></strong>.
+  </p>
+
+  <h3>Thông tin đơn hàng:</h3>
+  <ul>
+    <li><strong>Địa chỉ giao hàng:</strong> <span th:text="${orderEmailInfo.address}"></span></li>
+    <li><strong>Tổng thanh toán:</strong> <span th:text="${orderEmailInfo.totalPrice}"></span></li>
+  </ul>
+
+  <p>
+    Chúng tôi hy vọng bạn hài lòng với sản phẩm. Nếu có bất kỳ thắc mắc nào hoặc cần hỗ trợ đổi/trả hàng, bạn có thể liên hệ với bộ phận chăm sóc khách hàng qua email hoặc hotline của
+    <strong th:text="${orderEmailInfo.applicationName}"></strong>.
+  </p>
+
+  <p>Đừng quên để lại đánh giá của bạn về sản phẩm và trải nghiệm mua sắm nhé!</p>
+
+  <p>Xin chân thành cảm ơn quý khách đã lựa chọn <strong th:text="${orderEmailInfo.applicationName}"></strong>.</p>
+</body>
+</html>

@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Đơn hàng của bạn đang chờ xác nhận</title>
+</head>
+<body>
+  <h2 th:text="'Xin chào ' + ${orderEmailInfo.customerName} + ','"></h2>
+
+  <p>
+    Cảm ơn bạn đã đặt hàng tại
+    <strong th:text="${orderEmailInfo.applicationName}"></strong>!
+  </p>
+
+  <p>
+    Chúng tôi đã nhận được đơn hàn của bạn vào lúc
+    <strong th:text="${orderEmailInfo.orderDate}"></strong>.
+  </p>
+
+  <p>
+    Hiện tại đơn hàng đang <strong>chờ xác nhận</strong>.
+    Chúng tôi sẽ kiểm tra và xử lý đơn hàng của bạn trong thời gian sớm nhất.
+  </p>
+
+  <h3>Thông tin đơn hàng:</h3>
+  <ul>
+    <li><strong>Tên khách hàng:</strong> <span th:text="${orderEmailInfo.customerName}"></span></li>
+    <li><strong>Địa chỉ giao hàng:</strong> <span th:text="${orderEmailInfo.address}"></span></li>
+    <li><strong>Số điện thoại:</strong> <span th:text="${orderEmailInfo.phone}"></span></li>
+    <li><strong>Tổng tiền:</strong> <span th:text="${orderEmailInfo.totalPrice}"></span></li>
+  </ul>
+
+  <p>Trạng thái đơn hàng: <strong>Chờ xác nhận</strong></p>
+
+  <p>Cảm ơn bạn đã tin tưởng chúng tôi!</p>
+</body>
+</html>
