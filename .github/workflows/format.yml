@@ -1,0 +1,35 @@
+name: Validate coding format
+
+on: [push, pull_request]
+
+jobs:
+  format:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      ### ---- Java Format ---- ###
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Format Java with Spotless (Maven)
+        working-directory: ./clockee-server
+        run: mvn spotless:apply
+
+      ### ---- TypeScript Format ---- ###
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install frontend dependencies
+        working-directory: ./clockee-ui
+        run: npm ci
+
+      - name: Format TypeScript with Prettier
+        working-directory: ./clockee-ui
+        run: npx prettier --write 'src/**/*.{ts,tsx,js,jsx,json,css,md}'

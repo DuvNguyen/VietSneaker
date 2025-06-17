@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Đơn hàng đang được giao</title>
+</head>
+<body>
+  <h2 th:text="'Xin chào ' + ${orderEmailInfo.customerName} + ','"></h2>
+
+  <p>
+    Chúng tôi xin thông báo đơn hàng của bạn đã được giao cho đơn vị vận chuyển vào lúc
+    <strong th:text="${orderEmailInfo.shippedDate}"></strong>.
+  </p>
+
+  <p>
+    Dự kiến đơn hàng sẽ đến trong vòng vài ngày làm việc tới.
+    Vui lòng giữ điện thoại bên mình để nhận hàng thuận tiện.
+  </p>
+
+  <h3>Thông tin đơn hàng:</h3>
+  <ul>
+    <li><strong>Địa chỉ nhận hàng:</strong> <span th:text="${orderEmailInfo.address}"></span></li>
+    <li><strong>Tổng giá trị đơn hàng:</strong> <span th:text="${orderEmailInfo.totalPrice}"></span></li>
+  </ul>
+
+  <!-- <p> -->
+  <!--   Bạn có thể theo dõi trạng thái giao hàng tại đây: -->
+  <!--   <a th:href="@{${orderEmailInfo.trackingLink}}" th:text="${orderEmailInfo.trackingLink}"></a> -->
+  <!-- </p> -->
+
+  <p>
+    Cảm ơn bạn đã tin tưởng và sử dụng dịch vụ của
+    <strong th:text="${orderEmailInfo.applicationName}"></strong>!
+  </p>
+</body>
+</html>

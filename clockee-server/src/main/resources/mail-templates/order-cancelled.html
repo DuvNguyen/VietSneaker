@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Đơn hàng đã bị hủy</title>
+</head>
+<body>
+  <h2 th:text="'Xin chào ' + ${orderEmailInfo.customerName} + ','"></h2>
+
+  <p>
+    Chúng tôi rất tiếc phải thông báo rằng đơn hàng của bạn đã bị hủy vào lúc
+    <strong th:text="${orderEmailInfo.cancelledDate}"></strong>.
+  </p>
+
+  <h3>Thông tin đơn hàng:</h3>
+  <ul>
+    <li><strong>Địa chỉ giao hàng:</strong> <span th:text="${orderEmailInfo.address}"></span></li>
+    <li><strong>Tổng thanh toán dự kiến:</strong> <span th:text="${orderEmailInfo.totalPrice}"></span></li>
+  </ul>
+
+  <p>
+    Nếu đây là sự nhầm lẫn hoặc bạn cần thêm thông tin, vui lòng liên hệ bộ phận chăm sóc khách hàng của chúng tôi.
+  </p>
+
+  <p>Chúng tôi rất mong được phục vụ bạn trong những đơn hàng tiếp theo.</p>
+
+  <p>Trân trọng,</p>
+  <p><strong th:text="${orderEmailInfo.applicationName}"></strong></p>
+</body>
+</html>

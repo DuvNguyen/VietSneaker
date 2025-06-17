@@ -1,0 +1,23 @@
+@import "react-date-range/dist/styles.css";
+@import "react-date-range/dist/theme/default.css";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*  Date range */
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+  --primary: #ffd423;
+  --color-primary: #ffd423;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+    --primary: #ffd423;
+    --color-primary: #ffd423;
+  }
+}

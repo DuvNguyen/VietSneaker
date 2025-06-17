@@ -1,0 +1,91 @@
+Table brands {
+  brand_id int [primary key, not null]
+  name varchar(255) [not null]
+  is_deleted boolean
+}
+
+Table cart_items {
+  product_id int [not null]
+  user_id int [not null]
+  quantity int [not null]
+}
+
+Table orders {
+  order_id int [primary key, not null]
+  user_id int [not null]
+  create_at timestamp [not null]
+  address text [not null]
+  phone varchar(20) [not null]
+  total_price decimal(10,2) [not null]
+  status enum('Pending', 'Processing', 'Shipped', 'Completed', 'Cancelled') [not null]
+}
+
+Table order_items {
+  product_id int [not null]
+  order_id int [not null]
+  quantity int [not null]
+  price decimal(10,2) [not null]
+}
+
+Table products {
+  product_id int [primary key, not null]
+  name varchar(255) [not null]
+  description text
+  image_url varchar(255)
+  actual_price decimal(10,2) [not null]
+  sell_price decimal(10,2) [not null]
+  type varchar(50)
+  stock int [not null]
+  brand_id int [not null]
+  is_active boolean
+  visible boolean
+}
+
+Table purchases {
+  product_id int [not null]
+  supplier_id int [not null]
+  price decimal(10,2) [not null]
+  quantity int [not null]
+  total_price decimal(10,2)
+  create_at timestamp
+}
+
+Table roles {
+  role_id int [primary key, not null]
+  role_name enum('CUSTOMER', 'PRODUCT_ADMIN', 'INVENTORY_MANAGER') [not null]
+}
+
+Table suppliers {
+  supplier_id int [primary key, not null]
+  name varchar(255) [not null]
+  address text
+  phone varchar(20) [not null]
+  email varchar(255) [not null]
+  is_deleted boolean
+}
+
+Table users {
+  user_id int [primary key, not null]
+  email varchar(255) [not null, unique]
+  name varchar(255) [not null]
+  phone varchar(20) [not null]
+  address text
+  password varchar(255) [not null]
+  is_deleted boolean
+}
+
+Table user_roles {
+  role_id int [not null]
+  user_id int [not null]
+}
+
+Ref: cart_items.product_id > products.product_id
+Ref: cart_items.user_id > users.user_id
+Ref: orders.user_id > users.user_id
+Ref: order_items.product_id > products.product_id
+Ref: order_items.order_id > orders.order_id
+Ref: products.brand_id > brands.brand_id
+Ref: purchases.product_id > products.product_id
+Ref: purchases.supplier_id > suppliers.supplier_id
+Ref: user_roles.role_id > roles.role_id
+Ref: user_roles.user_id > users.user_id
