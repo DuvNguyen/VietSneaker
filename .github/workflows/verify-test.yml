@@ -22,12 +22,12 @@ jobs:
           distribution: "temurin"
           cache: "maven"
 
+      - name: Make mvnw executable
+        run: chmod +x ./clockee-server/mvnw
 
       - name: Verify
         working-directory: ./clockee-server
         run: ./mvnw  verify
-
-
 
 
   next-verify:
