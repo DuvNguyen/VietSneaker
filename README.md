@@ -14,7 +14,7 @@ Clocke is a pet project for pratice buidling simple ecommerce system in java
 # Getting started
 **Prerequisites**
 - Docker 
-- GNU Make 
+- GNU Make
 
 ## Docker compose 
 Services

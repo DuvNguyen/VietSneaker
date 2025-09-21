@@ -20,9 +20,19 @@ public interface BrandRepository
 
   Page<Brand> findAll(Specification<Brand> spec, Pageable pageable);
 
-  @Query(
-      value =
-          "SELECT TOP 10 b.name, b.brand_id  ,COUNT(p.product_id) FROM brands AS b INNER JOIN products as p ON  b.brand_id = p.brand_id  GROUP BY b.name, b.brand_id ORDER BY COUNT(b.name) DESC",
-      nativeQuery = true)
-  List<BrandVo> findTopByNumberProduct(@Param("size") int size);
+//   @Query(
+//       value =
+//           "SELECT TOP 10 b.name, b.brand_id  ,COUNT(p.product_id) FROM brands AS b INNER JOIN products as p ON  b.brand_id = p.brand_id  GROUP BY b.name, b.brand_id ORDER BY COUNT(b.name) DESC",
+//       nativeQuery = true)
+//   List<BrandVo> findTopByNumberProduct(@Param("size") int size);
+@Query(value = """
+    SELECT b.name, b.brand_id, COUNT(p.product_id) AS total_products
+    FROM brands b
+    INNER JOIN products p ON b.brand_id = p.brand_id
+    GROUP BY b.name, b.brand_id
+    ORDER BY COUNT(p.product_id) DESC
+    LIMIT :size
+    """, nativeQuery = true)
+List<BrandVo> findTopByNumberProduct(@Param("size") int size);
+
 }
