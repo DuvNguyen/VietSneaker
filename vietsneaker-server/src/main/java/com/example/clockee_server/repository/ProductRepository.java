@@ -28,22 +28,20 @@ public interface ProductRepository
   @Query(
       value =
           """
-      SELECT
-      DISTINCT
-          p.product_id AS productId,
-          p.name,
-          p.image_url as imageUrl,
-          p.sell_price as sellPrice,
-          p.type,
-          p.is_active AS isActive,
-          SUM(oi.quantity) AS totalSold
-      FROM products AS p
-      JOIN order_items AS oi ON p.product_id = oi.product_id
-      WHERE p.is_active = 1 -- SQL Server dùng BIT, TRUE = 1
-      GROUP BY
-          p.product_id, p.name, p.image_url, p.sell_price, p.type, p.is_active
-      ORDER BY totalSold DESC
-      OFFSET 0 ROWS FETCH NEXT 12 ROWS ONLY;
+        SELECT
+            p.product_id AS productId,
+            p.name,
+            p.image_url AS imageUrl,
+            p.sell_price AS sellPrice,
+            p.type,
+            p.is_active AS isActive,
+            SUM(oi.quantity) AS totalSold
+        FROM products AS p
+        JOIN order_items AS oi ON p.product_id = oi.product_id
+        WHERE p.is_active = 1
+        GROUP BY p.product_id, p.name, p.image_url, p.sell_price, p.type, p.is_active
+        ORDER BY totalSold DESC
+        LIMIT 12 OFFSET 0;
       """,
       nativeQuery = true)
   List<BestSellerProductVo> findBestSelling(@Param("size") int size);
