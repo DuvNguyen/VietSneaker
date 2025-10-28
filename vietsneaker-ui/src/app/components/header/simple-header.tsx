@@ -9,7 +9,7 @@ export default function SimpleHeader() {
       <div className="flex items-center text-xl font-bold text-orange-500">
         <Link href={"/"}>
           <img
-            className="mr-[-9px] mt-[-5px]"
+            className="w-[100px] h-auto mr-[-9px] mt-[-5px]"
             src="/logo_header.png"
             alt="logo login"
           />

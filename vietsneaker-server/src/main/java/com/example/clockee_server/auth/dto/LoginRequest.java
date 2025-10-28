@@ -16,10 +16,10 @@ import lombok.NoArgsConstructor;
 public class LoginRequest {
   @Email
   @NotNull(message = "Email không được để trống")
-  @Schema(example = "admin@clockee.com")
+  @Schema(example = "admin@vietsneaker.com")
   private String email;
 
   @NotNull(message = "Mật khẩu không được để trống")
-  @Schema(example = "clockee123")
+  @Schema(example = "vietsneaker123")
   private String password;
 }

@@ -6,7 +6,7 @@ const Logo = () => {
     <>
       <div className="flex items-center text-xl font-bold text-orange-500">
         <img
-          className="mr-[-9px] mt-[-5px] cursor-pointer"
+          className="w-[100px] h-auto mr-[-9px] mt-[-5px] cursor-pointer"
           src="/logo_header.png"
           alt="logo login"
         />

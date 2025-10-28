@@ -49,7 +49,7 @@ VALUES ('Nike Air Force 1', 'Giày sneaker huyền thoại của Nike', 'nike_ai
        ('Reebok Classic Leather', 'Phong cách vintage từ thập niên 80', 'reebok_classic.jpg', 2200000, 2500000, 'Lifestyle', 35, 7, 1, 1, 0),
        ('ASICS Gel-Kayano 29', 'Giày chạy bộ bền bỉ', 'asics_kayano.jpg', 4000000, 4300000, 'Running', 20, 8, 1, 1, 0),
        ('Fila Disruptor II', 'Thiết kế hầm hố chunky', 'fila_disruptor.jpg', 2600000, 2800000, 'Streetwear', 30, 9, 1, 1, 0),
-       ('Under Armour Curry Flow 10', 'Giày bóng rổ của Stephen Curry', 'ua_curry10.jpg', 4200000, 4500000, 'Basketball', 15, 10, 1, 1, 0);
+       ('Under Armour Curry Flow 10', 'Giày bóng rổ của Stephen Curry', 'https://pos.nvncdn.com/6a2de0-203642/ps/20250717_uvakcnntKw.jpeg?v=1752742658', 4200000, 4500000, 'Basketball', 15, 10, 1, 1, 0);
 
 -- Cart Items
 INSERT INTO cart_items (product_id, user_id, quantity)
