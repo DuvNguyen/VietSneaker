@@ -53,14 +53,14 @@ const OrderSummary = () => {
       {subtotal > 0 ? (
         <Link href={"/checkout/shippping"}>
           <button
-            className={`btn bg-primary  text-white w-full mt-4 rounded-lg `}
+            className={`btn bg-red-600  text-white w-full mt-4 rounded-lg `}
           >
             Tiến hành thanh toán
           </button>
         </Link>
       ) : (
         <button
-          className="w-full mt-4 btn btn-dark"
+          className="btn bg-red-600 hover:bg-red-700 text-white w-full mt-4 rounded-lg"
           onClick={() => {
             toast.warn("Vui lòng chọn sản phẩm để thanh toán");
           }}

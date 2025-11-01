@@ -25,7 +25,6 @@ export default function LoginPage() {
             {/* 🎯 Header */}
             <div className={styles.header}>
               <h2>Đăng nhập</h2>
-              <img src="/hight_brand.png" alt="logo" />
             </div>
 
             {/* 🧾 Form */}
