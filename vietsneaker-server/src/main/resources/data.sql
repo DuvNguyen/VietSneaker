@@ -29,14 +29,30 @@ VALUES (1, 'nguyen.van.a@gmail.com', 'hashedpassword1', 'Nguyễn Văn An', '091
        (5, 'hoang.van.e@hotmail.com', 'hashedpassword5', 'Hoàng Văn Em', '0978123456', '34 Nguyễn Huệ, Nha Trang', 0, 1),
        (6, 'vu.thi.f@gmail.com', 'hashedpassword6', 'Vũ Thị Phượng', '0918765432', '56 Phạm Ngũ Lão, Hà Nội', 0, 1);
 
+-- Inventory Admin account
+INSERT INTO users (user_id, email, password, name, phone, address, is_deleted, is_verified)
+VALUES (
+  7,
+  'inventory.admin@vietsneaker.com',
+  '$2a$10$L1NCuZpSXk83cDSSR/C9Hu3kEtI4fnQ5FngLpBwjzj2zB3aLcuejW', -- bcrypt("Admin@123")
+  'Kho hàng VietSneaker',
+  '0909999999',
+  'Khu kho tổng VietSneaker - HCM',
+  0,
+  1
+);
+
+
 -- Roles - Users
 INSERT INTO roles_users (user_id, role_id)
   VALUES (1, 1),
          (2, 1),
          (3, 1),
          (4, 1),
-         (5, 2),
-         (6, 3);
+         (5, 1),
+         (6, 1),
+         (7, 3),
+         (7, 2);
 
 -- Products (sneakers)
 INSERT INTO products (name, description, image_url, actual_price, sell_price, type, stock, brand_id, is_active, visible, is_deleted)
@@ -49,7 +65,7 @@ VALUES ('Nike Air Force 1', 'Giày sneaker huyền thoại của Nike', 'nike_ai
        ('Reebok Classic Leather', 'Phong cách vintage từ thập niên 80', 'reebok_classic.jpg', 2200000, 2500000, 'Lifestyle', 35, 7, 1, 1, 0),
        ('ASICS Gel-Kayano 29', 'Giày chạy bộ bền bỉ', 'asics_kayano.jpg', 4000000, 4300000, 'Running', 20, 8, 1, 1, 0),
        ('Fila Disruptor II', 'Thiết kế hầm hố chunky', 'fila_disruptor.jpg', 2600000, 2800000, 'Streetwear', 30, 9, 1, 1, 0),
-       ('Under Armour Curry Flow 10', 'Giày bóng rổ của Stephen Curry', 'https://pos.nvncdn.com/6a2de0-203642/ps/20250717_uvakcnntKw.jpeg?v=1752742658', 4200000, 4500000, 'Basketball', 15, 10, 1, 1, 0);
+       ('Under Armour Curry Flow 10', 'Giày bóng rổ của Stephen Curry', 'ua_curry10.jpg', 4200000, 4500000, 'Basketball', 15, 10, 1, 1, 0);
 
 -- Cart Items
 INSERT INTO cart_items (product_id, user_id, quantity)
@@ -85,4 +101,3 @@ VALUES ('Công ty Nike VN', '12 Nguyễn Trãi, Hà Nội', '0241234567', 'nikev
 --        (2, 2, 80, 4500000, '2024-12-05'),
 --        (3, 4, 120, 1800000, '2024-12-10'),
 --        (4, 5, 90, 1900000, '2024-12-15');   
-
