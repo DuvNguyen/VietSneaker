@@ -50,6 +50,7 @@ CREATE TABLE products (
     actual_price DOUBLE NOT NULL,
     sell_price DOUBLE NOT NULL,
     type VARCHAR(100),
+    shoe_size VARCHAR(10), -- add shoeSize field
     stock BIGINT DEFAULT 0,
     brand_id BIGINT NOT NULL,
     is_active BOOLEAN DEFAULT 1,

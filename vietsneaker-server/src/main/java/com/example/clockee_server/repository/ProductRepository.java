@@ -14,8 +14,9 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ProductRepository
-    extends JpaRepository<Product, Long>,
-        JpaSpecificationExecutor<Product> { // để kiểu của khóa chính là Long
+    extends JpaRepository<Product, Long>, // để kiểu của khóa chính là Long
+        JpaSpecificationExecutor<Product> { // extends JPA Specification
+            
   List<Product> findAllByOrderByStockDesc(); // Sắp xếp tồn kho giảm dần
 
   List<Product> findAllByOrderByStockAsc(); // Sắp xếp tồn kho tăng dần
