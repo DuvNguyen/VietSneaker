@@ -22,6 +22,18 @@ public class ProductSpecification {
     return (root, query, builder) -> builder.equal(root.get("type"), type);
   }
 
+  /**
+   * StringUtil.isNullOrEmpty(size) → kiểm tra chuỗi rỗng/null
+   * root.get("size") → trỏ tới field size trong entity Product
+   * builder.equal(...) → tìm chính xác bằng giá trị bạn truyền (ví dụ "42")
+   */
+  public static Specification<Product> searchByShoeSize(String shoeSize) {
+    if (StringUtil.isNullOrEmpty(shoeSize)){
+      return null;
+    }
+    return (root, query, builder) -> builder.like(root.get("size"),"%" +  shoeSize + "%");
+  }
+
   public static Specification<Product> belowPrice(Double maxPrice) {
     if (Double.compare(maxPrice, 0) == 0) {
       return null;

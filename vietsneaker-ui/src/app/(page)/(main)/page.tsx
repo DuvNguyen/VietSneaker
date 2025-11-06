@@ -39,7 +39,7 @@ export default function HomePage() {
   return (
     <>
       <img
-        src="/carosel.png"
+        src="/dat1.jpg"
         width={700}
         height={500}
         className="w-full"

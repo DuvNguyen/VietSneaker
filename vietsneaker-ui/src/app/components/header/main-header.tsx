@@ -148,11 +148,11 @@ export const MainHeader = ({ searchBar = true, filter = true }) => {
           </>
         ) : (
           <>
-            <Link className="text-gray-700 hover:text-yellow-500" href="/login">
+            <Link className="text-gray-700 hover:text-red-500" href="/login">
               Đăng nhập
             </Link>
             <Link
-              className="text-gray-700 hover:text-yellow-500"
+              className="text-gray-700 hover:text-red-500"
               href="/signup"
             >
               Đăng ký

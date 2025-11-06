@@ -6,3 +6,8 @@ init.sql/
 openapi.json
 .vscode/
 /*.sh
+
+
+# Ignore all files in keystore
+vietsneaker-server/src/main/resources/keystore/*
+vietsneaker-server/src/main/resources/

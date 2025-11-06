@@ -9,8 +9,8 @@ export default function Footer() {
       </nav>
 
       <nav className="pl-10">
-        <h6 className="footer-title">Clockee Việt Nam</h6>
-        <a className="link link-hover">Về Clockee</a>
+        <h6 className="footer-title">VietSneaker thông tin</h6>
+        <a className="link link-hover">Về VietSneaker</a>
         <a className="link link-hover">Tuyển dụng</a>
         <a className="link link-hover">Flash Sale</a>
       </nav>
@@ -19,11 +19,10 @@ export default function Footer() {
         <h6 className="footer-title">Thanh toán</h6>
         <a className="link link-hover">💳 VISA</a>
         <a className="link link-hover">🏦 Momo</a>
-        <a className="link link-hover">💰 ClockeePay</a>
       </nav>
 
       <nav className="pl-10">
-        <h6 className="footer-title">Tải ứng dụng Clockee</h6>
+        <h6 className="footer-title">Tải ứng dụng VietSneaker</h6>
         <a className="link link-hover">📱 App Store</a>
         <a className="link link-hover">📱 Google Play</a>
       </nav>
