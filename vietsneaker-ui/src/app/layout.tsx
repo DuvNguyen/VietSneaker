@@ -7,6 +7,9 @@ import ToastProvider from "@/lib/providers/toast-provider";
 import { CartProvider } from "@/lib/hooks/use-cart";
 import { Suspense } from "react";
 import { LoadingScreen } from "./components/common/loading";
+import Chatbot from "./components/common/ChatBox";
+import ChatBox from "./components/common/ChatBox";
+
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -40,6 +43,7 @@ export default function RootLayout({
             </Suspense>
           </AuthProvider>
         </ToastProvider>
+        <ChatBox />
       </body>
     </html>
   );

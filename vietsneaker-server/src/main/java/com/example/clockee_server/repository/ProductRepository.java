@@ -11,11 +11,16 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import java.util.List;
 
 @Repository
 public interface ProductRepository
     extends JpaRepository<Product, Long>,
-        JpaSpecificationExecutor<Product> { // để kiểu của khóa chính là Long
+    JpaSpecificationExecutor<Product> { // để kiểu của khóa chính là Long
+
+  List<Product> findTop6BySellPriceLessThanEqualOrderBySellPriceAsc(Double maxPrice);
+  List<Product> findBySellPriceLessThanEqual(Double price);
+
   List<Product> findAllByOrderByStockDesc(); // Sắp xếp tồn kho giảm dần
 
   List<Product> findAllByOrderByStockAsc(); // Sắp xếp tồn kho tăng dần
