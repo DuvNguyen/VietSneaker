@@ -30,12 +30,13 @@ public class UserProductController {
       @RequestParam(defaultValue = ApplicationConstants.PAGE_SIZE) int size,
       @RequestParam(value = "name", defaultValue = "") String name,
       @RequestParam(value = "type", defaultValue = "") String type,
+      @RequestParam(value = "shoeSize", defaultValue = "") String shoeSize,
       @RequestParam(value = "maxPrice", defaultValue = "0") Double maxPrice,
       @RequestParam(value = "brandId", required = false) Long brandId,
       @RequestParam(value = "sortBy", defaultValue = "") String sortBy) {
 
     Page<ProductSummaryResponse> products =
-        userProductService.getAllProducts(page, size, name, type, maxPrice, brandId, sortBy);
+        userProductService.getAllProducts(page, size, name, type, shoeSize, maxPrice, brandId, sortBy);
     return ResponseEntity.ok(products);
   }
 

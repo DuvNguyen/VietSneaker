@@ -55,17 +55,31 @@ INSERT INTO roles_users (user_id, role_id)
          (7, 2);
 
 -- Products (sneakers)
-INSERT INTO products (name, description, image_url, actual_price, sell_price, type, stock, brand_id, is_active, visible, is_deleted)
-VALUES ('Nike Air Force 1', 'Giày sneaker huyền thoại của Nike', 'nike_airforce1.jpg', 2500000, 2700000, 'Casual', 50, 1, 1, 1, 0),
-       ('Adidas Ultraboost 22', 'Giày chạy bộ hiệu năng cao', 'adidas_ultraboost22.jpg', 4500000, 4800000, 'Running', 30, 2, 1, 1, 0),
-       ('Puma Suede Classic', 'Thiết kế retro, phong cách đường phố', 'puma_suede.jpg', 2000000, 2200000, 'Lifestyle', 40, 3, 1, 1, 0),
-       ('Converse Chuck Taylor 70s', 'Mẫu giày canvas cổ điển', 'converse_chuck70.jpg', 1800000, 2000000, 'Casual', 60, 4, 1, 1, 0),
-       ('Vans Old Skool', 'Sneaker skateboarding nổi tiếng', 'vans_oldskool.jpg', 1900000, 2100000, 'Skate', 55, 5, 1, 1, 0),
-       ('New Balance 550', 'Phong cách retro basketball', 'newbalance_550.jpg', 3200000, 3500000, 'Lifestyle', 25, 6, 1, 1, 0),
-       ('Reebok Classic Leather', 'Phong cách vintage từ thập niên 80', 'reebok_classic.jpg', 2200000, 2500000, 'Lifestyle', 35, 7, 1, 1, 0),
-       ('ASICS Gel-Kayano 29', 'Giày chạy bộ bền bỉ', 'asics_kayano.jpg', 4000000, 4300000, 'Running', 20, 8, 1, 1, 0),
-       ('Fila Disruptor II', 'Thiết kế hầm hố chunky', 'fila_disruptor.jpg', 2600000, 2800000, 'Streetwear', 30, 9, 1, 1, 0),
-       ('Under Armour Curry Flow 10', 'Giày bóng rổ của Stephen Curry', 'ua_curry10.jpg', 4200000, 4500000, 'Basketball', 15, 10, 1, 1, 0);
+-- INSERT INTO products (name, description, image_url, actual_price, sell_price, type, stock, brand_id, is_active, visible, is_deleted)
+-- VALUES ('Nike Air Force 1', 'Giày sneaker huyền thoại của Nike', 'nike_airforce1.jpg', 2500000, 2700000, 'Casual', 50, 1, 1, 1, 0),
+--        ('Adidas Ultraboost 22', 'Giày chạy bộ hiệu năng cao', 'adidas_ultraboost22.jpg', 4500000, 4800000, 'Running', 30, 2, 1, 1, 0),
+--        ('Puma Suede Classic', 'Thiết kế retro, phong cách đường phố', 'puma_suede.jpg', 2000000, 2200000, 'Lifestyle', 40, 3, 1, 1, 0),
+--        ('Converse Chuck Taylor 70s', 'Mẫu giày canvas cổ điển', 'converse_chuck70.jpg', 1800000, 2000000, 'Casual', 60, 4, 1, 1, 0),
+--        ('Vans Old Skool', 'Sneaker skateboarding nổi tiếng', 'vans_oldskool.jpg', 1900000, 2100000, 'Skate', 55, 5, 1, 1, 0),
+--        ('New Balance 550', 'Phong cách retro basketball', 'newbalance_550.jpg', 3200000, 3500000, 'Lifestyle', 25, 6, 1, 1, 0),
+--        ('Reebok Classic Leather', 'Phong cách vintage từ thập niên 80', 'reebok_classic.jpg', 2200000, 2500000, 'Lifestyle', 35, 7, 1, 1, 0),
+--        ('ASICS Gel-Kayano 29', 'Giày chạy bộ bền bỉ', 'asics_kayano.jpg', 4000000, 4300000, 'Running', 20, 8, 1, 1, 0),
+--        ('Fila Disruptor II', 'Thiết kế hầm hố chunky', 'fila_disruptor.jpg', 2600000, 2800000, 'Streetwear', 30, 9, 1, 1, 0),
+--        ('Under Armour Curry Flow 10', 'Giày bóng rổ của Stephen Curry', 'ua_curry10.jpg', 4200000, 4500000, 'Basketball', 15, 10, 1, 1, 0);
+
+INSERT INTO products
+(name, description, image_url, actual_price, sell_price, type, shoe_size, stock, brand_id, is_active, visible, is_deleted)
+VALUES
+('Nike Air Force 1', 'Giày sneaker huyền thoại của Nike, condition khá tốt, vân đế gần full', 'nike_airforce1.jpg', 700000, 1200000, 'Casual', '42', 50, 1, 1, 1, 0),
+('Adidas Ultraboost 22', 'Giày chạy bộ hiệu năng cao', 'adidas_ultraboost22.jpg', 4500000, 4800000, 'Running', '41', 30, 2, 1, 1, 0),
+('Puma Suede Classic', 'Thiết kế retro, phong cách đường phố', 'puma_suede.jpg', 2000000, 2200000, 'Lifestyle', '40', 40, 3, 1, 1, 0),
+('Converse Chuck Taylor 70s', 'Mẫu giày canvas cổ điển', 'converse_chuck70.jpg', 1800000, 2000000, 'Casual', '42', 60, 4, 1, 1, 0),
+('Vans Old Skool', 'Sneaker skateboarding nổi tiếng', 'vans_oldskool.jpg', 1900000, 2100000, 'Skate', '41', 55, 5, 1, 1, 0),
+('New Balance 550', 'Phong cách retro basketball', 'newbalance_550.jpg', 3200000, 3500000, 'Lifestyle', '43', 25, 6, 1, 1, 0),
+('Reebok Classic Leather', 'Phong cách vintage từ thập niên 80', 'reebok_classic.jpg', 2200000, 2500000, 'Lifestyle', '42', 35, 7, 1, 1, 0),
+('ASICS Gel-Kayano 29', 'Giày chạy bộ bền bỉ', 'asics_kayano.jpg', 4000000, 4300000, 'Running', '41', 20, 8, 1, 1, 0),
+('Fila Disruptor II', 'Thiết kế hầm hố chunky', 'fila_disruptor.jpg', 2600000, 2800000, 'Streetwear', '40', 30, 9, 1, 1, 0),
+('Under Armour Curry Flow 10', 'Giày bóng rổ của Stephen Curry', 'ua_curry10.jpg', 4200000, 4500000, 'Basketball', '44', 15, 10, 1, 1, 0);
 
 -- Cart Items
 INSERT INTO cart_items (product_id, user_id, quantity)

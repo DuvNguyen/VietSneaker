@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Configuration;
 /** OpenAPIConfig */
 @Configuration
 @OpenAPIDefinition(
-    info = @Info(title = "Clockee API", version = "1.1", contact = @Contact(name = "clockee")),
+    info = @Info(title = "Vietsneaker API", version = "1.1", contact = @Contact(name = "vietsneaker")),
     security = {
       @SecurityRequirement(name = "basicAuth"),
       @SecurityRequirement(name = "bearerToken")
