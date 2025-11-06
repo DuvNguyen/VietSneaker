@@ -40,9 +40,9 @@ export default function HomePage() {
     <>
       <img
         src="/dat1.jpg"
-        width={700}
-        height={500}
-        className="w-full"
+        width={1920}
+        height={800}
+        className="w-full h-[500px] object-cover"
         alt="calrosel"
       />
 
