@@ -1,4 +1,4 @@
-import ClockeeModal from "@/app/components/modal/modal";
+import VietSneakerModal from "@/app/components/modal/modal";
 import ErrorText from "@/app/components/typography/error-text";
 import { AdminBrandControllerService, BrandDTO } from "@/gen";
 import { mapApiErrorsToForm } from "@/util/form";
@@ -31,9 +31,9 @@ const CreateBrandModal = ({
     }
   };
   return (
-    <ClockeeModal isOpen={isOpen} onClose={onClose}>
+    <VietSneakerModal isOpen={isOpen} onClose={onClose}>
       <form
-        className="flex items-center justify-center flex-col "
+        className="flex items-center justify-center flex-col rounded-none"
         onSubmit={handleSubmit(onSubmit)}
       >
         <div>
@@ -43,7 +43,7 @@ const CreateBrandModal = ({
             <label className="fieldset-label">Tên</label>
             <input
               autoFocus={true}
-              className="input validator"
+              className="input validator rounded-none"
               {...register("name", { required: "Tên không được trống" })}
             />
           </fieldset>
@@ -59,19 +59,19 @@ const CreateBrandModal = ({
           {/* Save & cancel button  */}
           <div className="modal-action">
             <button
-              className="btn bg-primary rounded-lg text-white"
+              className="btn bg-red-500 rounded-none text-white"
               onClick={refreshCallBack}
               style={{ marginRight: "10px" }}
             >
               Lưu
             </button>
-            <button type="submit" className="btn" onClick={onClose}>
+            <button type="submit" className="btn rounded-none" onClick={onClose}>
               Hủy
             </button>
           </div>
         </div>
       </form>
-    </ClockeeModal>
+    </VietSneakerModal>
   );
 };
 

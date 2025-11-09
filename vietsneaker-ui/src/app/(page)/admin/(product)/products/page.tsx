@@ -1,11 +1,12 @@
 "use client";
+
 import PageController from "@/app/components/common/page-controller";
 import {
   AdminProductControllerService,
   AdminProductResponse,
   PageAdminProductResponse,
 } from "@/gen";
-import React, { ChangeEvent, useEffect } from "react";
+import React, { ChangeEvent, useState } from "react";
 import Link from "next/link";
 import AdminMainCard from "@/app/components/card/admin-card";
 import PrimaryButton from "@/app/components/button/button";
@@ -14,92 +15,93 @@ import ProductTableRow from "./product-table-row";
 import { usePageSearch } from "@/lib/hooks/use-page-search";
 
 export default function ProductAdminPage() {
-  const fetchProducts = async () => {
-    try {
-      const resp = await AdminProductControllerService.getAllProducts(
-        page - 1,
-        undefined,
-        query,
-      );
-      if (pageInfo) setPageInfo(resp);
-      return pageInfo;
-    } catch (error) {
-      console.warn(error);
-    }
-  };
   const { pageInfo, setPage, query, setQuery, setPageInfo, page } =
     usePageSearch<PageAdminProductResponse>({
       fetchData: fetchProducts,
     });
+
+  async function fetchProducts() {
+    try {
+      const resp = await AdminProductControllerService.getAllProducts(
+        page - 1,
+        undefined,
+        query
+      );
+      if (resp) setPageInfo(resp);
+      return resp;
+    } catch (error) {
+      console.warn(error);
+    }
+  }
+
   function onChangeSearchQuery(event: ChangeEvent<HTMLInputElement>): void {
     setQuery(event.target.value);
   }
+
   return (
-    <AdminMainCard title="Sản phẩm" goBack={false}>
-      <div className="flex justify-between items-center mb-6">
-        <Link href={"/admin/products/new"}>
-          <PrimaryButton>
-            <i className="fa fa-add"></i>
-            <span>&nbsp;Thêm mới</span>
-          </PrimaryButton>
-        </Link>
-      </div>
-
-      <div className="flex flex-col gap-2 items-center">
-        {/*
-         * Search filter
-         */}
-        <div className="relative flex items-center w-1/3">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-            fill="currentColor"
-            className="absolute w-5 h-5 top-2.5 left-2.5 text-slate-600"
-          >
-            <path
-              fillRule="evenodd"
-              d="M10.5 3.75a6.75 6.75 0 1 0 0 13.5 6.75 6.75 0 0 0 0-13.5ZM2.25 10.5a8.25 8.25 0 1 1 14.59 5.28l4.69 4.69a.75.75 0 1 1-1.06 1.06l-4.69-4.69A8.25 8.25 0 0 1 2.25 10.5Z"
-              clipRule="evenodd"
-            />
-          </svg>
-
-          <input
-            value={query}
-            onChange={(event) => setQuery(event?.target.value)}
-            className="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md pl-10 pr-3 py-2 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow"
-            placeholder="Tìm kiếm"
-          />
+    <AdminMainCard title="SẢN PHẨM" goBack={false}>
+      <div className="w-full min-h-screen flex flex-col items-center bg-white px-10 py-5">
+        {/* 🔍 Thanh tìm kiếm */}
+        <div className="w-full flex justify-center mb-5">
+          <div className="w-full max-w-[500px]">
+            <div className="flex items-center border border-gray-300 bg-white h-10 px-3 rounded-none shadow-none">
+              <i className="fa fa-search mr-2 text-gray-500"></i>
+              <input
+                value={query || ""}
+                onChange={onChangeSearchQuery}
+                className="w-full focus:outline-none text-sm text-gray-700"
+                placeholder="Tìm kiếm sản phẩm..."
+              />
+            </div>
+          </div>
         </div>
 
-        {/*
-         * Display list of brand
-         */}
-        <DataTable<AdminProductResponse>
-          data={pageInfo?.content || []}
-          emptyMessage="Không tìm thấy sản phẩm nào"
-          headers={[
-            "Mã sản phẩm",
-            "Hình ảnh",
-            "Tên sản phẩm",
-            "Giá gốc",
-            "Giá bán",
-            "Còn lại",
-            "Loại",
-            "Thương hiệu",
-          ]}
-          renderRow={(item, index) => (
-            <ProductTableRow
-              key={index}
-              item={item}
-              refreshCallBack={fetchProducts}
-            />
-          )}
-        />
+        {/* 📋 Bảng danh sách sản phẩm */}
+        <div className="w-full overflow-x-auto">
+          <table className="w-full border-collapse table-fixed text-left text-[15px]">
+            <thead className="bg-[#ffcccc] text-gray-800">
+              <tr>
+                <th className="p-3 border-b border-gray-300 text-center">Mã sản phẩm</th>
+                <th className="p-3 border-b border-gray-300 text-center">Hình ảnh</th>
+                <th className="p-3 border-b border-gray-300 text-center">Tên sản phẩm</th>
+                <th className="p-3 border-b border-gray-300 text-center">Giá gốc</th>
+                <th className="p-3 border-b border-gray-300 text-center">Giá bán</th>
+                <th className="p-3 border-b border-gray-300 text-center">Còn lại</th>
+                <th className="p-3 border-b border-gray-300 text-center">Loại</th>
+                <th className="p-3 border-b border-gray-300 text-center">Thương hiệu</th>
+                <th className="p-3 border-b border-gray-300 text-center">Sửa</th>
+                <th className="p-3 border-b border-gray-300 text-center">Xóa</th>
 
-        {/*
-         * Pagination controller
-         */}
-        <PageController setPage={setPage} page={pageInfo} />
+              </tr>
+            </thead>
+            <tbody>
+              {(pageInfo?.content || []).map((item: AdminProductResponse, index: number) => (
+                <ProductTableRow
+                  key={index}
+                  item={item}
+                  refreshCallBack={fetchProducts}
+                />
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        {/* 📄 Bộ điều khiển phân trang */}
+        <div className="w-full mt-5 flex justify-center items-center rounded-none">
+          <PageController setPage={setPage} page={pageInfo} />
+        </div>
+
+        {/* ➕ Nút thêm mới */}
+        <div className="w-full mt-6 flex justify-end pr-2">
+          <div className="cursor-pointer inline-block">
+            <Link href="/admin/products/new">
+              <PrimaryButton className="!bg-[#e20000] hover:!bg-[#c10000] text-white font-semibold px-6 py-3 rounded-none transition-transform duration-200 hover:-translate-y-[1px]">
+                <i className="fa fa-add mr-2 text-sm"></i>
+                <span>Thêm mới</span>
+              </PrimaryButton>
+            </Link>
+          </div>
+        </div>
       </div>
     </AdminMainCard>
   );

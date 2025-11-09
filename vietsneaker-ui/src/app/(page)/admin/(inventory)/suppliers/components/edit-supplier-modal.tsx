@@ -1,4 +1,4 @@
-import ClockeeModal from "@/app/components/modal/modal";
+import VietSneakerModal from "@/app/components/modal/modal";
 import ErrorText from "@/app/components/typography/error-text";
 import { AdminSupplierControllerService, SupplierDTO } from "@/gen";
 import { mapApiErrorsToForm } from "@/util/form";
@@ -43,7 +43,7 @@ const EditSupplierModal = ({
     }
   };
   return (
-    <ClockeeModal isOpen={isOpen} onClose={onClose}>
+    <VietSneakerModal isOpen={isOpen} onClose={onClose}>
       <form
         className="flex items-center justify-center flex-col "
         onSubmit={handleSubmit(onSubmit)}
@@ -53,22 +53,22 @@ const EditSupplierModal = ({
             <h1 className="font-bold text-lg">Chỉnh sửa nhà cung cấp</h1>
 
             {/* Form input  */}
-            <label className="fieldset-label">Tên</label>
+            <label className="fieldset-label text-base font-semibold text-gray-800">Tên</label>
             <input
               autoFocus={true}
-              className="input validator"
+              className="input validator rounded-none"
               {...register("name", { required: "Tên không được trống" })}
             />
 
-            <label className="fieldset-label">Địa chỉ</label>
+            <label className="fieldset-label text-base font-semibold text-gray-800">Địa chỉ</label>
             <input
-              className="input validator"
+              className="input validator rounded-none"
               {...register("address", { required: "Địa chỉ không được trống" })}
             />
 
-            <label className="fieldset-label">Số điện thoại</label>
+            <label className="fieldset-label text-base font-semibold text-gray-800">Số điện thoại</label>
             <input
-              className="input validator"
+              className="input validator rounded-none"
               {...register("phone", {
                 pattern: {
                   value: /^[0-9]+$/,
@@ -77,9 +77,9 @@ const EditSupplierModal = ({
               })}
             />
 
-            <label className="fieldset-label">Email</label>
+            <label className="fieldset-label text-base font-semibold text-gray-800">Email</label>
             <input
-              className="input validator"
+              className="input validator rounded-none"
               {...register("email", {
                 required: "Email không được trống",
                 pattern: {
@@ -104,19 +104,19 @@ const EditSupplierModal = ({
           {/* Save & cancel button  */}
           <div className="modal-action">
             <button
-              className="btn bg-primary rounded-lg text-white"
+              className="btn bg-red-500 rounded-none text-white"
               onClick={refreshCallBack}
               style={{ marginRight: "10px" }}
             >
               Lưu
             </button>
-            <button type="submit" className="btn" onClick={onClose}>
+            <button type="submit" className="btn rounded-none" onClick={onClose}>
               Hủy
             </button>
           </div>
         </div>
       </form>
-    </ClockeeModal>
+    </VietSneakerModal>
   );
 };
 

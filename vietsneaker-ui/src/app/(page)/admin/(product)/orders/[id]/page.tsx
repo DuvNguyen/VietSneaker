@@ -45,7 +45,7 @@ const OrderDetail = () => {
   // Dùng State orderItem để lưu dữ liệu chi tiết đơn đặt hàng có order_id lưu trong sessionStorage
   const [orderItem, setOrderItem] = useState<OrderItem[]>([]);
   return (
-    <AdminMainCard goBack={true} title="Chi tiết đơn hàng">
+    <AdminMainCard goBack={true} title="CHI TIẾT ĐƠN HÀNG">
       {order ? (
         <div className="bg-gray grid grid-row-3 gap-4">
           {/* Thông tin khách hàng đặt */}

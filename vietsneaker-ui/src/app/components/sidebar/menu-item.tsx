@@ -4,53 +4,45 @@ import { useAuth } from "@/lib/hooks/use-auth";
 import { SidebarItem } from "@/model/SidebarItem";
 import Link from "next/link";
 
-/**
- * Use to diplay common action for admin to quick navigate: logout, products, brands, etc
- */
 export const MenuItem = ({ item }: { item: SidebarItem }) => {
   const { containAnyRoles } = useAuth();
   const validRoles = (roles?: Array<RoleName>) => {
     return !roles || containAnyRoles(roles);
   };
+
   return (
     <>
-      {/* Item in sidebar with link */}
-      <div className="overflow-y-scroll p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-gray-200 text-gray-900">
+      {/* Mục chính */}
+      <div className="p-2.5 mt-2 flex items-center rounded-md px-4 cursor-pointer hover:bg-gray-100 transition-colors">
         <div className="flex justify-between w-full items-center">
           <Link
             href={item.href}
-            className="text-md text-[15px] text-gray-800 font-bold"
+            className="text-sm font-semibold text-gray-800 hover:text-[#e20000] transition-colors"
           >
             {item.title}
           </Link>
-          <span className="text-sm rotate-180" id="arrow">
-            <i className="bi bi-chevron-down"></i>
-          </span>
+          <i className="bi bi-chevron-down text-gray-500 text-xs"></i>
         </div>
       </div>
-      <div
-        className="text-left text-sm mt-2 w-4/5 mx-auto text-gray-500 font-bold"
-        id="submenu"
-      >
-        {// Sub item menu - current support max depth is 2 for items structure
-        item.subItems?.map((subItem, index) => {
-          return (
-            <div key={index}>
-              {validRoles(subItem.roles) ? (
-                <Link
-                  href={subItem.href}
-                  className="block p-2 hover:bg-gray-300 rounded-md mt-1 cursor-pointer"
-                >
-                  {subItem.title}
-                </Link>
-              ) : (
-                <div className="block p-2 rounded-md mt-1 cursor-not-allowed text-gray-400">
-                  {subItem.title}
-                </div>
-              )}
-            </div>
-          );
-        })}
+
+      {/* Sub item */}
+      <div className="text-left text-sm mt-1 w-4/5 mx-auto text-gray-500 font-medium">
+        {item.subItems?.map((subItem, index) => (
+          <div key={index}>
+            {validRoles(subItem.roles) ? (
+              <Link
+                href={subItem.href}
+                className="block px-3 py-1.5 rounded-md hover:bg-[#e20000]/10 hover:text-[#e20000] transition-all"
+              >
+                {subItem.title}
+              </Link>
+            ) : (
+              <div className="block px-3 py-1.5 rounded-md text-gray-400 cursor-not-allowed">
+                {subItem.title}
+              </div>
+            )}
+          </div>
+        ))}
       </div>
     </>
   );

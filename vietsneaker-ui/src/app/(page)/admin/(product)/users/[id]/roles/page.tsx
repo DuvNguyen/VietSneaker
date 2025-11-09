@@ -35,7 +35,7 @@ const UserDetailsPage = () => {
 
   return (
     <>
-      <AdminMainCard title="Chi tiết người dùng" goBack={true}>
+      <AdminMainCard title="CHI TIẾT NGƯỜI DÙNG" goBack={true}>
         {user ? (
           <form className="space-y-4">
             <div>

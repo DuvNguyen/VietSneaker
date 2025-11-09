@@ -1,6 +1,5 @@
 import { ProductImage } from "@/app/components/common/base-64-image";
 import Thumbnail from "@/app/components/common/thumbnail";
-import ClockeeModal from "@/app/components/modal/modal";
 import ErrorText from "@/app/components/typography/error-text";
 import {
   AdminProductControllerService,
@@ -27,6 +26,7 @@ import {
   ProductSelectOption,
 } from "./purchase-item-utils";
 import { useDebounceCallback } from "usehooks-ts";
+import VietSneakerModal from "@/app/components/modal/modal";
 
 /**
  * For user to add single purchase item in a list
@@ -179,7 +179,7 @@ const AddPurchaseItemModal = ({
   );
 
   return (
-    <ClockeeModal isOpen={isOpen} onClose={onClose} width={"40rem"}>
+    <VietSneakerModal isOpen={isOpen} onClose={onClose} width={"40rem"}>
       <form className="w-full " onSubmit={handleSubmit(onSubmit)}>
         <fieldset className="fieldset w-full p-4 rounded-box space-y-4 text-left">
           <div>
@@ -365,7 +365,7 @@ const AddPurchaseItemModal = ({
           </button>
         </fieldset>
       </form>
-    </ClockeeModal>
+    </VietSneakerModal>
   );
 };
 
