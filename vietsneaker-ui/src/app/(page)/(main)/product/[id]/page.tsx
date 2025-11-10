@@ -17,15 +17,15 @@ type BenefitItem = {
 const benefits: BenefitItem[] = [
   {
     icon: <img src="/icons/warranty.png" alt="Bảo hành" className="w-8 h-8" />,
-    text: "Tăng thời gian bảo hành lên đến 5 năm",
+    text: "tặng thời gian bảo hành 6 tháng",
   },
   {
     icon: <img src="/icons/refund.png" alt="Hoàn tiền" className="w-8 h-8" />,
-    text: "Hoàn tiền gấp 10 lần khi phát hiện hàng giả",
+    text: "Hoàn tiền và tặng giày nếu phát hiện hàng FAKE",
   },
   {
     icon: <img src="/icons/service.png" alt="Tiêu chuẩn" className="w-8 h-8" />,
-    text: "Trung tâm bảo hành đạt tiêu chuẩn quốc tế - Xem Thêm",
+    text: "Bảo hành keo chỉ 1 tháng",
   },
   {
     icon: <img src="/icons/battery.png" alt="Pin" className="w-8 h-8" />,
@@ -33,11 +33,11 @@ const benefits: BenefitItem[] = [
   },
   {
     icon: <img src="/icons/shipping.png" alt="Giao hàng" className="w-8 h-8" />,
-    text: "Giao hàng siêu tốc 2h hoặc COD miễn phí",
+    text: "Giao hàng toàn quốc",
   },
   {
     icon: <img src="/icons/thirty.png" alt="Kinh nghiệm" className="w-8 h-8" />,
-    text: "Kinh nghiệm và dịch vụ hơn 30 năm",
+    text: "Đổi trả hàng trong 30 ngày đầu",
   },
 ];
 
@@ -97,25 +97,29 @@ export default function ProductDetailsPage() {
 
   return (
     <>
-      <div className="container mx-auto flex flex-col md:flex-row items-start gap-10 p-10 justify-center">
-        {/* Hình ảnh sản phẩm */}
-        <div className="w-96 flex flex-col ">
-          <div className="flex flex-col items-center">
-            <div className="mask mask-square">
+    {/*Khối hình ảnh sản phẩm + thông tin sản phẩm*/}
+      <div className="container mx-auto flex flex-col md:flex-row items-start gap-[6rem] p-10 justify-center">
+        {/* Khối trái: Hình + mô tả tách riêng */}
+        <div className="w-96 flex flex-col gap-4">
+          {/* Hình sản phẩm (luôn có khung cố định) */}
+          <div className="w-full bg-gray-50 border rounded-lg flex items-center justify-center min-h-[300px]">
+            {product.image ? (
               <ProductImage data={product.image} />
-            </div>
+            ) : (
+              <span className="text-gray-400 text-sm italic">
+                Không có hình ảnh sản phẩm
+              </span>
+            )}
           </div>
-          {/* Mô tả sản phẩm */}
-          <div className="mt-4 ml-2">
-            <div className="">
-              <h1 className="font-bold">Mô tả sản phẩm:</h1>
 
-              <p className="text-[#3b4543] font-semibold" style={{ fontSize: "17px" }}>
-                {product.description} 
-              </p>
-            </div>
+          {/* Mô tả sản phẩm (có khung riêng, không phụ thuộc hình) */}
+          <div className="bg-white border rounded-lg p-4 shadow-sm">
+            <h2 className="font-bold mb-2 text-gray-800">Mô tả sản phẩm:</h2>
+            <p className="text-gray-600 leading-relaxed text-[16px]">
+              {product.description || "Không có mô tả cho sản phẩm này."}
+            </p>
           </div>
-        </div>
+        </div>  
 
         {/* Thông tin sản phẩm */}
         <div className="flex flex-col max-w-lg">
@@ -125,7 +129,7 @@ export default function ProductDetailsPage() {
               Thương hiệu: {product.brand?.name}
             </span>
           </p>
-          {/* TODO: Show shoe size */}
+          {/* size giay */}
           <div className="mt-2 flex items-center gap-2">
             <span className="font-semibold text-gray-700">Size:</span>
             <span className="px-3 py-1 bg-gray-100 text-gray-800 rounded-md">
@@ -172,11 +176,11 @@ export default function ProductDetailsPage() {
             )}
           </div>
 
-          <div className="mt-4 text-m text-gray-600 bg-gray-200 rounded-lg">
-            <div className=" text-xl font-bold border-b-4 p-2 border-white ">
+          <div className="bg-gray-50 border rounded-lg p-4 shadow-sm mt-4">
+            <h2 className="font-bold mb-2 text-gray-800 text-xl">
               Ưu đãi áp dụng đến 2025:
-            </div>
-            <ul className="list-disc ml-4 pl-6 space-y-1 p-3">
+            </h2>
+            <ul className="list-disc ml-4 pl-6 space-y-1 text-gray-600 leading-relaxed text-[16px]">
               <li>Dịch vụ gói quà miễn phí khi mua hàng qua hotline</li>
               <li>
                 Nhận tư vấn đặt hàng qua hotline{" "}
@@ -185,8 +189,10 @@ export default function ProductDetailsPage() {
               <li>Chuyên viên hỗ trợ tư vấn khách hàng 24/7</li>
             </ul>
           </div>
+          
         </div>
       </div>
+
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 max-w-4xl mx-auto mb-[40px]">
         {benefits.map((benefit, index) => (
           <div
