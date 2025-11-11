@@ -3,7 +3,6 @@ package com.example.clockee_server.auth;
 import static org.springframework.security.web.util.matcher.AntPathRequestMatcher.antMatcher;
 
 import com.example.clockee_server.auth.jwt.JwtTokenFilter;
-import com.example.clockee_server.config.ApplicationProperties;
 import com.example.clockee_server.exception.ApiException;
 import com.example.clockee_server.message.AppMessage;
 import com.example.clockee_server.message.MessageKey;
@@ -12,6 +11,9 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -28,103 +30,92 @@ import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
 
-/** SecurityConfiguration */
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity(prePostEnabled = true)
 @RequiredArgsConstructor
 public class SecurityConfiguration {
-  private final ApplicationProperties applicationProperties;
+
   private final UserDetailsService userDetailsService;
   private final JwtTokenFilter jwtTokenFilter;
   private final AuthEntryPointJwt authEntryPointJwt;
 
   @Bean
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-    http.authorizeHttpRequests(
-        customizer -> {
-          customizer
-              .requestMatchers(antMatcher("/swagger-ui/**"))
-              .permitAll()
-              .requestMatchers(antMatcher("/v3/api-docs/**"))
-              .permitAll()
-              .requestMatchers(antMatcher("/swagger-resources/**"))
-              .permitAll()
-              .requestMatchers(antMatcher("/webjars/**"))
-              .permitAll()
-              .requestMatchers(antMatcher("/admin/**"))
-              .authenticated()
-              .anyRequest()
-              .permitAll();
-        });
+    http
+        .csrf(AbstractHttpConfigurer::disable)
+        .cors(c -> c.configurationSource(corsConfigurationSource()))
+        .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+        .exceptionHandling(h -> {
+          h.authenticationEntryPoint(authEntryPointJwt);
+          h.accessDeniedHandler(accessDeniedHandler());
+        })
+        .authorizeHttpRequests(reg -> reg
+            // 👇 PHẢI permit OPTIONS cho mọi đường dẫn để preflight không bị chặn
+            .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+            .requestMatchers(
+                antMatcher("/swagger-ui/**"),
+                antMatcher("/v3/api-docs/**"),
+                antMatcher("/swagger-resources/**"),
+                antMatcher("/webjars/**"),
+                antMatcher("/api/chat/**")
+            ).permitAll()
+            .requestMatchers(antMatcher("/admin/**")).authenticated()
+            .anyRequest().permitAll()
+        );
 
-    // http.oauth2Login(customizer -> {
-    // customizer.successHandler(oauth2LoginSuccessHandler);
-    // });
-
-    http.exceptionHandling(
-        customer -> {
-          customer.authenticationEntryPoint(authEntryPointJwt);
-          customer.accessDeniedHandler(accessDeniedHandler());
-        });
-
-    // Change from cookiee base session to stateless => user store jwt token in
-    // localStorage
-    http.sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
-    // Filter apply on request to put userdetails to application context if exist
     http.addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class);
-    // TODO: remove this
-    http.addFilterBefore(new LogRequestFilter(), JwtTokenFilter.class);
-
     http.userDetailsService(userDetailsService);
 
-    http.csrf(AbstractHttpConfigurer::disable);
-
-    http.cors(
-        customizer -> {
-          customizer.configurationSource(corsConfigurationSource());
-        });
-
-    http.requiresChannel(chanel -> chanel.anyRequest().requiresSecure());
+    // ⚠️ Không ép HTTPS trong môi trường DEV
+    // http.requiresChannel(ch -> ch.anyRequest().requiresSecure());
 
     return http.build();
   }
 
   @Bean
-  public PasswordEncoder passwordEncoder() {
-    return new BCryptPasswordEncoder();
+  public PasswordEncoder passwordEncoder() { return new BCryptPasswordEncoder(); }
+
+  // Đăng ký CorsFilter ở mức ưu tiên cao để trả preflight 200 trước các filter khác
+  @Bean
+  @Order(Ordered.HIGHEST_PRECEDENCE)
+  public CorsFilter corsFilter() {
+    return new CorsFilter(corsConfigurationSource());
   }
 
-  private CorsConfigurationSource corsConfigurationSource() {
-    return new CorsConfigurationSource() {
-      @Override
-      public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
-        CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(applicationProperties.getAllowedOrigins());
-        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
-        config.setAllowedHeaders(List.of("*"));
-        config.setAllowCredentials(true);
-        return config;
-      }
-    };
+  @Bean
+  public CorsConfigurationSource corsConfigurationSource() {
+    CorsConfiguration config = new CorsConfiguration();
+    // Dùng allowedOriginPatterns để dev localhost + credentials
+    config.setAllowedOriginPatterns(List.of("http://localhost:3000"));
+    config.setAllowedMethods(List.of("GET","POST","PUT","DELETE","OPTIONS","PATCH"));
+    config.setAllowedHeaders(List.of("Content-Type","Authorization","X-Requested-With","Accept","Origin"));
+    config.setExposedHeaders(List.of("Location"));
+    config.setAllowCredentials(true);
+    config.setMaxAge(3600L);
+
+    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+    source.registerCorsConfiguration("/**", config);
+    return source;
   }
 
   private AccessDeniedHandler accessDeniedHandler() {
-    return (request, response, accessDeniedException) -> {
+    return (request, response, ex) -> {
       throw ApiException.builder()
           .message(AppMessage.of(MessageKey.ACCESS_DENIED))
           .status(403)
           .build();
     };
   }
-  ;
 
   @Bean
   public AuthenticationManager authenticationManager() {
-    DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
-    daoAuthenticationProvider.setUserDetailsService(userDetailsService);
-    daoAuthenticationProvider.setPasswordEncoder(passwordEncoder());
-    return new ProviderManager(daoAuthenticationProvider);
+    DaoAuthenticationProvider dao = new DaoAuthenticationProvider();
+    dao.setUserDetailsService(userDetailsService);
+    dao.setPasswordEncoder(passwordEncoder());
+    return new ProviderManager(dao);
   }
 }

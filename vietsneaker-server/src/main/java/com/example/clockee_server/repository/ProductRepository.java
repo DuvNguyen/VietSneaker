@@ -11,12 +11,23 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import java.util.List;
 
 @Repository
 public interface ProductRepository
+<<<<<<< HEAD
     extends JpaRepository<Product, Long>, // để kiểu của khóa chính là Long
         JpaSpecificationExecutor<Product> { // extends JPA Specification
             
+=======
+    extends JpaRepository<Product, Long>,
+    JpaSpecificationExecutor<Product> { // để kiểu của khóa chính là Long
+
+  List<Product> findTop6BySellPriceLessThanEqualOrderBySellPriceAsc(Double maxPrice);
+  
+  List<Product> findBySellPriceLessThanEqual(Double price);
+
+>>>>>>> vi
   List<Product> findAllByOrderByStockDesc(); // Sắp xếp tồn kho giảm dần
 
   List<Product> findAllByOrderByStockAsc(); // Sắp xếp tồn kho tăng dần
@@ -31,7 +42,7 @@ public interface ProductRepository
           """
         SELECT
             p.product_id AS productId,
-            p.name,
+            p.name, 
             p.image_url AS imageUrl,
             p.sell_price AS sellPrice,
             p.type,
@@ -45,5 +56,8 @@ public interface ProductRepository
         LIMIT 12 OFFSET 0;
       """,
       nativeQuery = true)
+
   List<BestSellerProductVo> findBestSelling(@Param("size") int size);
+
+
 }

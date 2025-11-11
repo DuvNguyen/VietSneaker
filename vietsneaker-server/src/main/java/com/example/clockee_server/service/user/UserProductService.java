@@ -65,6 +65,7 @@ public class UserProductService {
     return productMapper.productToProductDetails(product);
   }
 
+  // Lay san pham moi nhat
   public PageResponse<ProductSummaryResponse> getLatestProducts(int page, int size) {
     Specification<Product> specification =
         ProductSpecification.isNotDeleted()
@@ -77,6 +78,7 @@ public class UserProductService {
     return MapperUtil.mapPageResponse(products, productMapper::productToProductSummary);
   }
 
+  // lay san pham ban chay nhat
   public List<ProductSummaryResponse> getBestSellingProducts(int page, int size) {
     List<BestSellerProductVo> products = productRepository.findBestSelling(size);
     return MapperUtil.mapList(
