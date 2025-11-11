@@ -32,19 +32,24 @@ public class UserProductService {
 
   // Lấy danh sách sản phẩm của user có phân trang
   public Page<ProductSummaryResponse> getAllProducts(
-      int page, int size, String name, String type, Double maxPrice, Long brandId, String sortBy) {
+      int page, int size, String name, String type, String shoeSize,
+      Double maxPrice, Long brandId, String sortBy) {
+
     Specification<Product> specification =
         Specification.where(ProductSpecification.searchByName(name))
             .and(ProductSpecification.searchByType(type))
+            .and(ProductSpecification.searchByShoeSize(shoeSize))  // add filter by shoe size
             .and(ProductSpecification.searchByBrandId(brandId))
             .and(ProductSpecification.isNotDeleted())
             .and(ProductSpecification.sortBy(sortBy))
             .and(ProductSpecification.belowPrice(maxPrice));
+
     Pageable pageable = PageRequest.of(page, size);
     Page<Product> products = productRepository.findAll(specification, pageable);
 
-    return products.map(product -> productMapper.productToProductSummary(product));
+    return products.map(productMapper::productToProductSummary);
   }
+
 
   // Lấy sản phẩm theo id
   public ProductDetailsResponse getProductById(Long id) {

@@ -15,6 +15,7 @@ public class ProductSummaryResponse {
   private byte[] image;
   private Double sellPrice;
   private String type;
+  private String shoeSize;
   private Boolean isActive;
   private Long stock;
 }
