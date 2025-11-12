@@ -112,19 +112,12 @@ export default function ProductDetailsPage() {
             )}
           </div>
 
-<<<<<<< HEAD
-              <p className="text-[#3b4543] font-semibold" style={{ fontSize: "17px" }}>
-                {product.description} 
-              </p>
-            </div>
-=======
           {/* Mô tả sản phẩm (có khung riêng, không phụ thuộc hình) */}
           <div className="bg-white border rounded-lg p-4 shadow-sm">
             <h2 className="font-bold mb-2 text-gray-800">Mô tả sản phẩm:</h2>
             <p className="text-gray-600 leading-relaxed text-[16px]">
               {product.description || "Không có mô tả cho sản phẩm này."}
             </p>
->>>>>>> vi
           </div>
         </div>  
 
@@ -136,11 +129,7 @@ export default function ProductDetailsPage() {
               Thương hiệu: {product.brand?.name}
             </span>
           </p>
-<<<<<<< HEAD
-          {/* TODO: Show shoe size */}
-=======
           {/* size giay */}
->>>>>>> vi
           <div className="mt-2 flex items-center gap-2">
             <span className="font-semibold text-gray-700">Size:</span>
             <span className="px-3 py-1 bg-gray-100 text-gray-800 rounded-md">

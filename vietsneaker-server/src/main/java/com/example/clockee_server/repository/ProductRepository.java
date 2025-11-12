@@ -15,11 +15,6 @@ import java.util.List;
 
 @Repository
 public interface ProductRepository
-<<<<<<< HEAD
-    extends JpaRepository<Product, Long>, // để kiểu của khóa chính là Long
-        JpaSpecificationExecutor<Product> { // extends JPA Specification
-            
-=======
     extends JpaRepository<Product, Long>,
     JpaSpecificationExecutor<Product> { // để kiểu của khóa chính là Long
 
@@ -27,7 +22,6 @@ public interface ProductRepository
   
   List<Product> findBySellPriceLessThanEqual(Double price);
 
->>>>>>> vi
   List<Product> findAllByOrderByStockDesc(); // Sắp xếp tồn kho giảm dần
 
   List<Product> findAllByOrderByStockAsc(); // Sắp xếp tồn kho tăng dần
