@@ -35,7 +35,7 @@ export const ProductImage = ({
       <img
         src={imageSrc}
         alt="product image"
-        className={`rounded-lg cursor-zoom-in ${className}`}
+        className={`rounded-none cursor-zoom-in ${className}`}
         onClick={() => setIsOpen(true)}
       />
 
