@@ -19,6 +19,7 @@ public interface ProductRepository
     JpaSpecificationExecutor<Product> { // để kiểu của khóa chính là Long
 
   List<Product> findTop6BySellPriceLessThanEqualOrderBySellPriceAsc(Double maxPrice);
+  
   List<Product> findBySellPriceLessThanEqual(Double price);
   List<Product> findBySellPriceLessThan(Double price);
 
@@ -42,7 +43,7 @@ public interface ProductRepository
           """
         SELECT
             p.product_id AS productId,
-            p.name,
+            p.name, 
             p.image_url AS imageUrl,
             p.sell_price AS sellPrice,
             p.type,
@@ -56,5 +57,8 @@ public interface ProductRepository
         LIMIT 12 OFFSET 0;
       """,
       nativeQuery = true)
+
   List<BestSellerProductVo> findBestSelling(@Param("size") int size);
+
+
 }

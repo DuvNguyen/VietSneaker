@@ -21,3 +21,10 @@
     --color-primary: #ffd423;
   }
 }
+
+.steps .step-primary::before,
+.steps .step-primary::after {
+  background-color: #e20000 !important;
+  border-color: #e20000 !important;
+}
+

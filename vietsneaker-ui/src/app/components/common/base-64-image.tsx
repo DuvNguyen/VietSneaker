@@ -19,7 +19,7 @@ const Base64Image = ({ data, className }: ImageProps) => {
   );
 };
 
-const defaultProductImage = "product1.png";
+const defaultProductImage = "nike-airforce1.jpg";
 export const ProductImage = ({
   data,
   className,

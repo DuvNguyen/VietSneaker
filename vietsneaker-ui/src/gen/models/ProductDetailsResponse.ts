@@ -11,6 +11,7 @@ export type ProductDetailsResponse = {
   description?: string;
   brand?: BrandDTO;
   type?: string;
+  shoeSize?: String; // add shoeSize
   isActive?: boolean;
   stock?: number;
 };

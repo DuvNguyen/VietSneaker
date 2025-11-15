@@ -38,6 +38,9 @@ public class Product {
 
   @Column private String type;
 
+  @Column(name = "shoe_size", length = 10)
+  private String shoeSize;
+
   @Column(nullable = false)
   private Long stock = 0L;
 
@@ -46,7 +49,7 @@ public class Product {
   private Brand brand;
 
   @Column(name = "is_active")
-  private Boolean isActive;
+  private Boolean isActive; 
 
   private Boolean visible;
 

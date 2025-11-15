@@ -15,7 +15,7 @@ export default function SimpleHeader() {
           />
         </Link>
       </div>
-      <p className="text-sm text-yellow-500">Bạn cần giúp đỡ?</p>
+      <p className="text-sm text-red-500">Bạn cần giúp đỡ?</p>
     </header>
   );
 }

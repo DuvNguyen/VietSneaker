@@ -18,6 +18,7 @@ public class ProductDetailsResponse {
   private String description;
   private BrandDTO brand;
   private String type;
+  private String shoeSize;
   private Boolean isActive;
   private Long stock;
 }
