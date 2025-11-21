@@ -24,6 +24,13 @@ public interface ProductRepository
   List<Product> findTop6BySellPriceLessThanEqualOrderBySellPriceAsc(Double maxPrice);
   
   List<Product> findBySellPriceLessThanEqual(Double price);
+  List<Product> findBySellPriceLessThan(Double price);
+
+    // trên giá
+    List<Product> findBySellPriceGreaterThan(Double price);
+
+    // bằng / khoảng giá (dùng cho EQUAL: ±5%)
+    List<Product> findBySellPriceBetween(Double minPrice, Double maxPrice);
 
 <<<<<<< HEAD
   List<Product> findAllByOrderByStockDesc(); // Sắp xếp tồn kho giảm dần
