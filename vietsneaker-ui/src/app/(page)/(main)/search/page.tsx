@@ -15,7 +15,7 @@ import { usePage } from "@/lib/hooks/use-page-search";
 import { formatVND } from "@/util/currency";
 import { logger } from "@/util/logger";
 import { useSearchParams } from "next/navigation";
-import { ChangeEvent, Dispatch, SetStateAction, useState } from "react";
+import { ChangeEvent, Dispatch, SetStateAction, useState, useEffect } from "react";
 import { useDebounceCallback } from "usehooks-ts";
 
 const types = ["Specialty", "General", "Luxury", "Local"];
@@ -43,6 +43,12 @@ export default function ProductFilterPage() {
     },
     maxPrice: Number(searchParam.get("maxPrice") ?? DEFAULT_MAX_PRICE),
   });
+
+  // add useEffect to update searchbar param everytime
+  useEffect(() => {
+  setSearchTerm(searchParam.get("name") ?? "");
+  setSortBy(searchParam.get("sortBy") ?? "");
+  }, [searchParam]);
 
   const fetchProducts = async () => {
     try {
@@ -85,7 +91,7 @@ export default function ProductFilterPage() {
       <div className="flex flex-col w-full mx-20 mt-10">
         {/* Top bar */}
         <div className="flex justify-between items-center mb-4 ">
-          <label className="input ">
+          {/* <label className="input ">
             <svg
               className="h-[1em] opacity-50"
               xmlns="http://www.w3.org/2000/svg"
@@ -108,7 +114,7 @@ export default function ProductFilterPage() {
               placeholder="Search product name"
               onChange={handleSearchTermChange}
             />
-          </label>
+          </label> */}
           <div></div>
 
           <select
