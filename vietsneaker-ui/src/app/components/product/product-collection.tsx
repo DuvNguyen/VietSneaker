@@ -10,7 +10,7 @@ const ProductCollection = ({
 }) => {
   return (
     products && (
-      <div className="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 mx-auto">
+      <div className="w-full max-w-7xl mx-auto grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
         {products.map((product) => (
           <ProductSummaryCard key={product.productId} product={product} />
         ))}
