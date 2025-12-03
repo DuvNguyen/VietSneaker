@@ -101,7 +101,7 @@ const DeliveryDetailsForm = () => {
         <div className="flex justify-end mt-5">
           <button
             type="submit"
-            className="text-white btn btn-md px-4 py-2 rounded bg-primary shadow"
+            className="text-white btn btn-md px-4 py-2 rounded bg-red-500 shadow"
           >
             Tiếp tục →
           </button>

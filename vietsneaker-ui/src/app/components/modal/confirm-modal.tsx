@@ -1,5 +1,5 @@
 import React from "react";
-import ClockeeModal from "./modal";
+import VietSneakerModal from "./modal";
 
 const ConfirmModal = ({
   isOpen,
@@ -15,24 +15,24 @@ const ConfirmModal = ({
   content: string;
 }) => {
   return (
-    <ClockeeModal isOpen={isOpen} onClose={onClose}>
+    <VietSneakerModal isOpen={isOpen} onClose={onClose}>
       <div>
         <h2 className="font-bold text-lg">{title}</h2>
         <p className="py-4">{content}</p>
       </div>
       <div className="modal-action">
         <button
-          className="btn bg-primary text-white"
+          className="btn bg-red-500 text-white rounded-none"
           onClick={onConfirm}
           style={{ marginRight: "10px" }}
         >
           Đồng ý
         </button>
-        <button className="btn" onClick={onClose}>
+        <button className="btn rounded-none" onClick={onClose}>
           Hủy
         </button>
       </div>
-    </ClockeeModal>
+    </VietSneakerModal>
   );
 };
 

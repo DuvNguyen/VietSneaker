@@ -1,4 +1,5 @@
 "use client";
+
 import { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import Link from "next/link";
@@ -6,10 +7,10 @@ import { AuthControllerService, CreateUserRequest } from "@/gen";
 import { useRouter } from "next/navigation";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { EMAIL_PATTERN } from "@/config/pattern";
-import ErrorText from "@/app/components/typography/error-text";
 import { getPasswordError } from "@/util/validate";
 import { mapApiErrorsToForm } from "@/util/form";
 import { toast } from "react-toastify";
+
 const RegisterForm = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -22,54 +23,58 @@ const RegisterForm = () => {
   } = useForm<CreateUserRequest>();
 
   const password = watch("password");
-
   const router = useRouter();
+
   const onSubmit: SubmitHandler<CreateUserRequest> = async (data) => {
     try {
       await AuthControllerService.register(data);
-      toast.success(
-        "Đăng ký tài khoản thành công vui lòng kiểm tra email để xác nhận tài khoản",
-      );
+      toast.success("Đăng ký tài khoản thành công, vui lòng kiểm tra email!");
       router.push("/login");
     } catch (error) {
       mapApiErrorsToForm(error, setError);
     }
   };
+
   return (
-    <form action="" onSubmit={handleSubmit(onSubmit)}>
-      <div className="w-full md:w-[380px] bg-white p-8 rounded-lg shadow-lg border border-yellow-300">
-        {/* Tiêu đề */}
-        <div className="flex justify-between items-center bg-White rounded-md">
-          <h2 className="text-xl font-bold text-black">ĐĂNG KÝ</h2>
+    <div className="w-full max-w-md bg-white/90 backdrop-blur-lg p-10 rounded-2xl border border-[rgba(255,62,62,0.25)] shadow-[0_8px_30px_rgba(255,62,62,0.15)] transition-transform duration-300 hover:-translate-y-1">
+      <div className="flex justify-between items-center mb-6">
+        <h2 className="text-2xl font-bold text-gray-800">ĐĂNG KÝ</h2>
+      </div>
+
+      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
+        {/* Email */}
+        <div>
+          <input
+            type="text"
+            placeholder="Email"
+            autoFocus
+            {...register("email", {
+              required: "Email không được để trống",
+              pattern: { value: EMAIL_PATTERN, message: "Email không hợp lệ" },
+            })}
+            className="w-full border border-gray-300 bg-gray-50 text-gray-700 px-3 py-3 rounded-lg text-base transition-all focus:outline-none focus:border-[#e03a00] focus:ring-2 focus:ring-[#ff3e3e]/30 focus:bg-white placeholder-gray-400"
+          />
+          {errors.email && (
+            <p className="text-red-600 text-sm mt-1">
+              {errors.email.message}
+            </p>
+          )}
         </div>
-        {/* Form Đăng ký */}
-        <input
-          type="text"
-          placeholder="Email"
-          autoFocus
-          className="w-full border border-yellow-400 bg-transparent text-gray-700 p-2 mt-3 rounded"
-          {...register("email", {
-            required: "Email không được để trống",
-            pattern: {
-              value: EMAIL_PATTERN,
-              message: "Email không hợp lệ",
-            },
-          })}
-        />
-        <p className="text-red-500 mt-2 text-sm">
-          {errors.email && <ErrorText>{errors.email.message}</ErrorText>}
-        </p>
-        <input
-          type="text"
-          placeholder="Họ và tên"
-          className="w-full border border-yellow-400 bg-transparent text-gray-700 p-2 mt-3 rounded"
-          {...register("name", {
-            required: "Tên không được để trống",
-          })}
-        />
-        <div className="text-red-500 mt-2 text-sm">
-          {errors.name && <ErrorText>{errors.name.message}</ErrorText>}
+
+        {/* Name */}
+        <div>
+          <input
+            type="text"
+            placeholder="Họ và tên"
+            {...register("name", { required: "Tên không được để trống" })}
+            className="w-full border border-gray-300 bg-gray-50 text-gray-700 px-3 py-3 rounded-lg text-base transition-all focus:outline-none focus:border-[#e03a00] focus:ring-2 focus:ring-[#ff3e3e]/30 focus:bg-white placeholder-gray-400"
+          />
+          {errors.name && (
+            <p className="text-red-600 text-sm mt-1">{errors.name.message}</p>
+          )}
         </div>
+
+        {/* Password */}
         <div className="relative">
           <input
             type={showPassword ? "text" : "password"}
@@ -78,77 +83,104 @@ const RegisterForm = () => {
               required: "Mật khẩu không được để trống",
               validate: () => getPasswordError(password) ?? true,
             })}
-            className="w-full border border-yellow-400 bg-transparent text-gray-700 p-2 mt-3 rounded"
+            className="w-full border border-gray-300 bg-gray-50 text-gray-700 px-3 py-3 rounded-lg text-base transition-all focus:outline-none focus:border-[#e03a00] focus:ring-2 focus:ring-[#ff3e3e]/30 focus:bg-white placeholder-gray-400 pr-10"
           />
           <button
             type="button"
-            className="absolute top-3 inset-y-0 right-3 flex items-center"
             onClick={() => setShowPassword(!showPassword)}
+            className="absolute top-1/2 right-3 -translate-y-1/2 text-gray-500 hover:text-[#e03a00] transition-colors"
           >
             {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
           </button>
+          {errors.password && (
+            <p className="text-red-600 text-sm mt-1">
+              {errors.password.message}
+            </p>
+          )}
         </div>
-        <div className="text-red-500 mt-2 text-sm">
-          {errors.password && <ErrorText>{errors.password.message}</ErrorText>}
-        </div>
+
+        {/* Confirm Password */}
         <div className="relative">
           <input
             type={showConfirmPassword ? "text" : "password"}
             placeholder="Xác nhận mật khẩu"
-            className="w-full border border-yellow-400 bg-transparent text-gray-700 p-2 mt-3 rounded"
             {...register("passwordConfirmation", {
               required: "Vui lòng xác nhận lại mật khẩu",
               validate: (val) =>
                 val === password || "Mật khẩu xác nhận không khớp",
             })}
+            className="w-full border border-gray-300 bg-gray-50 text-gray-700 px-3 py-3 rounded-lg text-base transition-all focus:outline-none focus:border-[#e03a00] focus:ring-2 focus:ring-[#ff3e3e]/30 focus:bg-white placeholder-gray-400 pr-10"
           />
-          <div className="text-red-500 mt-2 text-sm">
-            {errors.passwordConfirmation && (
-              <ErrorText>{errors.passwordConfirmation.message}</ErrorText>
-            )}
-            {errors.root && <ErrorText>{errors.root.message}</ErrorText>}
-          </div>
           <button
             type="button"
-            className="absolute top-3 inset-y-0 right-3 flex items-center"
             onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+            className="absolute top-1/2 right-3 -translate-y-1/2 text-gray-500 hover:text-[#e03a00] transition-colors"
           >
             {showConfirmPassword ? <EyeOff size={20} /> : <Eye size={20} />}
           </button>
+          {errors.passwordConfirmation && (
+            <p className="text-red-600 text-sm mt-1">
+              {errors.passwordConfirmation.message}
+            </p>
+          )}
         </div>
-        <button className="w-full bg-yellow-400 text-white p-3 rounded mt-3 font-semibold shadow-md disabled:opacity-50">
-          Đăng Ký
-        </button>
 
-        <div className="flex justify-center text-sm text-gray-600 mt-3 border-t border-gray-300 pt-4">
-          <span className="text-gray-600 pr-2 ">Bạn đã có tài khoản?</span>
-          <Link
-            href={"/login"}
-            className="text-yellow-700 cursor-pointer hover:text-yellow-900"
-          >
-            Đăng nhập
-          </Link>
-        </div>
+        {/* Submit */}
+        <button
+          type="submit"
+          className="w-full bg-[#ff3e3e] text-white font-semibold py-3 rounded-lg shadow-[0_4px_12px_rgba(255,62,62,0.4)] hover:bg-[#e03a00] hover:shadow-[0_6px_18px_rgba(224,58,0,0.45)] active:translate-y-[1px] transition-all duration-150"
+        >
+          Đăng ký
+        </button>
+      </form>
+
+      <div className="mt-5 text-center text-gray-600 text-sm">
+        Bạn đã có tài khoản?
+        <Link
+          href="/login"
+          className="text-[#e03a00] font-semibold ml-1 hover:text-[#c73200] transition-colors"
+        >
+          Đăng nhập
+        </Link>
       </div>
-    </form>
+    </div>
   );
 };
 
 export default function RegisterUser() {
   return (
-    <div className="w-full flex flex-col items-center bg-white">
-      {/* Header */}
-      {/* Main Content */}
-      <div className="bg-[#FFDA3E] w-full h-[604px] flex justify-center items-center ">
-        <main className="w-full max-w-5xl flex flex-col  md:flex-row items-center bg-[#FFDA3E]">
-          {/* Banner */}
-          <div className="flex-1 p-5">
-            <img src="/body.png" className="w-full rounded-lg" />
+    <div className="w-full min-h-screen bg-[#ff3e3e] flex justify-center items-center relative overflow-hidden">
+      {/* Banner */}
+      <div className="relative w-full min-h-screen bg-[linear-gradient(135deg,#666,#666,#666)] flex justify-center items-center overflow-hidden">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_50%,rgba(0,0,0,0.05)_100%)]"></div>
+
+        {/* Content */}
+        <div className="relative z-10 flex flex-col md:flex-row items-center justify-center w-[90%] max-w-[1100px] gap-8 md:gap-12">
+          <div className="flex-1 flex justify-center items-center">
+            <img
+              src="/body.png"
+              alt="banner"
+              className="w-full max-w-[280px] h-auto object-contain animate-[float_3s_ease-in-out_infinite]"
+            />
           </div>
-          {/* Form Register */}
           <RegisterForm />
-        </main>
+        </div>
       </div>
+
+      {/* Animation keyframes */}
+      <style jsx global>{`
+        @keyframes float {
+          0% {
+            transform: translateY(0);
+          }
+          50% {
+            transform: translateY(-10px);
+          }
+          100% {
+            transform: translateY(0);
+          }
+        }
+      `}</style>
     </div>
   );
 }

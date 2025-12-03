@@ -17,7 +17,9 @@ const AdminMainCard = ({ title, goBack = false, children }: AdminCardProps) => {
           {goBack && (
             <ArrowLeft className="hover:cursor-pointer" onClick={router.back} />
           )}
-          <Subtitle styleClass={""}>{title}</Subtitle>
+          <Subtitle styleClass={"text-center font-semibold text-2xl"}>
+            {title}
+          </Subtitle>
           {children}
         </div>
       </div>

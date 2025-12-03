@@ -1,7 +1,7 @@
 import React, { ReactNode } from "react";
 import Modal from "react-modal";
 
-const ClockeeModal = ({
+const VietSneakerModal = ({
   isOpen,
   onClose,
   children,
@@ -35,11 +35,11 @@ const ClockeeModal = ({
           textAlign: "center",
         },
       }}
-      className={`shadow rounded-xl m-10 bg-white min-h-60 min-w-80 flex items-center justify-center flex-col ${className}`}
+      className={`shadow rounded-none m-10 bg-white min-h-60 min-w-80 flex items-center justify-center flex-col ${className}`}
     >
       {children}
     </Modal>
   );
 };
 
-export default ClockeeModal;
+export default VietSneakerModal;

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { ReactNode, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Chart from "chart.js/auto";
 import {
   AdminOrderControllerService,
@@ -15,20 +15,18 @@ interface StatCardProps {
   title: string;
   value: string;
   icon: string;
-  bgColor: string;
 }
-const EMPTY_CHART_VALUE = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 
-const StatCard: React.FC<StatCardProps> = ({ title, value, icon, bgColor }) => (
-  <div className="bg-white p-4 rounded-lg shadow flex items-center border-2">
-    <div
-      className={`w-20 h-20 rounded-full flex items-center justify-center mr-6 ${bgColor}`}
-    >
-      <img src={`${icon}`} className="ml-1" />
+const EMPTY_CHART_VALUE = Array(12).fill(0);
+
+const StatCard: React.FC<StatCardProps> = ({ title, value, icon }) => (
+  <div className="bg-white border border-gray-300 flex items-center p-4 gap-4 rounded-none shadow-none">
+    <div className="flex items-center justify-center">
+      <img src={icon} alt={title} className="w-10 h-10 object-contain" />
     </div>
     <div>
-      <div className="text-gray-600 text-2xl">{title}</div>
-      <div className="text-3xl font-bold">{value}</div>
+      <div className="text-gray-700 text-lg font-medium">{title}</div>
+      <div className="text-black text-2xl font-bold">{value}</div>
     </div>
   </div>
 );
@@ -36,84 +34,50 @@ const StatCard: React.FC<StatCardProps> = ({ title, value, icon, bgColor }) => (
 const SalesChart: React.FC<{ year: number }> = ({ year }) => {
   const chartRef = useRef<Chart | null>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const [chartData, setChartData] = useState<{
-    revenue: number[];
-    profit: number[];
-  } | null>(null);
+  const [chartData, setChartData] = useState<{ revenue: number[]; profit: number[] } | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
 
-  // Gọi hai API để lấy dữ liệu doanh thu và lợi nhuận
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
       try {
-        const revenueData =
-          await FinancialReportControllerService.geFinancialReport(year);
-        const profitData =
-          await AdminOrderControllerService.getMonthlyRevenueInYear(year);
-        // Chia dữ liệu cho 1 triệu để hiển thị dạng triệu VNĐ
-        const formattedRevenue = revenueData.map(
-          (value: number) => value / UNIT,
-        );
-        const formattedProfit = profitData.map((value: number) => value / UNIT);
+        const revenueData = await FinancialReportControllerService.geFinancialReport(year);
+        const profitData = await AdminOrderControllerService.getMonthlyRevenueInYear(year);
+        const formattedRevenue = revenueData.map((v: number) => v / UNIT);
+        const formattedProfit = profitData.map((v: number) => v / UNIT);
         setChartData({
-          revenue:
-            formattedRevenue.length === 12
-              ? formattedRevenue
-              : EMPTY_CHART_VALUE,
-          profit:
-            formattedProfit.length === 12 ? formattedProfit : EMPTY_CHART_VALUE,
+          revenue: formattedRevenue.length === 12 ? formattedRevenue : EMPTY_CHART_VALUE,
+          profit: formattedProfit.length === 12 ? formattedProfit : EMPTY_CHART_VALUE,
         });
       } catch (error) {
         logger.error("Error fetching data:", error);
-        // Hiển thị tất cả giá trị bằng 0 nếu API thất bại
-        setChartData({
-          revenue: EMPTY_CHART_VALUE,
-          profit: EMPTY_CHART_VALUE,
-        });
+        setChartData({ revenue: EMPTY_CHART_VALUE, profit: EMPTY_CHART_VALUE });
       } finally {
         setLoading(false);
       }
     };
-
     fetchData();
-  }, [year]); // Gọi lại khi năm thay đổi
+  }, [year]);
 
-  // Vẽ biểu đồ khi có dữ liệu
   useEffect(() => {
     if (canvasRef.current && chartData) {
       const ctx = canvasRef.current.getContext("2d");
       if (ctx) {
-        if (chartRef.current) {
-          chartRef.current.destroy();
-        }
+        if (chartRef.current) chartRef.current.destroy();
         chartRef.current = new Chart(ctx, {
           type: "bar",
           data: {
-            labels: [
-              "Tháng 1",
-              "Tháng 2",
-              "Tháng 3",
-              "Tháng 4",
-              "Tháng 5",
-              "Tháng 6",
-              "Tháng 7",
-              "Tháng 8",
-              "Tháng 9",
-              "Tháng 10",
-              "Tháng 11",
-              "Tháng 12",
-            ],
+            labels: Array.from({ length: 12 }, (_, i) => `Tháng ${i + 1}`),
             datasets: [
               {
                 label: "Doanh thu",
                 data: chartData.revenue,
-                backgroundColor: "#f87171",
+                backgroundColor: "#e20000", // 🔴 đỏ VietSneaker
               },
               {
                 label: "Lợi nhuận",
                 data: chartData.profit,
-                backgroundColor: "#fbbf24",
+                backgroundColor: "#4b4b4b", // ⚫ xám đậm phẳng
               },
             ],
           },
@@ -121,129 +85,81 @@ const SalesChart: React.FC<{ year: number }> = ({ year }) => {
             scales: {
               y: {
                 beginAtZero: true,
-                max: 400,
-                title: {
-                  display: true,
-                  text: "Triệu VNĐ",
-                },
+                title: { display: true, text: "Triệu VNĐ" },
               },
               x: {
-                title: {
-                  display: true,
-                  text: "Tháng",
-                },
+                title: { display: true, text: "Tháng" },
               },
             },
-            plugins: {
-              legend: {
-                display: true,
-                position: "top",
-              },
-            },
+            plugins: { legend: { display: true, position: "top" } },
           },
         });
       }
     }
-    return () => {
-      if (chartRef.current) {
-        chartRef.current.destroy();
-      }
-    };
-  }, [chartData]); // Cập nhật biểu đồ khi dữ liệu thay đổi
+    return () => chartRef.current?.destroy();
+  }, [chartData]);
 
-  if (loading) return <div className="text-center">Đang tải dữ liệu...</div>;
-
+  if (loading) return <div className="text-center text-gray-500 italic">Đang tải dữ liệu...</div>;
   return <canvas ref={canvasRef} className="w-full h-64" />;
 };
 
 const AdminDashboardPage: React.FC = () => {
-  const currentYear = new Date().getFullYear(); // Lấy năm hiện tại
-  const [selectedYear, setSelectedYear] = useState<number>(currentYear); // Mặc định là năm hiện tại
+  const currentYear = new Date().getFullYear();
+  const [selectedYear, setSelectedYear] = useState<number>(currentYear);
   const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
-
   const [stats, setStats] = useState<OrderDTO>({} as OrderDTO);
   const [statsLoading, setStatsLoading] = useState<boolean>(true);
+  const years = [currentYear - 2, currentYear - 1, currentYear, currentYear + 1];
 
-  const years = [
-    currentYear - 2,
-    currentYear - 1,
-    currentYear,
-    currentYear + 1,
-  ];
-
-  // Dữ liệu mẫu cho các chỉ số theo năm
   useEffect(() => {
     const fetchStats = async () => {
       setStatsLoading(true);
       try {
-        const resp =
-          await AdminOrderControllerService.getYearlyOrder(selectedYear);
+        const resp = await AdminOrderControllerService.getYearlyOrder(selectedYear);
         setStats(resp);
       } catch (error) {
         logger.error(error);
       }
       setStatsLoading(false);
     };
-
     fetchStats();
   }, [selectedYear]);
 
-  const toggleDropdown = () => {
-    setIsDropdownOpen(!isDropdownOpen);
-  };
-
-  const handleYearSelect = (year: number) => {
-    setSelectedYear(year);
-    setIsDropdownOpen(false); // Đóng dropdown sau khi chọn
-  };
-
   return (
     <AdminMainCard title="THỐNG KÊ" goBack={false}>
-      <div className="grid grid-cols-3 gap-8 mb-4">
-        <StatCard
-          title="Tổng đơn"
-          value={String(stats.totalOrders || "??")}
-          icon="/total.svg"
-          bgColor="bg-[#FFD700]/30"
-        />
-        <StatCard
-          title="Đã giao hoàn thành"
-          value={String(stats.finishOrders || "??")}
-          icon="/finish.svg"
-          bgColor="bg-[#FFD700]/30"
-        />
-        <StatCard
-          title="Đơn ở trạng thái khác"
-          value={String(stats.otherOrders || "??")}
-          icon="/cancel.svg"
-          bgColor="bg-yellow-100"
-        />
+      {/* Thống kê nhanh */}
+      <div className="grid grid-cols-3 gap-6 mb-4">
+        <StatCard title="Tổng đơn" value={String(stats.totalOrders || "??")} icon="/total.png" />
+        <StatCard title="Đã giao hoàn thành" value={String(stats.finishOrders || "??")} icon="/finish.png" />
+        <StatCard title="Đơn ở trạng thái khác" value={String(stats.otherOrders || "??")} icon="/cancel.png" />
       </div>
 
-      <div className="bg-white p-4 rounded-lg shadow">
-        <div className="flex justify-end items-center mb-4">
-          <div className="relative">
-            <div
-              className="flex items-center border border-gray-300 rounded px-3 py-1 cursor-pointer"
-              onClick={toggleDropdown}
-            >
-              <span className="mr-2">{selectedYear}</span>
-              <span className="text-red-500">▼</span>
-            </div>
-            {isDropdownOpen && (
-              <div className="absolute right-0 mt-2 w-32 bg-white border border-gray-300 rounded shadow-lg z-10">
-                {years.map((year) => (
-                  <div
-                    key={year}
-                    className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
-                    onClick={() => handleYearSelect(year)}
-                  >
-                    {year}
-                  </div>
-                ))}
-              </div>
-            )}
+      {/* Biểu đồ */}
+      <div className="bg-white border border-gray-300 rounded-none shadow-none p-4 relative">
+        <div className="flex justify-end mb-4 relative">
+          <div
+            className="flex items-center border border-gray-400 px-3 py-1 cursor-pointer select-none"
+            onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+          >
+            <span className="mr-2">{selectedYear}</span>
+            <span className="text-[#e20000] text-xs">▼</span>
           </div>
+          {isDropdownOpen && (
+            <div className="absolute top-full right-0 mt-2 w-32 bg-white border border-gray-300 z-10">
+              {years.map((year) => (
+                <div
+                  key={year}
+                  className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                  onClick={() => {
+                    setSelectedYear(year);
+                    setIsDropdownOpen(false);
+                  }}
+                >
+                  {year}
+                </div>
+              ))}
+            </div>
+          )}
         </div>
         <SalesChart year={selectedYear} />
       </div>

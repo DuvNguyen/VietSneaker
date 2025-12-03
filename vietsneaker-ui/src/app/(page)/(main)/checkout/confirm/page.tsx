@@ -50,7 +50,7 @@ const CheckoutAddressPage = () => {
         </ul>
       </div>
       <div className="max-w-2xl mx-auto px-4">
-        <h1 className="text-xl font-medium mb-4">Chi tiết đơn hàng</h1>
+        <h1 className="text-xl font-medium mb-4">CHI TIẾT ĐƠN HÀNG</h1>
 
         {/* Shipping address */}
         <div className="bg-white rounded-lg shadow mb-4 p-4 border">

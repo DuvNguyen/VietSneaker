@@ -19,7 +19,7 @@ const Base64Image = ({ data, className }: ImageProps) => {
   );
 };
 
-const defaultProductImage = "product1.png";
+const defaultProductImage = "nike-airforce1.jpg";
 export const ProductImage = ({
   data,
   className,
@@ -35,7 +35,7 @@ export const ProductImage = ({
       <img
         src={imageSrc}
         alt="product image"
-        className={`rounded-lg cursor-zoom-in ${className}`}
+        className={`rounded-none cursor-zoom-in ${className}`}
         onClick={() => setIsOpen(true)}
       />
 

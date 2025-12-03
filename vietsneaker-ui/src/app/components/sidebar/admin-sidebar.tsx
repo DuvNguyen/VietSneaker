@@ -5,49 +5,48 @@ import { adminMenuItems } from "@/config/sidebar";
 import { useAuth } from "@/lib/hooks/use-auth";
 import { getRoleNameLabel } from "@/util/role-utils";
 
-/**
- * List of item (action) for manager shop data
- */
 export const AdminSideBar = () => {
   const { user, getRoles } = useAuth();
+
   return (
     <>
-      <span className="absolute text-gray-900 text-4xl top-5 left-4 cursor-pointer"></span>
-      <div className="sidebar lg:left-0 p-2 w-[220px] overflow-y-auto text-center">
-        <div className="text-gray-950 text-xl">
-          <div className="p-2.5 mt-1 flex items-center">
-            <Link href={"/"}>
-              <img
-                className="mr-[-9px] mt-[-5px] cursor-pointer"
-                src="/logoAdmin.svg"
-                alt="logo login"
-              />
-            </Link>
-          </div>
-          <div className="my-2  h-[1px]"></div>
+      <div className="fixed left-0 top-0 h-screen w-[240px] bg-white border-r border-gray-200 shadow-md flex flex-col">
+        {/* Logo */}
+        <div className="p-5 border-b border-gray-200 flex items-center justify-center">
+          <Link href={"/"}>
+            <img
+              src="/logoAdmin.png"
+              alt="logo"
+              className="h-10 cursor-pointer hover:opacity-80 transition"
+            />
+          </Link>
         </div>
-        <div className="text-left pl-4">
+
+        {/* Thông tin user */}
+        <div className="px-5 py-3 border-b border-gray-100 text-center">
           {user && (
             <div>
-              <p className="font-bold">{user.name}</p>
-              {getRoles().map((role) => (
-                <p
-                  className="badge badge-sm font-medium  badge-soft"
-                  key={role}
-                >
-                  {getRoleNameLabel(role)}
-                </p>
-              ))}
+              <p className="font-semibold text-gray-800">{user.name}</p>
+              <div className="flex justify-center gap-1 flex-wrap mt-1">
+                {getRoles().map((role) => (
+                  <span
+                    key={role}
+                    className="bg-red-100 text-[#e20000] border border-red-200 px-2 py-[2px] text-xs rounded-full"
+                  >
+                    {getRoleNameLabel(role)}
+                  </span>
+                ))}
+              </div>
             </div>
           )}
         </div>
 
-        {
-          // Display menu item base on items structure
-          adminMenuItems.map((menuItem, idx) => {
-            return <MenuItem key={idx} item={menuItem} />;
-          })
-        }
+        {/* Menu */}
+        <div className="flex-1 overflow-y-auto px-3 py-4 space-y-1">
+          {adminMenuItems.map((menuItem, idx) => (
+            <MenuItem key={idx} item={menuItem} />
+          ))}
+        </div>
       </div>
     </>
   );

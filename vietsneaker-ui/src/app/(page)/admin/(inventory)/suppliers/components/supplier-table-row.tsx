@@ -1,8 +1,10 @@
+"use client";
 import ConfirmModal from "@/app/components/modal/confirm-modal";
 import { AdminSupplierControllerService, SupplierDTO } from "@/gen";
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 import EditSupplierModal from "./edit-supplier-modal";
+
 const SupplierTableRow = ({
   item,
   refreshCallBack,
@@ -10,10 +12,11 @@ const SupplierTableRow = ({
   item: SupplierDTO;
   refreshCallBack: () => void;
 }) => {
+  const [isOpenConfirmModal, setIsOpenConfirmModal] = useState(false);
+  const [isEditModal, setIsEditModal] = useState(false);
+
   const handleDelete = async () => {
-    if (!item.supplierId) {
-      return;
-    }
+    if (!item.supplierId) return;
     try {
       await AdminSupplierControllerService.deleteSupplier(item.supplierId);
       setIsOpenConfirmModal(false);
@@ -23,12 +26,10 @@ const SupplierTableRow = ({
       toast(e as string);
     }
   };
-  const [isOpenConfirmModal, setIsOpenConfirmModal] = useState(false);
-
-  const [isEditModal, setIsEditModal] = useState(false);
 
   return (
-    <tr className="whitespace-nowrap text-center">
+    <tr className="border-b border-gray-200 odd:bg-white even:bg-gray-50 hover:bg-[#fff0f0] transition-colors duration-200 text-center text-[15px] text-gray-700">
+      {/* 🧩 Modals */}
       <EditSupplierModal
         isOpen={isEditModal}
         onClose={() => setIsEditModal(false)}
@@ -39,26 +40,66 @@ const SupplierTableRow = ({
         isOpen={isOpenConfirmModal}
         onClose={() => setIsOpenConfirmModal(false)}
         onConfirm={handleDelete}
-        title={"Xác nhận"}
-        content={"Bạn có muốn xóa nhà cung cấp này?"}
+        title="Xác nhận"
+        content="Bạn có muốn xóa nhà cung cấp này?"
       />
-      <td>{item.supplierId}</td>
-      <td className={``}>{item.name}</td>
-      <td className={``}>{item.address}</td>
-      <td className={``}>{item.phone}</td>
-      <td className={``}>{item.email}</td>
-      <td onClick={() => setIsEditModal(true)} className={`hover:bg-gray-200 `}>
-        {/* Action edit */}
-        <i className="fa fa-edit cursor-pointer"></i>
+
+      {/* 🆔 ID */}
+      <td className="p-3 font-medium text-gray-800">{item.supplierId}</td>
+
+      {/* 🏷️ Tên */}
+      <td className="p-3 truncate" title={item.name}>{item.name}</td>
+
+      {/* 🏠 Địa chỉ */}
+      <td className="p-3 truncate max-w-[250px]" title={item.address}>
+        {item.address}
       </td>
+
+      {/* 📞 SĐT */}
+      <td className="p-3 whitespace-nowrap">{item.phone}</td>
+
+      {/* ✉️ Email */}
+      <td className="p-3 truncate">{item.email}</td>
+
+      {/* 🧪 Loại NCC */}
+      <td className="p-3">{item.supplierType}</td>
+
+      {/* 📱 Zalo */}
+      <td className="p-3">{item.zalo || "-"}</td>
+
+      {/* 🌐 Facebook */}
+      <td className="p-3">
+        {item.facebook ? (
+          <a 
+            href={item.facebook} 
+            target="_blank"
+            className="text-blue-600 underline"
+          >
+            Link
+          </a>
+        ) : "-"}
+      </td>
+
+      {/* ⭐ Rating */}
+      <td className="p-3">{item.rating} ⭐</td>
+
+      {/* ✏️ Sửa */}
       <td
-        onClick={() => setIsOpenConfirmModal(true)}
-        className={`hover:bg-gray-200  `}
+        className="p-3 cursor-pointer hover:bg-[#fff0f0] transition"
+        onClick={() => setIsEditModal(true)}
       >
-        {/* Action delete */}
-        <i className="fa fa-trash cursor-pointer"></i>
+        <i className="fa fa-edit text-[#e20000] hover:scale-110 transition-transform"></i>
+      </td>
+
+      {/* 🗑 Xóa */}
+      <td
+        className="p-3 cursor-pointer hover:bg-[#fff0f0] transition"
+        onClick={() => setIsOpenConfirmModal(true)}
+      >
+        <i className="fa fa-trash text-red-600 hover:scale-110 transition-transform"></i>
       </td>
     </tr>
   );
 };
+
 export default SupplierTableRow;

@@ -144,12 +144,12 @@ const EditProductForm = ({ model }: { model: AdminProductResponse }) => {
       <fieldset className="fieldset w-full p-4 rounded-box space-y-4">
         <div>
           <label className="label">
-            <span className="label-text">Tên</span>
+            <span className="label-text text-lg font-bold text-gray-800">Tên</span>
           </label>
           <input
             autoFocus={true}
             type="text"
-            className="input validator input-bordered w-full"
+            className="input validator input-bordered w-full rounded-none"
             placeholder="Nhập tên đầy đủ của sản phẩm"
             {...register("name", { required: "Tên không được trống" })}
           />
@@ -157,10 +157,10 @@ const EditProductForm = ({ model }: { model: AdminProductResponse }) => {
 
         <div>
           <label className="label">
-            <span className="label-text">Mô tả</span>
+            <span className="label-text text-lg font-bold text-gray-800">Mô tả</span>
           </label>
           <textarea
-            className="textarea validator textarea-bordered w-full"
+            className="textarea validator textarea-bordered w-full rounded-none"
             placeholder="Nhập mô tả chi tiết (không bắt buộc)"
             {...register("description", {
               maxLength: {
@@ -173,11 +173,11 @@ const EditProductForm = ({ model }: { model: AdminProductResponse }) => {
 
         <div>
           <label className="label">
-            <span className="label-text">Giá gốc</span>
+            <span className="label-text text-lg font-bold text-gray-800">Giá gốc</span>
           </label>
           <input
             type="number"
-            className="input input-bordered w-full"
+            className="input input-bordered w-full rounded-none"
             placeholder="Giá nhập hàng vào"
             {...register("actualPrice", {
               valueAsNumber: true,
@@ -191,12 +191,12 @@ const EditProductForm = ({ model }: { model: AdminProductResponse }) => {
 
         <div>
           <label className="label">
-            <span className="label-text">Giá bán</span>
+            <span className="label-text text-lg font-bold text-gray-800">Giá bán</span>
           </label>
 
           <input
             type="number"
-            className="input input-bordered w-full"
+            className="input input-bordered w-full rounded-none"
             placeholder="Nhập giá bán cho khách hàng"
             {...register("sellPrice", {
               valueAsNumber: true,
@@ -213,11 +213,11 @@ const EditProductForm = ({ model }: { model: AdminProductResponse }) => {
 
         <div>
           <label className="label">
-            <span className="label-text">Loại</span>
+            <span className="label-text text-lg font-bold text-gray-800">Loại</span>
           </label>
           <input
             type="text"
-            className="input validator input-bordered w-full"
+            className="input validator input-bordered w-full rounded-none"
             placeholder="Tên phân loại"
             {...register("type", { required: "Tên không được trống" })}
           />
@@ -225,11 +225,11 @@ const EditProductForm = ({ model }: { model: AdminProductResponse }) => {
 
         <div>
           <label className="label">
-            <span className="label-text">Số lượng</span>
+            <span className="label-text text-lg font-bold text-gray-800">Số lượng</span>
           </label>
           <input
             type="number"
-            className="input input-bordered w-full"
+            className="input input-bordered w-full rounded-none"
             defaultValue={model.stock}
             disabled
           />
@@ -237,7 +237,7 @@ const EditProductForm = ({ model }: { model: AdminProductResponse }) => {
 
         <div>
           <label className="label">
-            <span className="label-text">Nhãn hiệu</span>
+            <span className="label-text text-lg font-bold text-gray-800">Nhãn hiệu</span>
           </label>
           <Controller
             control={control}
@@ -268,6 +268,11 @@ const EditProductForm = ({ model }: { model: AdminProductResponse }) => {
               return (
                 <Select
                   className="w-full validator"
+                  classNames={{
+                    control: ({ isFocused }) =>
+                      `!rounded-none !shadow-none !border-gray-300 ${isFocused ? '!border-gray-400' : ''}`,
+                    menu: () => "!rounded-none",
+                  }}
                   options={
                     pageInfo?.content?.map(mapBrandDTOToSelectOption) || []
                   }
@@ -296,25 +301,25 @@ const EditProductForm = ({ model }: { model: AdminProductResponse }) => {
 
         <div className="flex items-center space-x-4">
           <label className="label cursor-pointer">
-            <span className="label-text">Hiển thị với khách hàng</span>
+            <span className="label-text text-base font-semibold text-gray-800">Hiển thị với khách hàng</span>
             <input
               type="checkbox"
-              className="checkbox"
+              className="checkbox rounded-none"
               {...register("visible")}
             />
           </label>
 
           <label className="label cursor-pointer">
-            <span className="label-text">Đang kinh doanh</span>
+            <span className="label-text text-base font-semibold text-gray-800">Đang kinh doanh</span>
             <input
               type="checkbox"
-              className="checkbox"
+              className="checkbox rounded-none"
               {...register("active")}
             />
           </label>
         </div>
 
-        <label className="fieldset-label">Ảnh minh họa</label>
+        <label className="label-text text-lg font-bold text-gray-800">Ảnh minh họa</label>
 
         {
           // Preview product image
@@ -389,7 +394,10 @@ const EditProductForm = ({ model }: { model: AdminProductResponse }) => {
         </div>
 
         <div className="text-right">
-          <button type="submit" className="btn btn-primary">
+          <button
+            type="submit"
+            className="btn rounded-none border-none bg-[#e20000] hover:bg-[#c10000] text-white font-semibold px-6 py-2 transition-all duration-200 hover:-translate-y-[1px]"
+          >
             Lưu
           </button>
         </div>

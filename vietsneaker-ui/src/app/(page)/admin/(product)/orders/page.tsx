@@ -15,6 +15,7 @@ import { usePage } from "@/lib/hooks/use-page-search";
 
 const OrderSummaryPage = () => {
   const [currentStatus, setCurrentStatus] = useState<OrderStatusType>();
+
   const handleStatusChange = (event: ChangeEvent<HTMLInputElement>) => {
     setCurrentStatus(event.target.value as OrderStatusType);
   };
@@ -23,7 +24,7 @@ const OrderSummaryPage = () => {
     try {
       const resp = await AdminOrderControllerService.getOrderSummary(
         currentStatus,
-        page - 1,
+        page - 1
       );
       if (pageInfo) setPageInfo(resp);
       return pageInfo;
@@ -46,19 +47,65 @@ const OrderSummaryPage = () => {
   }
 
   return (
-    <AdminMainCard title="Danh sách đơn hàng" goBack={false}>
-      <div className="container mx-auto px-4 py-8">
-        <div className="container mx-auto p-10 overflow-x-auto">
-          <div className="tabs tabs-lift tabs-xl">
-            {/* All status order */}
+    <AdminMainCard title="DANH SÁCH ĐƠN HÀNG" goBack={false}>
+      <div className="w-full min-h-screen flex flex-col items-center bg-white px-10 py-8">
+        {/* 🧭 Tabs hiển thị trạng thái đơn hàng */}
+        <div className="w-full flex flex-wrap justify-center gap-3 mb-6">
+          {/* Tab “Tất cả” */}
+          <label className="cursor-pointer">
             <input
               type="radio"
               name="status"
-              className="tab"
+              className="hidden"
+              onChange={() => setCurrentStatus(undefined)}
+              defaultChecked
+            />
+            <div
+              className={`px-5 py-2 text-sm font-medium rounded-full border ${
+                currentStatus === undefined
+                  ? "bg-[#e20000] text-white border-[#e20000]"
+                  : "bg-white text-gray-700 border-gray-300 hover:bg-gray-100"
+              } transition-colors duration-200`}
+            >
+              Tất cả
+            </div>
+          </label>
+
+          {/* Các tab trạng thái khác */}
+          {Object.entries(OrderStatusDict).map(([status, value]) => {
+            const isActive = currentStatus === value;
+            return (
+              <label key={status} className="cursor-pointer">
+                <input
+                  type="radio"
+                  name="status"
+                  className="hidden"
+                  value={value}
+                  onChange={handleStatusChange}
+                />
+                <div
+                  className={`px-5 py-2 text-sm font-medium rounded-full border ${
+                    isActive
+                      ? "bg-[#e20000] text-white border-[#e20000]"
+                      : "bg-white text-gray-700 border-gray-300 hover:bg-gray-100"
+                  } transition-colors duration-200`}
+                >
+                  {getOrderStatusLabel(status as OrderStatusType)}
+                </div>
+              </label>
+            );
+          })}
+        </div>
+
+        {/* 🧾 Giữ nguyên cấu trúc gốc — logic cũ hoạt động */}
+        <div className="container mx-auto p-10 overflow-x-auto">
+          <div className="tabs tabs-lift tabs-xl">
+            {/* Tab “Tất cả” */}
+            <input
+              type="radio"
+              name="status-table"
+              className="tab hidden"
               aria-label="Tất cả"
-              onChange={() => {
-                setCurrentStatus(undefined);
-              }}
               defaultChecked
             />
             <AdminOrderTable
@@ -66,31 +113,30 @@ const OrderSummaryPage = () => {
               onOrdersChange={handleOrdersChange}
             />
 
-            {
-              // Filter for each order status
-              Object.entries(OrderStatusDict).map(([status, value]) => (
-                <Fragment key={status}>
-                  <input
-                    type="radio"
-                    name="status"
-                    className="tab"
-                    value={value}
-                    aria-label={getOrderStatusLabel(status as OrderStatusType)}
-                    onChange={handleStatusChange}
-                  />
-                  <AdminOrderTable
-                    key={status}
-                    orders={pageInfo.content || []}
-                    onOrdersChange={handleOrdersChange}
-                  />
-                </Fragment>
-              ))
-            }
+            {/* Các tab trạng thái khác */}
+            {Object.entries(OrderStatusDict).map(([status, value]) => (
+              <Fragment key={status}>
+                <input
+                  type="radio"
+                  name="status-table"
+                  className="tab hidden"
+                  value={value}
+                  aria-label={getOrderStatusLabel(status as OrderStatusType)}
+                />
+                <AdminOrderTable
+                  key={status}
+                  orders={pageInfo.content || []}
+                  onOrdersChange={handleOrdersChange}
+                />
+              </Fragment>
+            ))}
           </div>
         </div>
-      </div>
-      <div className="flex justify-center">
-        <PageController setPage={setPage} page={pageInfo} />
+
+        {/* 📄 Bộ phân trang */}
+        <div className="flex justify-center mt-6">
+          <PageController setPage={setPage} page={pageInfo} />
+        </div>
       </div>
     </AdminMainCard>
   );

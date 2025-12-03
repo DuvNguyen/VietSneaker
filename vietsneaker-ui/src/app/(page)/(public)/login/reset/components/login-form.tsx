@@ -98,11 +98,21 @@ export const LoginForm = () => {
           {errors.root && <ErrorText>{errors.root.message}</ErrorText>}
         </div>
       </div>
+      {/* Forgot password */}
+      <div className="text-right text-sm mt-2">
+        <button
+          type="button"
+          onClick={() => router.push("/login/reset")}
+          className="text-[#ef4444] hover:text-[#b91c1c] transition-colors font-medium"
+        >
+          Quên mật khẩu?
+        </button>
+      </div>
       <button
         type="submit"
-        className={`w-full bg-yellow-400 text-white p-3 rounded mt-7 font-semibold shadow-md hover:opacity-75"`}
+        className={`w-full bg-red-500 text-white p-3 rounded mt-7 font-semibold shadow-md hover:opacity-75"`}
       >
-        Tiếp theo
+        Đăng nhập
       </button>
     </form>
   );

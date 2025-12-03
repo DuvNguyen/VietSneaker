@@ -8,7 +8,7 @@ import CreateProductForm from "./components/create-product-form";
 const NewProductPage = ({}) => {
   return (
     <>
-      <AdminMainCard title="Sản phẩm mới" goBack={true}>
+      <AdminMainCard title="SẢN PHẨM MỚI" goBack={true}>
         <CreateProductForm />
       </AdminMainCard>
     </>

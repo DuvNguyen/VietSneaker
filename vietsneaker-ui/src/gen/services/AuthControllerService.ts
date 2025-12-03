@@ -26,18 +26,18 @@ export class AuthControllerService {
     });
   }
   /**
-   * @param clockeeRefresh
+   * @param vietsneakerRefresh
    * @returns RefreshTokenResponse OK
    * @throws ApiError
    */
   public static refreshAccessToken(
-    clockeeRefresh?: string,
+    vietsneakerRefresh?: string,
   ): CancelablePromise<RefreshTokenResponse> {
     return __request(OpenAPI, {
       method: "POST",
       url: "/auth/refresh",
       cookies: {
-        "clockee-refresh": clockeeRefresh,
+        "vietsneaker-refresh": vietsneakerRefresh,
       },
     });
   }

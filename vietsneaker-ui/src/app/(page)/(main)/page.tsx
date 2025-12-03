@@ -39,10 +39,10 @@ export default function HomePage() {
   return (
     <>
       <img
-        src="/carosel.png"
-        width={700}
-        height={500}
-        className="w-full"
+        src="/dat1.jpg"
+        width={1920}
+        height={800}
+        className="w-full h-[500px] object-cover"
         alt="calrosel"
       />
 

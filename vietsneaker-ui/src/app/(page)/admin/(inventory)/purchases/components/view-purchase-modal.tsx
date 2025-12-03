@@ -1,8 +1,8 @@
 import DataTable from "@/app/components/common/data-table";
-import ClockeeModal from "@/app/components/modal/modal";
 import React from "react";
 import PurchaseDetailsTableRow from "./purchase-details-table-row";
 import { PurchaseDetails, PurchaseItemDetails } from "@/gen";
+import VietSneakerModal from "@/app/components/modal/modal";
 
 /**
  * For user to add single purchase item in a list
@@ -20,7 +20,7 @@ const PurchaseDetailsModal = ({
   model?: PurchaseDetails;
 }) => {
   return (
-    <ClockeeModal isOpen={isOpen} onClose={onClose} width={"40rem"}>
+    <VietSneakerModal isOpen={isOpen} onClose={onClose} width={"40rem"}>
       <fieldset className="fieldset w-full p-4 rounded-box space-y-4 text-left">
         <div className="flex flex-col gap-2 items-center overflow-y-auto flex-grow">
           <DataTable<PurchaseItemDetails>
@@ -50,7 +50,7 @@ const PurchaseDetailsModal = ({
           Thoát
         </button>
       </fieldset>
-    </ClockeeModal>
+    </VietSneakerModal>
   );
 };
 
