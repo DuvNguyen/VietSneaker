@@ -16,7 +16,7 @@ build:
 # Do not use mvn spring-boot:run without any specify prod profile. It will not work!
 build-window:
 	mvn package -D maven.test.skip=true
-	java -jar .\target\clockee-server-0.0.1-SNAPSHOT.jar --spring.profiles.active=prod
+	java -jar .\target\vietsneaker-server-0.0.1-SNAPSHOT.jar --spring.profiles.active=prod
 
 
 

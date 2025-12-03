@@ -23,22 +23,22 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Build and push clockee-server image
+      - name: Build and push vietsneaker-server image
         uses: docker/build-push-action@v5
         with:
-          context: ./clockee-server
-          file: ./clockee-server/Dockerfile.prod
+          context: ./vietsneaker-server
+          file: ./vietsneaker-server/Dockerfile.prod
           push: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
           tags: |
-            ${{ secrets.DOCKERHUB_USERNAME }}/clockee-server:latest
-            ${{ secrets.DOCKERHUB_USERNAME }}/clockee-server:${{ github.sha }}
+            ${{ secrets.DOCKERHUB_USERNAME }}/vietsneaker-server:latest
+            ${{ secrets.DOCKERHUB_USERNAME }}/vietsneaker-server:${{ github.sha }}
 
-      - name: Build and push clockee-web image
+      - name: Build and push vietsneaker-web image
         uses: docker/build-push-action@v5
         with:
-          context: ./clockee-ui
-          file: ./clockee-ui/Dockerfile.prod
+          context: ./vietsneaker-ui
+          file: ./vietsneaker-ui/Dockerfile.prod
           push: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
           tags: |
-            ${{ secrets.DOCKERHUB_USERNAME }}/clockee-web:latest
-            ${{ secrets.DOCKERHUB_USERNAME }}/clockee-web:${{ github.sha }}
+            ${{ secrets.DOCKERHUB_USERNAME }}/vietsneaker-web:latest
+            ${{ secrets.DOCKERHUB_USERNAME }}/vietsneaker-web:${{ github.sha }}

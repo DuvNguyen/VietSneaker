@@ -23,10 +23,10 @@ jobs:
           cache: "maven"
 
       - name: Make mvnw executable
-        run: chmod +x ./clockee-server/mvnw
+        run: chmod +x ./vietsneaker-server/mvnw
 
       - name: Verify
-        working-directory: ./clockee-server
+        working-directory: ./vietsneaker-server
         run: ./mvnw  verify
 
 
@@ -35,7 +35,7 @@ jobs:
     runs-on:  ubuntu-latest
     defaults:
       run:
-        working-directory: ./clockee-ui
+        working-directory: ./vietsneaker-ui
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -45,7 +45,7 @@ jobs:
         with:
           node-version: 18
           cache: "npm"
-          cache-dependency-path: ./clockee-ui/package-lock.json
+          cache-dependency-path: ./vietsneaker-ui/package-lock.json
 
 
       - name: Install dependencies
