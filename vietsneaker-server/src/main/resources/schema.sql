@@ -90,14 +90,39 @@ CREATE TABLE order_items (
     FOREIGN KEY (product_id) REFERENCES products(product_id)
 );
 
+-- CREATE TABLE suppliers (
+--     supplier_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+--     name VARCHAR(255) NOT NULL,
+--     address VARCHAR(255),
+--     phone VARCHAR(20),
+--     email VARCHAR(255),
+--     is_deleted BOOLEAN DEFAULT 0
+-- );
+
 CREATE TABLE suppliers (
     supplier_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    
+    -- Thông tin cơ bản
     name VARCHAR(255) NOT NULL,
-    address VARCHAR(255),
+    supplier_type ENUM('PERSON','SHOP','WHOLESALE','CONSIGN') DEFAULT 'PERSON',  -- Loại NCC
+    
+    -- Liên hệ
     phone VARCHAR(20),
     email VARCHAR(255),
+    zalo VARCHAR(100),
+    facebook VARCHAR(255),
+
+    -- Địa chỉ
+    address VARCHAR(255),
+
+    -- Đánh giá
+    rating INT DEFAULT 5,               -- Uy tín: 1–5
+    total_transactions BIGINT DEFAULT 0, -- Lịch sử giao dịch
+    notes TEXT,                          -- Ghi chú nội bộ
+
     is_deleted BOOLEAN DEFAULT 0
 );
+
 
 CREATE TABLE purchases (
     purchase_id BIGINT AUTO_INCREMENT PRIMARY KEY,

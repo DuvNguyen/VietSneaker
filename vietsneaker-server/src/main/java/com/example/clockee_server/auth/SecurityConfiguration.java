@@ -90,7 +90,8 @@ public class SecurityConfiguration {
   public CorsConfigurationSource corsConfigurationSource() {
     CorsConfiguration config = new CorsConfiguration();
     // Dùng allowedOriginPatterns để dev localhost + credentials
-    config.setAllowedOriginPatterns(List.of("http://localhost:3000"));
+    // config.setAllowedOriginPatterns(List.of("http://localhost:3000"));
+    config.setAllowedOriginPatterns(List.of("http://localhost:3000", "https://localhost:3000"));
     config.setAllowedMethods(List.of("GET","POST","PUT","DELETE","OPTIONS","PATCH"));
     config.setAllowedHeaders(List.of("Content-Type","Authorization","X-Requested-With","Accept","Origin"));
     config.setExposedHeaders(List.of("Location"));

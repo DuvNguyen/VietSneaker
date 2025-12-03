@@ -5,75 +5,117 @@ import com.example.clockee_server.payload.dto.SupplierDTO;
 import com.example.clockee_server.repository.SupplierRepository;
 import com.example.clockee_server.specification.SupplierSpecification;
 import jakarta.validation.constraints.NotNull;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.*;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class SupplierService {
-  @Autowired private SupplierRepository supplierRepository;
 
-  public Page<SupplierDTO> getAllSuppliers(int page, int size, @NotNull String name) {
-    Pageable pageable = PageRequest.of(page, size);
-    Specification<Supplier> specification =
-        SupplierSpecification.searchByName(name).and(SupplierSpecification.isDeleted());
-    return supplierRepository
-        .findAll(specification, pageable)
-        .map(
-            s ->
-                new SupplierDTO(
-                    s.getSupplierId(), s.getName(), s.getAddress(), s.getPhone(), s.getEmail()));
-  }
+    @Autowired 
+    private SupplierRepository supplierRepository;
 
-  public SupplierDTO addSupplier(SupplierDTO dto) {
-    Supplier supplier =
-        Supplier.builder()
-            .name(dto.getName())
-            .address(dto.getAddress())
-            .phone(dto.getPhone())
-            .email(dto.getEmail())
-            .isDeleted(false)
-            .build();
-    Supplier saved = supplierRepository.save(supplier);
-    return new SupplierDTO(
-        saved.getSupplierId(),
-        saved.getName(),
-        saved.getAddress(),
-        saved.getPhone(),
-        saved.getEmail());
-  }
+    // ---------------------------
+    // GET ALL + SEARCH + PAGING
+    // ---------------------------
+    public Page<SupplierDTO> getAllSuppliers(int page, int size, @NotNull String name) {
+        Pageable pageable = PageRequest.of(page, size);
+        Specification<Supplier> specification =
+                SupplierSpecification.searchByName(name)
+                        .and(SupplierSpecification.isDeleted());
 
-  public SupplierDTO updateSupplier(Long id, SupplierDTO dto) {
-    Optional<Supplier> supplierOptional = supplierRepository.findById(id);
-    if (supplierOptional.isPresent()) {
-      Supplier supplier = supplierOptional.get();
-      supplier.setName(dto.getName());
-      supplier.setAddress(dto.getAddress());
-      supplier.setPhone(dto.getPhone());
-      supplier.setEmail(dto.getEmail());
-      Supplier supplierUpdated = supplierRepository.save(supplier);
-      return new SupplierDTO(
-          supplierUpdated.getSupplierId(),
-          supplierUpdated.getName(),
-          supplierUpdated.getAddress(),
-          supplierUpdated.getPhone(),
-          supplierUpdated.getEmail());
+        return supplierRepository.findAll(specification, pageable)
+                .map(this::convertToDTO);
     }
-    throw new RuntimeException("Supplier not found");
-  }
 
-  public void deletedSupplier(Long id) {
-    Optional<Supplier> supplierOptional = supplierRepository.findById(id);
-    supplierOptional.ifPresent(
-        sup -> {
-          sup.setIsDeleted(true);
-          supplierRepository.save(sup);
+    // ---------------------------
+    // ADD NEW SUPPLIER
+    // ---------------------------
+    public SupplierDTO addSupplier(SupplierDTO dto) {
+
+        Supplier supplier = Supplier.builder()
+                .name(dto.getName())
+                .address(dto.getAddress())
+                .phone(dto.getPhone())
+                .email(dto.getEmail())
+                .isDeleted(false)
+
+                // New fields
+                .supplierType(dto.getSupplierType())
+                .zalo(dto.getZalo())
+                .facebook(dto.getFacebook())
+                .rating(dto.getRating() != null ? dto.getRating() : 5)
+                .totalTransactions(0L)
+                .notes(dto.getNotes())
+                .build();
+
+        Supplier saved = supplierRepository.save(supplier);
+        return convertToDTO(saved);
+    }
+
+    // ---------------------------
+    // UPDATE SUPPLIER
+    // ---------------------------
+    public SupplierDTO updateSupplier(Long id, SupplierDTO dto) {
+        Optional<Supplier> supplierOptional = supplierRepository.findById(id);
+
+        if (supplierOptional.isEmpty()) {
+            throw new RuntimeException("Supplier not found");
+        }
+
+        Supplier supplier = supplierOptional.get();
+
+        supplier.setName(dto.getName());
+        supplier.setAddress(dto.getAddress());
+        supplier.setPhone(dto.getPhone());
+        supplier.setEmail(dto.getEmail());
+
+        // New fields
+        supplier.setSupplierType(dto.getSupplierType());
+        supplier.setZalo(dto.getZalo());
+        supplier.setFacebook(dto.getFacebook());
+        supplier.setRating(dto.getRating());
+        supplier.setNotes(dto.getNotes());
+
+        // totalTransactions không dùng update từ FE
+
+        Supplier updated = supplierRepository.save(supplier);
+        return convertToDTO(updated);
+    }
+
+    // ---------------------------
+    // SOFT DELETE
+    // ---------------------------
+    public void deletedSupplier(Long id) {
+        supplierRepository.findById(id).ifPresent(supplier -> {
+            supplier.setIsDeleted(true);
+            supplierRepository.save(supplier);
         });
-  }
+    }
+
+    // ---------------------------
+    // CONVERTER
+    // ---------------------------
+    private SupplierDTO convertToDTO(Supplier s) {
+        return SupplierDTO.builder()
+                .supplierId(s.getSupplierId())
+                .name(s.getName())
+                .address(s.getAddress())
+                .phone(s.getPhone())
+                .email(s.getEmail())
+
+                // New fields
+                .supplierType(s.getSupplierType())
+                .zalo(s.getZalo())
+                .facebook(s.getFacebook())
+                .rating(s.getRating())
+                .totalTransactions(s.getTotalTransactions())
+                .notes(s.getNotes())
+                .build();
+    }
 }
