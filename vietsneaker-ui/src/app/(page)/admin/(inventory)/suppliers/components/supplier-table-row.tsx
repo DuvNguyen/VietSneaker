@@ -28,15 +28,7 @@ const SupplierTableRow = ({
   };
 
   return (
-    <tr
-      className="
-        border-b border-gray-200
-        odd:bg-white even:bg-gray-50
-        hover:bg-[#fff0f0]
-        transition-colors duration-200
-        text-center text-[15px] text-gray-700
-      "
-    >
+    <tr className="border-b border-gray-200 odd:bg-white even:bg-gray-50 hover:bg-[#fff0f0] transition-colors duration-200 text-center text-[15px] text-gray-700">
       {/* 🧩 Modals */}
       <EditSupplierModal
         isOpen={isEditModal}
@@ -52,43 +44,57 @@ const SupplierTableRow = ({
         content="Bạn có muốn xóa nhà cung cấp này?"
       />
 
-      {/* 🧾 Cột ID */}
-      <td className="p-3 font-medium text-gray-800 w-[8%] whitespace-nowrap">
-        {item.supplierId}
-      </td>
+      {/* 🆔 ID */}
+      <td className="p-3 font-medium text-gray-800">{item.supplierId}</td>
 
-      {/* 🏷️ Cột Tên */}
-      <td className="p-3 w-[20%] truncate" title={item.name}>
-        {item.name}
-      </td>
+      {/* 🏷️ Tên */}
+      <td className="p-3 truncate" title={item.name}>{item.name}</td>
 
-      {/* 🏠 Cột Địa chỉ (giới hạn chiều rộng để tránh tràn) */}
-      <td className="p-3 w-[28%] max-w-[250px] truncate" title={item.address}>
+      {/* 🏠 Địa chỉ */}
+      <td className="p-3 truncate max-w-[250px]" title={item.address}>
         {item.address}
       </td>
 
-      {/* 📞 Cột SĐT */}
-      <td className="p-3 w-[15%] whitespace-nowrap">{item.phone}</td>
+      {/* 📞 SĐT */}
+      <td className="p-3 whitespace-nowrap">{item.phone}</td>
 
-      {/* ✉️ Cột Email */}
-      <td className="p-3 w-[20%] truncate" title={item.email}>
-        {item.email}
+      {/* ✉️ Email */}
+      <td className="p-3 truncate">{item.email}</td>
+
+      {/* 🧪 Loại NCC */}
+      <td className="p-3">{item.supplierType}</td>
+
+      {/* 📱 Zalo */}
+      <td className="p-3">{item.zalo || "-"}</td>
+
+      {/* 🌐 Facebook */}
+      <td className="p-3">
+        {item.facebook ? (
+          <a 
+            href={item.facebook} 
+            target="_blank"
+            className="text-blue-600 underline"
+          >
+            Link
+          </a>
+        ) : "-"}
       </td>
 
-      {/* ✏️ Cột sửa */}
+      {/* ⭐ Rating */}
+      <td className="p-3">{item.rating} ⭐</td>
+
+      {/* ✏️ Sửa */}
       <td
+        className="p-3 cursor-pointer hover:bg-[#fff0f0] transition"
         onClick={() => setIsEditModal(true)}
-        className="p-3 w-[4%] cursor-pointer hover:bg-[#fff0f0] transition"
-        title="Chỉnh sửa"
       >
         <i className="fa fa-edit text-[#e20000] hover:scale-110 transition-transform"></i>
       </td>
 
-      {/* 🗑️ Cột xóa */}
+      {/* 🗑 Xóa */}
       <td
+        className="p-3 cursor-pointer hover:bg-[#fff0f0] transition"
         onClick={() => setIsOpenConfirmModal(true)}
-        className="p-3 w-[4%] cursor-pointer hover:bg-[#fff0f0] transition"
-        title="Xóa nhà cung cấp"
       >
         <i className="fa fa-trash text-red-600 hover:scale-110 transition-transform"></i>
       </td>
