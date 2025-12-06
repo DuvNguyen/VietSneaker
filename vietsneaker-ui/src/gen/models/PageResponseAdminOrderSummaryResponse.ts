@@ -2,14 +2,15 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { AdminOrderSummaryResponse } from "./AdminOrderSummaryResponse";
+import type { AdminOrderSummaryResponse } from './AdminOrderSummaryResponse';
 export type PageResponseAdminOrderSummaryResponse = {
-  page?: number;
-  size?: number;
-  totalElements?: number;
-  totalPages?: number;
-  content?: Array<AdminOrderSummaryResponse>;
-  first?: boolean;
-  last?: boolean;
-  empty?: boolean;
+    page?: number;
+    size?: number;
+    totalElements?: number;
+    totalPages?: number;
+    content?: Array<AdminOrderSummaryResponse>;
+    first?: boolean;
+    last?: boolean;
+    empty?: boolean;
 };
+

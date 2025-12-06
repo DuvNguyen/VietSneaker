@@ -2,10 +2,11 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { Product } from "./Product";
+import type { Product } from './Product';
 export type Brand = {
-  brandId?: number;
-  name?: string;
-  isDeleted?: boolean;
-  products?: Array<Product>;
+    brandId?: number;
+    name?: string;
+    isDeleted?: boolean;
+    products?: Array<Product>;
 };
+

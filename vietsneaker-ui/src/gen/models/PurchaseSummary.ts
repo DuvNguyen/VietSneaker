@@ -3,9 +3,10 @@
 /* tslint:disable */
 /* eslint-disable */
 export type PurchaseSummary = {
-  purchaseId?: number;
-  totalPrice?: number;
-  createdAt?: string;
-  status?: string;
-  createdByUsername?: string;
+    purchaseId?: number;
+    totalPrice?: number;
+    createdAt?: string;
+    status?: string;
+    createdByUsername?: string;
 };
+

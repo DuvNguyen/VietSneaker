@@ -3,9 +3,10 @@
 /* tslint:disable */
 /* eslint-disable */
 export type PurchaseItemDetails = {
-  productName?: string;
-  supplierName?: string;
-  productImage?: string;
-  quantity?: number;
-  price?: number;
+    productName?: string;
+    supplierName?: string;
+    productImage?: string;
+    quantity?: number;
+    price?: number;
 };
+

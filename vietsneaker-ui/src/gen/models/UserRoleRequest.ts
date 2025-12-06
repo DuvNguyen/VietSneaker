@@ -3,6 +3,7 @@
 /* tslint:disable */
 /* eslint-disable */
 export type UserRoleRequest = {
-  userId?: number;
-  role?: string;
+    userId?: number;
+    role?: string;
 };
+
