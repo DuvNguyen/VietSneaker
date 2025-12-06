@@ -81,7 +81,7 @@ const SupplierTableRow = ({
       </td>
 
       {/* ⭐ Rating */}
-      <td className="p-3">{item.rating} ⭐</td>
+      <td className="p-3">{item.rating} / 5</td>
 
       {/* ✏️ Sửa */}
       <td
