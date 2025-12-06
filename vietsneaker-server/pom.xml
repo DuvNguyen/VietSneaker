@@ -10,9 +10,9 @@
     <relativePath /> <!-- lookup parent from repository -->
   </parent>
   <groupId>com.example</groupId>
-  <artifactId>clockee-server</artifactId>
+  <artifactId>vietsneaker-server</artifactId>
   <version>0.0.1-SNAPSHOT</version>
-  <name>clockee</name>
+  <name>vietsneaker</name>
   <description>Demo project for Spring Boot</description>
   <url />
   <licenses>
@@ -280,7 +280,7 @@
           <jsonLibrary>jackson2</jsonLibrary>
           <generateSpringApplicationClient>true</generateSpringApplicationClient>
           <classesWithAnnotations>
-            <classesWithAnnotation>com.example.clockee_server.util.Client</classesWithAnnotation>
+            <classesWithAnnotation>com.example.vietsneaker_server.util.Client</classesWithAnnotation>
           </classesWithAnnotations>
           <outputKind>module</outputKind>
           <mapEnum>asEnum</mapEnum>

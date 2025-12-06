@@ -56,7 +56,7 @@ export default function SupplierAdminPage() {
         {/* 📋 Bảng danh sách nhà cung cấp */}
         <div className="w-full">
           <table className="w-full border-collapse table-fixed text-left text-[15px]">
-            <thead className="bg-[#ffcccc] text-gray-800">
+            {/* <thead className="bg-[#ffcccc] text-gray-800">
               <tr>
                 <th className="p-3 border-b border-gray-300 text-center w-[8%]">
                   Mã NCC
@@ -80,7 +80,23 @@ export default function SupplierAdminPage() {
                   Xóa
                 </th>
               </tr>
+            </thead> */}
+            <thead className="bg-[#ffcccc] text-gray-800">
+              <tr>
+                <th className="p-3 border-b border-gray-300 text-center w-[6%]">Mã</th>
+                <th className="p-3 border-b border-gray-300 text-center w-[15%]">Tên</th>
+                <th className="p-3 border-b border-gray-300 text-center w-[18%]">Địa chỉ</th>
+                <th className="p-3 border-b border-gray-300 text-center w-[12%]">SĐT</th>
+                <th className="p-3 border-b border-gray-300 text-center w-[10%]">Email</th>
+                <th className="p-3 border-b border-gray-300 text-center w-[10%]">Loại</th>
+                <th className="p-3 border-b border-gray-300 text-center w-[10%]">Zalo</th>
+                <th className="p-3 border-b border-gray-300 text-center w-[10%]">Facebook</th>
+                <th className="p-3 border-b border-gray-300 text-center w-[5%]">⭐</th>
+                <th className="p-3 border-b border-gray-300 text-center w-[4%]">Sửa</th>
+                <th className="p-3 border-b border-gray-300 text-center w-[4%]">Xóa</th>
+              </tr>
             </thead>
+
 
             <tbody>
               {(pageInfo?.content ?? []).length > 0 ? (
