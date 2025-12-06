@@ -26,6 +26,7 @@ export class UserProductControllerService {
     size: number = 10,
     name: string = "",
     type: string = "",
+    shoeSize?: string, // <--- THÊM DÒNG NÀY VÀO ĐÂY (Vị trí thứ 5)
     maxPrice?: number,
     brandId?: number,
     sortBy: string = "",
@@ -38,6 +39,7 @@ export class UserProductControllerService {
         size: size,
         name: name,
         type: type,
+        'shoeSize': shoeSize, // <--- VÀ THÊM DÒNG NÀY
         maxPrice: maxPrice,
         brandId: brandId,
         sortBy: sortBy,

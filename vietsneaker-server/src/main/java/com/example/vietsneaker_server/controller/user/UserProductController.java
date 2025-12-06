@@ -24,13 +24,13 @@ public class UserProductController {
 
   @Autowired UserProductService userProductService;
 
-  // Api có phân trang (trả về theo từng trang)
   @GetMapping
   public ResponseEntity<Page<ProductSummaryResponse>> getAllProducts(
       @RequestParam(defaultValue = ApplicationConstants.PAGE_NUMBER) int page,
       @RequestParam(defaultValue = ApplicationConstants.PAGE_SIZE) int size,
       @RequestParam(value = "name", defaultValue = "") String name,
       @RequestParam(value = "type", defaultValue = "") String type,
+      // Đã khớp với Frontend: URL gửi ?shoeSize=40 thì biến này nhận được giá trị "40"
       @RequestParam(value = "shoeSize", defaultValue = "") String shoeSize,
       @RequestParam(value = "maxPrice", defaultValue = "0") Double maxPrice,
       @RequestParam(value = "brandId", required = false) Long brandId,
@@ -58,7 +58,6 @@ public class UserProductController {
     return ResponseEntity.ok(products);
   }
 
-  // Api lấy sản phẩm theo id
   @GetMapping("/{id}")
   public ResponseEntity<ProductDetailsResponse> getProductById(@PathVariable Long id) {
     ProductDetailsResponse product = userProductService.getProductById(id);

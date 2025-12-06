@@ -1,12 +1,9 @@
 package com.example.vietsneaker_server.specification;
 
 import ch.qos.logback.core.util.StringUtil;
-
 import org.springframework.data.jpa.domain.Specification;
-
 import com.example.vietsneaker_server.entity.Product;
 
-/** ProductSpecification */
 public class ProductSpecification {
 
   public static Specification<Product> searchByName(String name) {
@@ -24,17 +21,16 @@ public class ProductSpecification {
     return (root, query, builder) -> builder.equal(root.get("type"), type);
   }
 
-  /**
-   * StringUtil.isNullOrEmpty(size) → kiểm tra chuỗi rỗng/null
-   * root.get("size") → trỏ tới field size trong entity Product
-   * builder.equal(...) → tìm chính xác bằng giá trị bạn truyền (ví dụ "42")
-   */
+  // --- PHẦN ĐÃ SỬA ---
   public static Specification<Product> searchByShoeSize(String shoeSize) {
     if (StringUtil.isNullOrEmpty(shoeSize)){
       return null;
     }
-    return (root, query, builder) -> builder.like(root.get("size"),"%" +  shoeSize + "%");
+    // Sửa 1: Đổi "size" thành "shoeSize" để khớp với field trong file Product.java
+    // Sửa 2: Đổi "like" thành "equal" để tìm chính xác size (ví dụ tìm 40 ra 40, không ra 40.5)
+    return (root, query, builder) -> builder.equal(root.get("shoeSize"), shoeSize);
   }
+  // -------------------
 
   public static Specification<Product> belowPrice(Double maxPrice) {
     if (Double.compare(maxPrice, 0) == 0) {
@@ -50,7 +46,6 @@ public class ProductSpecification {
   public static Specification<Product> latest() {
     return (root, query, criteriaBuilder) -> {
       query.orderBy(criteriaBuilder.desc(root.get("createdAt")));
-      // Not filter just change order
       return criteriaBuilder.conjunction();
     };
   }
@@ -86,10 +81,8 @@ public class ProductSpecification {
       if (separateIndex == -1 || separateIndex == sortQuery.length() - 1) {
         return null;
       }
-
       String sortProperty = sortQuery.substring(0, separateIndex);
-      String sortDirection = sortQuery.substring(separateIndex + 1); // skip '-'
-      //
+      String sortDirection = sortQuery.substring(separateIndex + 1); 
       return sortBy(sortProperty, sortDirection);
     } catch (Exception e) {
       return null;
