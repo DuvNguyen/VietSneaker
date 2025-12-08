@@ -7,7 +7,6 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
 import java.util.*;
 
 @Service
@@ -19,7 +18,7 @@ public class RecommendService {
 
     private final OkHttpClient client = new OkHttpClient();
 
-    // ⭐ Tìm loại sản phẩm được mua nhiều nhất
+    // ⭐ top type
     public String findTopType(List<Map<String, Object>> history) {
         Map<String, Integer> freq = new HashMap<>();
 
@@ -35,16 +34,33 @@ public class RecommendService {
                 .getKey();
     }
 
-    // ⭐ Gửi request sang OpenRouter AI
+    // ⭐ top brand
+    public String findTopBrand(List<Map<String, Object>> history) {
+        Map<String, Integer> freq = new HashMap<>();
+
+        for (Map<String, Object> item : history) {
+            if (item.get("brand") == null) continue;
+
+            String brand = item.get("brand").toString();
+            freq.put(brand, freq.getOrDefault(brand, 0) + 1);
+        }
+
+        if (freq.isEmpty()) return "";
+        return freq.entrySet()
+                .stream()
+                .max(Map.Entry.comparingByValue())
+                .get()
+                .getKey();
+    }
+
+    // ⭐ AI Recommend
     public String askAI(JSONArray historyJson, JSONArray productJson) {
 
-        // PROMPT BẮT BUỘC AI TRẢ VỀ JSON ARRAY THUẦN
         String prompt =
                 "Dưới đây là lịch sử mua hàng và danh sách sản phẩm." +
                 "\nHãy chọn 3 sản phẩm phù hợp nhất, KHÔNG TRÙNG NHAU." +
-                "\nTrả về DUY NHẤT một JSON ARRAY thuần (không thêm chữ, không markdown, không ```json)." +
-                "\nFormat bắt buộc:\n" +
-                "[{\"productId\": 1, \"reason\": \"lý do\"}]\n\n" +
+                "\nTrả về DUY NHẤT JSON ARRAY thuần." +
+                "\nFormat: [{\"productId\": 1, \"reason\": \"...\"}]\n\n" +
                 "Lịch sử: " + historyJson +
                 "\nSản phẩm: " + productJson;
 
@@ -53,7 +69,7 @@ public class RecommendService {
         json.put("messages", new JSONArray()
                 .put(new JSONObject()
                         .put("role", "system")
-                        .put("content", "Bạn là hệ thống gợi ý sneaker, chỉ trả về JSON ARRAY."))
+                        .put("content", "Chỉ trả về JSON ARRAY"))
                 .put(new JSONObject()
                         .put("role", "user")
                         .put("content", prompt)));
@@ -66,6 +82,8 @@ public class RecommendService {
         Request request = new Request.Builder()
                 .url("https://openrouter.ai/api/v1/chat/completions")
                 .header("Authorization", "Bearer " + apiKey)
+                .header("HTTP-Referer", "https://example.com")
+                .header("X-Title", "Vietsneaker")
                 .header("Content-Type", "application/json")
                 .post(body)
                 .build();
@@ -75,33 +93,36 @@ public class RecommendService {
             String raw = response.body().string();
             System.out.println("=== RAW AI RESPONSE ===\n" + raw);
 
-            // Lấy phần content thực từ AI
-            JSONObject obj = new JSONObject(raw);
-            String content = obj
+            // 🛑 1) Nếu AI trả về lỗi -> trả về rỗng
+            if (raw.contains("\"error\"")) {
+                System.out.println("❌ AI ERROR → return empty");
+                return "[]";
+            }
+
+            // 🛑 2) Parse JSON OpenRouter
+            JSONObject full = new JSONObject(raw);
+
+            String content = full
                     .getJSONArray("choices")
                     .getJSONObject(0)
                     .getJSONObject("message")
                     .getString("content")
                     .trim();
 
-            // CẮT BỎ ```json ... ```
+            // xoá ```json ```
             if (content.startsWith("```")) {
                 content = content.substring(content.indexOf("["));
                 content = content.substring(0, content.lastIndexOf("]") + 1);
             }
 
-            // KIỂM TRA JSON ARRAY
-            if (!content.startsWith("[")) {
-                throw new RuntimeException("AI DID NOT RETURN JSON ARRAY: " + content);
-            }
-
-            // Validate JSON
+            // phải là JSON array
             new JSONArray(content);
 
-            return content; // FE nhận đúng dạng JSON ARRAY
+            return content;
         }
         catch (Exception e) {
-            return "ERROR: " + e.getMessage();
+            System.out.println("❌ AI PARSE ERROR: " + e.getMessage());
+            return "[]";
         }
     }
 }

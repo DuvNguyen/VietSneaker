@@ -11,6 +11,7 @@ public class ProductHistoryDTO {
     private Long productId;
     private String name;
     private String type;
+    private String brand;
     private Long quantity;   // Long (khớp OrderItem)
     private Double price;    // Double (khớp OrderItem)
 }

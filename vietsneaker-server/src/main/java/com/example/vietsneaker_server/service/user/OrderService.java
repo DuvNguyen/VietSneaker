@@ -168,6 +168,7 @@ public List<ProductHistoryDTO> getPurchaseHistory(User user) {
                 product.getProductId(),
                 product.getName(),
                 product.getType(),
+                item.getProduct().getBrand().getName(),
                 item.getQuantity(),
                 item.getPrice()
             ));

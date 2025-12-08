@@ -28,16 +28,16 @@ public class RecommendController {
         List<Map<String, Object>> history = (List<Map<String, Object>>) req.get("history");
 
         if (history == null || history.isEmpty()) {
-            return List.of(); // trả về mảng rỗng FE sẽ không lỗi
+            return List.of();
         }
 
-        // 1. Lấy type phổ biến nhất
+        // 1. Lấy type & brand phổ biến
         String type = recommendService.findTopType(history);
+        String brand = recommendService.findTopBrand(history);
 
-        // 2. Lấy danh sách sản phẩm cùng type
-        List<Product> products = productService.getProductsByType(type);
+        // 2. Lấy products theo type OR brand
+        List<Product> products = productService.getProductsByTypeOrBrand(type, brand);
 
-        // Tạo JSON gửi cho AI
         JSONArray historyJson = new JSONArray(history);
 
         JSONArray productJson = new JSONArray();
@@ -46,30 +46,24 @@ public class RecommendController {
                     "productId", p.getProductId(),
                     "name", p.getName(),
                     "type", p.getType(),
+                    "brand", p.getBrand().getName(),
                     "price", p.getSellPrice()
             ));
         }
 
         // 3. Gọi AI
         String aiResult = recommendService.askAI(historyJson, productJson);
-        System.out.println("ProductJson = " + productJson);
-        System.out.println("AI Raw Result = " + aiResult);
+        System.out.println("productJson = " + productJson);
+        System.out.println("AI RAW RESPONSE = " + aiResult);
 
-        // 4. Parse AI JSON ARRAY TRẢ VỀ
-        // 🔥 Quan trọng: AI phải trả về đúng dạng:
-        // [
-        //    {"productId": 1, "reason": "..."},
-        //    {"productId": 3, "reason": "..."}
-        // ]
+        // 4. AIResult LÚC NÀY LÀ JSON ARRAY → chỉ cần parse bằng JSONArray
         try {
-            JSONArray arr = new JSONArray(aiResult);
+            JSONArray arr = new JSONArray(aiResult); // ← THIS IS THE FIX!
 
-            // Convert JSONArray → List<Map>
-            return arr.toList();
-
+            return arr.toList(); // FE cần List<Map>
         } catch (Exception e) {
-            System.out.println("❌ Lỗi parse JSON từ AI: " + e.getMessage());
-            return List.of(); // tránh FE bị lỗi
+            System.out.println("ERROR PARSING AI JSON: " + e.getMessage());
+            return List.of();
         }
     }
 }

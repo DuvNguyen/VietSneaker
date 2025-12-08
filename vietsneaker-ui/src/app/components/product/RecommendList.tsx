@@ -17,8 +17,8 @@ export default function RecommendList({ products }: Props) {
       <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
         {products.map((p: any) => (
           <Link
-            key={p.id}
-            href={`/product/${p.id}`}
+            key={p.productId}
+            href={`/product/${p.productId}`}
             className="border rounded-lg p-3 shadow-sm hover:shadow-lg transition"
           >
             <Image
@@ -28,10 +28,13 @@ export default function RecommendList({ products }: Props) {
               alt={p.name}
               className="rounded-md"
             />
+
             <div className="mt-2 font-semibold">{p.name}</div>
+
             <div className="text-sm text-gray-500">{p.type}</div>
+
             <div className="text-red-500 font-bold">
-              {p.price.toLocaleString()} đ
+              {p.sellPrice?.toLocaleString() ?? p.price?.toLocaleString()} đ
             </div>
           </Link>
         ))}
