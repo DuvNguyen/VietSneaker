@@ -21,7 +21,7 @@ public interface ProductRepository
     JpaSpecificationExecutor<Product> { // để kiểu của khóa chính là Long
 
   List<Product> findTop6BySellPriceLessThanEqualOrderBySellPriceAsc(Double maxPrice);
-  
+  List<Product> findByType(String type);
   List<Product> findBySellPriceLessThanEqual(Double price);
   List<Product> findBySellPriceLessThan(Double price);
 

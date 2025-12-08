@@ -1,4 +1,5 @@
 package com.example.vietsneaker_server.controller.user;
+import com.example.vietsneaker_server.payload.response.ProductHistoryDTO;
 
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -50,4 +51,11 @@ public class OrderController {
     orderService.createOrder(user, request);
     return ResponseEntity.accepted().build();
   }
+
+  @GetMapping("/history")
+  public ResponseEntity<List<ProductHistoryDTO>> getHistory(@CurrentUser User user) {
+    return ResponseEntity.ok(orderService.getPurchaseHistory(user));
+  }
 }
+
+
