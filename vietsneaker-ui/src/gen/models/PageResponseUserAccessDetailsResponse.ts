@@ -2,14 +2,15 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { UserAccessDetailsResponse } from "./UserAccessDetailsResponse";
+import type { UserAccessDetailsResponse } from './UserAccessDetailsResponse';
 export type PageResponseUserAccessDetailsResponse = {
-  page?: number;
-  size?: number;
-  totalElements?: number;
-  totalPages?: number;
-  content?: Array<UserAccessDetailsResponse>;
-  first?: boolean;
-  last?: boolean;
-  empty?: boolean;
+    page?: number;
+    size?: number;
+    totalElements?: number;
+    totalPages?: number;
+    content?: Array<UserAccessDetailsResponse>;
+    first?: boolean;
+    last?: boolean;
+    empty?: boolean;
 };
+

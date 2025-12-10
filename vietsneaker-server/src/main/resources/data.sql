@@ -92,12 +92,37 @@ VALUES (1, 1, 2, 2700000),
        (4, 3, 1, 2000000);
 
 -- Suppliers
-INSERT INTO suppliers (name, address, phone, email, is_deleted)
-VALUES ('Công ty Nike VN', '12 Nguyễn Trãi, Hà Nội', '0241234567', 'nikevn@gmail.com', 0),
-       ('Công ty Adidas VN', '45 Lê Lợi, TP.HCM', '0289876543', 'adidasvn@gmail.com', 0),
-       ('Công ty Converse VN', '67 Hai Bà Trưng, Đà Nẵng', '0236123456', 'conversevn@gmail.com', 0),
-       ('Nhà phân phối Vans VN', '89 Điện Biên Phủ, Cần Thơ', '0292233445', 'vansvn@gmail.com', 0);
+INSERT INTO suppliers (name, supplier_type, phone, email, zalo, facebook, address, rating, total_transactions, notes, is_deleted)
+VALUES
+  ('Tiệm Giày Cũ Sài Gòn', 'SHOP', '0968047079', 'tgcsaigon@gmail.com', '0968047079', 'facebook.com/tgc.sneaker.saigon', 
+   '208 Nguyễn Gia Trí, P.25, Bình Thạnh, TP.HCM', 4, 12, 'Sneaker 2hand chính hãng, check legit kỹ', 0),
 
+  ('Trung Sneaker', 'SHOP', '0973614345', 'contact@trungsneaker.vn', '0973614345', 'facebook.com/trungsneaker.official',
+   '14/220 Nguyễn Oanh, P.17, Gò Vấp, TP.HCM', 5, 28, 'Chuyên hàng OG, hiếm; vệ sinh giày', 0),
+
+  ('Chuck Secondhand OG', 'SHOP', '0342713164', 'chuckog.store@gmail.com', '0342713164', 'facebook.com/chucksecondhandog',
+   'B116 Nguyễn Thần Hiến, P.18, Q.4, TP.HCM', 4, 7, 'Converse 2hand 85–95% new', 0),
+
+  ('Xóm Mê Giày', 'SHOP', '0937187613', 'xommegiay.shop@gmail.com', '0937187613', 'facebook.com/xommegiay.store',
+   '6 Lý Tự Trọng, P.Bến Nghé, Q.1, TP.HCM', 3, 4, 'Giày da & sneaker 2hand mẫu ít', 0),
+
+  ('Bèo Store', 'SHOP', '0398999181', 'contact@beostore.vn', '0398999181', 'facebook.com/beostore.2hand',
+   '429/17E Lê Văn Sỹ, P.13, Q.3, TP.HCM', 4, 10, 'Giày 2hand giá mềm, nhiều size phổ thông', 0),
+
+  ('Sneaker 2Hand Hà Nội', 'SHOP', '0912345678', 'hn.snk2hand@gmail.com', '0912345678', 'facebook.com/sneaker2hand.hn',
+   '29 Trần Đăng Ninh, Cầu Giấy, Hà Nội', 5, 21, 'Chuyên giày Adidas, Nike, Vans 2hand', 0),
+
+  ('Tiệm Sneaker Hải Phòng', 'SHOP', '0856789123', 'hp.sneaker.store@gmail.com', '0856789123', 'facebook.com/hp.sneaker2hand',
+   '33 Lạch Tray, Ngô Quyền, Hải Phòng', 4, 9, 'Hàng 2hand tình trạng đẹp, giá tốt', 0),
+
+  ('Saigon Resell Hub', 'CONSIGN', '0907778899', 'support@srhub.vn', '0907778899', 'facebook.com/saigonresellhub',
+   '355 Điện Biên Phủ, Bình Thạnh, TP.HCM', 5, 15, 'Nhận ký gửi sneaker cao cấp', 0),
+
+  ('Kho Sneaker 2hand', 'WHOLESALE', '0984456672', 'khosneaker.sale@gmail.com', '0984456672', 'facebook.com/khosneaker2hand',
+   'Kho hàng: 1200 Quốc Lộ 1A, Bình Tân, TP.HCM', 4, 102, 'Chuyên sỉ giày 2hand lô lớn', 0),
+
+  ('Minh Ký Gửi Sneaker', 'CONSIGN', '0922334556', 'minhkysneaker@gmail.com', '0922334556', 'facebook.com/minhkygui.sneaker',
+   '252 Tân Sơn Nhì, Tân Phú, TP.HCM', 4, 6, 'Nhận ký gửi – chăm sóc giày trước khi bán', 0);
 -- Purchases
 -- INSERT INTO purchases (supplier_id, product_id, quantity, purchase_price, purchase_date)
 -- VALUES (1, 1, 100, 2500000, '2024-12-01'),

@@ -4,7 +4,6 @@ import PageController from "@/app/components/common/page-controller";
 import ProductCollection from "@/app/components/product/product-collection";
 import { UNIT } from "@/config/app-config";
 import {
-  AdminBrandControllerService,
   BrandControllerService,
   BrandDTO,
   PageResponseProductSummaryResponse,
@@ -27,43 +26,78 @@ type FilterProps = {
   brand: BrandDTO;
   minPrice: number;
   maxPrice: number;
+  shoeSize: string;
 };
+
 export default function ProductFilterPage() {
   const searchParam = useSearchParams();
+  
+  // State quản lý Search Term và Sort
   const [searchTerm, setSearchTerm] = useState(searchParam.get("name") ?? "");
   const [sortBy, setSortBy] = useState(searchParam.get("sortBy") ?? "");
+
+  // State quản lý bộ lọc
   const [selectedFilters, setSelectedFilters] = useState<FilterProps>({
     type: searchParam.get("type") ?? "",
     minPrice: Number(searchParam.get("minPrice") ?? 0),
     brand: {
-      brandId: searchParam.get("brandId")
-        ? Number(searchParam.get("brandId"))
-        : undefined,
+      brandId: searchParam.get("brandId") ? Number(searchParam.get("brandId")) : undefined,
       name: "",
     },
     maxPrice: Number(searchParam.get("maxPrice") ?? DEFAULT_MAX_PRICE),
+    shoeSize: searchParam.get("shoeSize") ?? "",
   });
 
-  // add useEffect to update searchbar param everytime
+  // --- PHẦN SỬA ĐỔI QUAN TRỌNG NHẤT ---
+  // Khi URL thay đổi (nhấn từ Header), ta phải RESET lại filter theo đúng URL đó
+  // Không dùng "...prev" để tránh bị dính filter cũ không mong muốn
   useEffect(() => {
-  setSearchTerm(searchParam.get("name") ?? "");
-  setSortBy(searchParam.get("sortBy") ?? "");
+    const paramName = searchParam.get("name") ?? "";
+    const paramSort = searchParam.get("sortBy") ?? "";
+    const paramType = searchParam.get("type") ?? "";
+    const paramBrandId = searchParam.get("brandId");
+    const paramShoeSize = searchParam.get("shoeSize") ?? "";
+    const paramMinPrice = searchParam.get("minPrice");
+    const paramMaxPrice = searchParam.get("maxPrice");
+
+    setSearchTerm(paramName);
+    setSortBy(paramSort);
+
+    // Reset trọn vẹn bộ lọc
+    setSelectedFilters({
+      type: paramType,
+      shoeSize: paramShoeSize, // Lấy size mới nhất từ URL
+      
+      // Brand: Nếu URL không có brandId -> Trả về undefined (Reset brand cũ)
+      brand: {
+        brandId: paramBrandId ? Number(paramBrandId) : undefined,
+        name: "", 
+      },
+      
+      minPrice: paramMinPrice ? Number(paramMinPrice) : 0,
+      maxPrice: paramMaxPrice ? Number(paramMaxPrice) : DEFAULT_MAX_PRICE,
+    });
   }, [searchParam]);
+  // -------------------------------------
 
   const fetchProducts = async () => {
     try {
+      // Đảm bảo thứ tự tham số đúng với Service gen ra (đã sửa ở bước trước)
       const resp = await UserProductControllerService.getAllProducts1(
-        undefined,
-        12,
+        undefined, // page
+        12,        // size
         searchTerm,
         selectedFilters.type,
+        selectedFilters.shoeSize, // shoeSize
         selectedFilters.maxPrice * UNIT,
         selectedFilters.brand.brandId,
-        sortBy,
+        sortBy
       );
       setProductPage(resp);
     } catch (error) {
       logger.warn(error);
+      // Nếu lỗi, set trang rỗng để tránh màn hình trắng xoá (crash)
+      setProductPage({ content: [], totalPages: 0, totalElements: 0 });
     }
   };
 
@@ -73,7 +107,8 @@ export default function ProductFilterPage() {
     setPageInfo: setProductPage,
   } = usePage<PageResponseProductSummaryResponse>({
     fetchData: fetchProducts,
-    dependencies: [searchTerm, selectedFilters, sortBy],
+    // Khi bất kỳ điều kiện nào thay đổi, gọi lại API
+    dependencies: [searchTerm, selectedFilters, sortBy], 
   });
 
   const handleSearchTermChange = useDebounceCallback(
@@ -82,6 +117,7 @@ export default function ProductFilterPage() {
     },
     300,
   );
+
   return (
     <div className="flex">
       <FilterSidebar
@@ -91,45 +127,64 @@ export default function ProductFilterPage() {
       <div className="flex flex-col w-full mx-20 mt-10">
         {/* Top bar */}
         <div className="flex justify-between items-center mb-4 ">
-          {/* <label className="input ">
-            <svg
-              className="h-[1em] opacity-50"
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-            >
-              <g
-                strokeLinejoin="round"
-                strokeLinecap="round"
-                strokeWidth="2.5"
-                fill="none"
-                stroke="currentColor"
+         <div className="flex gap-2 flex-wrap">
+  
+          {/* Tag Size */}
+          {selectedFilters.shoeSize && (
+            <div className="flex items-center gap-2 px-3 py-1 border border-gray-300 rounded-full text-sm bg-white shadow-sm">
+              <span className="text-gray-700">Size: {selectedFilters.shoeSize}</span>
+              <button
+                className="text-gray-500 hover:text-black"
+                onClick={() => setSelectedFilters(prev => ({ ...prev, shoeSize: "" }))}
               >
-                <circle cx="11" cy="11" r="8"></circle>
-                <path d="m21 21-4.3-4.3"></path>
-              </g>
-            </svg>
-            <input
-              type="search"
-              defaultValue={searchTerm}
-              placeholder="Search product name"
-              onChange={handleSearchTermChange}
-            />
-          </label> */}
-          <div></div>
+                ✕
+              </button>
+            </div>
+          )}
+
+          {/* Tag Brand – HIỂN THỊ TÊN HÃNG */}
+          {selectedFilters.brand?.brandId && (
+            <div className="flex items-center gap-2 px-3 py-1 border border-gray-300 rounded-full text-sm bg-white shadow-sm">
+              <span className="text-gray-700">
+                {selectedFilters.brand.name}
+              </span>
+
+              <button
+                className="text-gray-500 hover:text-black"
+                onClick={() => setSelectedFilters(prev => ({
+                  ...prev,
+                  brand: { brandId: undefined, name: "" }
+                }))}
+              >
+                ✕
+              </button>
+            </div>
+          )}
+
+        </div>
+
 
           <select
             className="select select-bordered w-40"
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value)}
           >
-            <option value="sellPrice-asc">Giá: tăng dần</option>
-            <option value="sellPrice-desc">Giá: giảm dần</option>
+            <option value="">Sắp xếp</option>
+            <option value="sellPrice-asc">Giá: thấp đến cao</option>
+            <option value="sellPrice-desc">Giá: cao đến thấp</option>
             <option value="createdAt-desc">Mới nhất</option>
-            <option value="createdAt-asc">Cũ nhất</option>
           </select>
         </div>
-        <div className="my-20">
-          <ProductCollection products={productPage.content || []} />
+        
+        <div className="my-10">
+          {/* Kiểm tra null/undefined để tránh crash */}
+          {productPage && productPage.content && productPage.content.length > 0 ? (
+             <ProductCollection products={productPage.content} />
+          ) : (
+             <div className="text-center py-10 text-gray-500">
+               Không tìm thấy sản phẩm nào phù hợp.
+             </div>
+          )}
         </div>
 
         <PageController setPage={setPage} page={productPage} />
@@ -138,22 +193,27 @@ export default function ProductFilterPage() {
   );
 }
 
+// --- Phần Sidebar giữ nguyên nhưng đảm bảo logic ---
 type FilterSidebarProps = {
   selectedFilters: FilterProps;
   setSelectedFilters: Dispatch<SetStateAction<FilterProps>>;
 };
+
 const FilterSidebar = ({
   selectedFilters,
   setSelectedFilters,
 }: FilterSidebarProps) => {
   const { fetchMore, pageInfo } = useLazyPage<BrandDTO>({
     fetchData: async (page, query) => {
-      return await BrandControllerService.getAllBrands1(page, undefined, query);
+      // Gọi service lấy danh sách brand
+      return await BrandControllerService.getAllBrands1(page, undefined, query); 
     },
   });
   const brandPage = pageInfo;
 
   function handleBrandChange(brand: BrandDTO): void {
+    // Khi chọn Brand từ Sidebar, ta giữ lại các filter khác (Size, Price)
+    // Nhưng nếu muốn logic "Chọn Brand thì Reset Size" thì sửa ở đây
     setSelectedFilters((prev) => ({
       ...prev,
       brand: brand,
@@ -171,75 +231,61 @@ const FilterSidebar = ({
   );
 
   return (
-    <div className="w-80 p-4 bg-base-200 h-screen overflow-auto">
+    <div className="w-80 p-4 bg-base-200 h-screen overflow-auto sticky top-0">
       <form className="form-control space-y-4 pt-20">
-        {/*
-          * TODO manager search for product type
-        <div>
-          <h2 className="text-lg font-bold">Types</h2>
-          <div className="filter my-4">
-            <input className="btn filter-reset btn-sm" type="radio" name="metaframeworks" aria-label="All"
-              onClick={() => handleTypeChange('')}
-            />
-
-            {types.map((type: string) => {
-              return (
-                <input key={type} className="btn btn-sm" type="radio" name="metaframeworks" aria-label={type}
-                  onChange={() => handleTypeChange(type)}
-                />
-              )
-            })}
-          </div>
-        </div>
-          */}
-
         {brandPage?.content && (
           <div>
             <h2 className="text-lg font-bold">Nhãn hiệu</h2>
-            <div className="filter my-4">
-              <input
-                className="btn filter-reset btn-sm"
-                type="radio"
-                name="metaframeworks"
-                aria-label="All"
-                onClick={() => handleBrandChange({} as BrandDTO)}
-              />
+            <div className="filter my-4 flex flex-col items-start gap-2">
+               <label className="cursor-pointer label justify-start gap-2">
+                  <input
+                    className="radio radio-sm"
+                    type="radio"
+                    name="brands"
+                    checked={!selectedFilters.brand?.brandId}
+                    onChange={() => handleBrandChange({} as BrandDTO)}
+                  />
+                  <span className="label-text">Tất cả</span>
+               </label>
 
               {brandPage?.content.map((brand, idx) => {
                 return (
-                  <input
-                    key={idx}
-                    className="btn btn-sm"
-                    type="radio"
-                    name="metaframeworks"
-                    aria-label={brand.name}
-                    onChange={() => handleBrandChange(brand)}
-                  />
+                   <label key={idx} className="cursor-pointer label justify-start gap-2">
+                      <input
+                        className="radio radio-sm"
+                        type="radio"
+                        name="brands"
+                        checked={selectedFilters.brand?.brandId === brand.brandId}
+                        onChange={() => handleBrandChange(brand)}
+                      />
+                      <span className="label-text">{brand.name}</span>
+                   </label>
                 );
               })}
-              <u className="text-sm" onClick={fetchMore}>
+              <u className="text-sm cursor-pointer mt-2 block" onClick={fetchMore}>
                 Xem thêm nhãn hiệu khác
               </u>
             </div>
           </div>
         )}
 
+        <div className="divider"></div>
+
         <div>
-          <h2 className="text-lg font-bold">Price Range</h2>
+          <h2 className="text-lg font-bold">Khoảng giá</h2>
           <label className="label">
             <span className="label-text">
-              Giá nhỏ hơn: {formatVND(selectedFilters.maxPrice * UNIT)}
+              Giá tối đa: {formatVND(selectedFilters.maxPrice * UNIT)}
             </span>
           </label>
           <input
             type="range"
             onChange={handleMaxPriceChange}
             min="0"
-            // value={selectedFilters.maxPrice}
-            defaultValue={DEFAULT_MAX_PRICE}
+            defaultValue={selectedFilters.maxPrice} 
             max={MAX_PRICE}
-            className="range range-sm"
-            id="priceRange"
+            className="range range-xs"
+            step="10"
           />
         </div>
       </form>

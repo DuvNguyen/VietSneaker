@@ -2,10 +2,11 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { User } from "./User";
+import type { User } from './User';
 export type VerificationCode = {
-  verificationId?: number;
-  emailSent?: boolean;
-  code?: string;
-  user?: User;
+    verificationId?: number;
+    emailSent?: boolean;
+    code?: string;
+    user?: User;
 };
+

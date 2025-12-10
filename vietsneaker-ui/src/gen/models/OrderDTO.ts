@@ -3,7 +3,8 @@
 /* tslint:disable */
 /* eslint-disable */
 export type OrderDTO = {
-  totalOrders?: number;
-  finishOrders?: number;
-  otherOrders?: number;
+    totalOrders?: number;
+    finishOrders?: number;
+    otherOrders?: number;
 };
+

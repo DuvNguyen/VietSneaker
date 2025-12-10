@@ -3,11 +3,12 @@
 /* tslint:disable */
 /* eslint-disable */
 export type AdminOrderSummaryResponse = {
-  orderId?: number;
-  customerName?: string;
-  phone?: string;
-  address?: string;
-  totalPrice?: number;
-  createdAt?: string;
-  status?: string;
+    orderId?: number;
+    customerName?: string;
+    phone?: string;
+    address?: string;
+    totalPrice?: number;
+    createdAt?: string;
+    status?: string;
 };
+
