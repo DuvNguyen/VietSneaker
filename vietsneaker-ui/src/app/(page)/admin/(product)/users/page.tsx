@@ -21,7 +21,7 @@ export default function UserAdminPage() {
   // 🔍 Hàm lấy danh sách user
   async function fetchUsers() {
     try {
-      const resp = await AdminUserControllerService.getAllUsers(page - 1, query);
+      const resp = await AdminUserControllerService.getAllUsers(page - 1, undefined);
       if (resp) setPageInfo(resp);
 
       const users = resp.content || [];
@@ -111,7 +111,7 @@ export default function UserAdminPage() {
 
             <tbody>
               {(pageInfo?.content || []).length > 0 ? (
-                pageInfo.content.map((item: UserDetailResponse, index: number) => (
+                pageInfo?.content?.map((item: UserDetailResponse, index: number) => (
                   <UserTableRow
                     key={index}
                     item={item}

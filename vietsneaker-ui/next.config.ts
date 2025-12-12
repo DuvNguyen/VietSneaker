@@ -7,7 +7,7 @@ const nextConfig: NextConfig = {
     ignoreDuringBuilds: true,
   },
   /* config options here */
-  
+  output: 'standalone',
 };
 
 export default nextConfig;

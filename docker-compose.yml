@@ -1,0 +1,32 @@
+version: "3.9"
+
+services:
+  # --- BACKEND ---
+  vietsneaker-server:
+    build: ./vietsneaker-server #local build
+    container_name: vietsneaker-server
+    ports:
+      - "8083:8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+    networks:
+      - vietsneaker-net
+  # --- FRONTEND ---
+  vietsneaker-ui:
+    image: vuthanhdat04/vietsneaker:vietsneaker-ui #dockerhub build
+    container_name: vietsneaker-ui
+    ports:
+      - "3000:3000"
+    environment:
+      - HOST=http://vietsneaker-server:8080
+      - CONTEXT_API=/api
+    depends_on:
+      - vietsneaker-server
+    networks:
+      - vietsneaker-net
+    restart: always
+
+# --- NETWORK ---
+networks:
+  vietsneaker-net:
+    driver: bridge

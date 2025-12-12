@@ -43,6 +43,7 @@ export default function ProductByBrandPage() {
         undefined,
         undefined,
         undefined,
+        undefined,
         searchBrandId,
         sortBy,
       );
