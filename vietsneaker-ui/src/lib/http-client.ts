@@ -4,9 +4,10 @@ import { AuthManager } from "@/lib/auth/AuthManager";
 import { toast } from "react-toastify";
 import { logger } from "@/util/logger";
 import { redirectAuthenticateAndGoBack } from "@/util/route";
+import { OpenAPI } from "@/gen";
 
 // https://github.com/nextauthjs/next-auth/discussions/3550
-
+OpenAPI.BASE = API_BASE;
 interface RefreshTokenResponse {
   accessToken: string;
 }
