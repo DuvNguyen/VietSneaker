@@ -74,7 +74,7 @@ export default function ChatBox() {
     setLoading(true);
 
     try {
-      const res = await fetch("https://localhost:8081/api/chat", {
+      const res = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include", // nếu bạn dùng cookie

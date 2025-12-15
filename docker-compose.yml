@@ -1,32 +1,101 @@
-version: "3.9"
+version: '3.8'
 
 services:
-  # --- BACKEND ---
-  vietsneaker-server:
-    build: ./vietsneaker-server #local build
-    container_name: vietsneaker-server
-    ports:
-      - "8083:8080"
+  # ----------------------------
+  # 1. DATABASE (MySQL)
+  # ----------------------------
+  mysqldb:
+    image: mysql:8.0
+    container_name: vietsneaker-db
+    restart: always
     environment:
-      - SPRING_PROFILES_ACTIVE=prod
+      MYSQL_DATABASE: vietsneaker
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      # Tạo user riêng cho app (bảo mật hơn dùng root)
+      MYSQL_USER: ${DB_USERNAME}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+    command: --default-authentication-plugin=mysql_native_password
+    volumes:
+      - db_data:/var/lib/mysql
     networks:
       - vietsneaker-net
-  # --- FRONTEND ---
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
+
+  # ----------------------------
+  # 2. BACKEND (Spring Boot HTTPS)
+  # ----------------------------
+  vietsneaker-server:
+    image: vuthanhdat04/vietsneaker-server:v2
+    container_name: vietsneaker-server
+    restart: unless-stopped
+    depends_on:
+      mysqldb:
+        condition: service_healthy
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+      # Cấu hình HTTPS
+      - SERVER_PORT=8083
+      - SERVER_SSL_ENABLED=true
+      - SERVER_SSL_KEY_STORE=classpath:keystore/vietsneaker-localhost-new.p12
+      - SERVER_SSL_KEY_STORE_PASSWORD=changeit
+      - SERVER_SSL_KEY_STORE_TYPE=PKCS12
+      # Kết nối DB (Dùng tên service 'mysqldb' thay vì localhost)
+      - DB_HOST=mysqldb
+      - DB_USERNAME=${DB_USERNAME}
+      - DB_PASSWORD=${DB_PASSWORD}
+      # Các key khác từ file .env
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - JWT_SECRET=${JWT_SECRET}
+      - MAIL_USERNAME=${MAIL_USERNAME}
+      - MAIL_PASSWORD=${MAIL_PASSWORD}
+      # CORS: Cho phép Frontend gọi vào
+      - APP_ALLOWED_ORIGINS=*
+      - APP_BASE_URL=*
+    networks:
+      - vietsneaker-net
+
+  # ----------------------------
+  # 3. FRONTEND (Next.js)
+  # ----------------------------
   vietsneaker-ui:
-    image: vuthanhdat04/vietsneaker:vietsneaker-ui #dockerhub build
+    # Build từ thư mục hiện tại (chứa Dockerfile bạn gửi)
+    image: vuthanhdat04/vietsneaker:vietsneaker-ui
     container_name: vietsneaker-ui
     ports:
       - "3000:3000"
-    environment:
-      - HOST=http://vietsneaker-server:8080
-      - CONTEXT_API=/api
+    restart: always
     depends_on:
       - vietsneaker-server
+    environment:
+      # URL Backend khi gọi từ Server-Side (SSR)
+      - HOST=https://vietsneaker-server:8083
+      - CONTEXT_API=/api
+      # QUAN TRỌNG: Vì Backend dùng HTTPS tự ký, Nodejs sẽ chặn.
+      # Dòng này bắt Nodejs bỏ qua lỗi bảo mật khi gọi nội bộ.
+      - NODE_TLS_REJECT_UNAUTHORIZED=0
     networks:
       - vietsneaker-net
-    restart: always
 
-# --- NETWORK ---
+  # ----------------------------
+  # 4. CLOUDFLARE TUNNEL
+  # ----------------------------
+  tunnel:
+    image: cloudflare/cloudflared:latest
+    container_name: cloudflare-tunnel
+    restart: unless-stopped
+    command: tunnel run
+    environment:
+      - TUNNEL_TOKEN=${TUNNEL_TOKEN}
+    networks:
+      - vietsneaker-net
+
+# Volume để lưu dữ liệu DB bền vững
+volumes:
+  db_data:
+
 networks:
   vietsneaker-net:
     driver: bridge

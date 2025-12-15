@@ -2,13 +2,22 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   eslint: {
-    // Warning: This allows production builds to successfully complete even if
-    // your project has ESLint errors.
+    // Cho phép build production dù có lỗi eslint
     ignoreDuringBuilds: true,
   },
-  /* config options here */
-    output: "standalone",
-    
+
+  // Dùng standalone cho Docker
+  output: "standalone",
+
+  // 🔥 REWRITE API → BACKEND CONTAINER
+  async rewrites() {
+    return [
+      {
+        source: "/api/:path*",
+        destination: "https://vietsneaker-server:8083/api/:path*",
+      },
+    ];
+  },
 };
 
 export default nextConfig;

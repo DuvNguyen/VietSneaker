@@ -3,6 +3,8 @@ package com.example.vietsneaker_server.auth;
 import static org.springframework.security.web.util.matcher.AntPathRequestMatcher.antMatcher;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -114,12 +116,16 @@ public class SecurityConfiguration {
 
   private AccessDeniedHandler accessDeniedHandler() {
     return (request, response, ex) -> {
-      throw ApiException.builder()
-          .message(AppMessage.of(MessageKey.ACCESS_DENIED))
-          .status(403)
-          .build();
+      response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+      response.setContentType("application/json");
+      response.getWriter().write("""
+        {
+          "message": "ACCESS_DENIED"
+        }
+      """);
     };
   }
+
 
   @Bean
   public AuthenticationManager authenticationManager() {
