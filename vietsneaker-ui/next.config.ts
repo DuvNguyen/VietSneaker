@@ -14,7 +14,7 @@ const nextConfig: NextConfig = {
     return [
       {
         source: "/api/:path*",
-        destination: "https://vietsneaker-server:8083/api/:path*",
+        destination: "https://3.27.137.145:8083/api/:path*",
       },
     ];
   },

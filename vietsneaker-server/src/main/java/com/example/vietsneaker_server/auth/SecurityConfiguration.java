@@ -2,7 +2,6 @@ package com.example.vietsneaker_server.auth;
 
 import static org.springframework.security.web.util.matcher.AntPathRequestMatcher.antMatcher;
 
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.util.List;
@@ -102,7 +101,11 @@ public class SecurityConfiguration {
     CorsConfiguration config = new CorsConfiguration();
     // Dùng allowedOriginPatterns để dev localhost + credentials
     // config.setAllowedOriginPatterns(List.of("http://localhost:3000"));
-    config.setAllowedOriginPatterns(List.of("http://localhost:3000", "https://localhost:3000"));
+    config.setAllowedOriginPatterns(List.of(
+      "http://localhost:3000", 
+      "https://localhost:3000",
+      "https://*.trycloudflare.com"
+    ));
     config.setAllowedMethods(List.of("GET","POST","PUT","DELETE","OPTIONS","PATCH"));
     config.setAllowedHeaders(List.of("Content-Type","Authorization","X-Requested-With","Accept","Origin"));
     config.setExposedHeaders(List.of("Location"));
@@ -125,7 +128,6 @@ public class SecurityConfiguration {
       """);
     };
   }
-
 
   @Bean
   public AuthenticationManager authenticationManager() {
