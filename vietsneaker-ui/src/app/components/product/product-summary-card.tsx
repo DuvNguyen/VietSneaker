@@ -1,6 +1,6 @@
 import { ProductSummaryResponse } from "@/gen";
 import Thumbnail from "../common/thumbnail";
-import { ProductImage } from "../common/base-64-image";
+import { ProductImage } from "../common/ProductImage";
 import { formatVND } from "@/util/currency";
 import Link from "next/link";
 
@@ -16,7 +16,7 @@ const ProductSummaryCard = ({
         <figure className="p-4">
           <Thumbnail className="w-full aspect-[1/1]">
             <ProductImage
-              data={product.image}
+              src={product.image}
               className="w-full h-full object-cover"
             />
           </Thumbnail>

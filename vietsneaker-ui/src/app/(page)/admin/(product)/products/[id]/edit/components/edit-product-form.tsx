@@ -1,5 +1,5 @@
 "use client";
-import Base64Image from "@/app/components/common/base-64-image";
+// import Base64Image from "@/app/components/common/base-64-image";
 import ErrorText from "@/app/components/typography/error-text";
 import {
   AdminBrandControllerService,
@@ -335,12 +335,28 @@ const EditProductForm = ({ model }: { model: AdminProductResponse }) => {
             </div>
           ) : (
             <div>
-              {model.image && (
-                <Base64Image
-                  className="h-[400px] w-[400px]"
-                  data={model.image}
+              {
+            selectedFile ? (
+              <div>
+                <img
+                  src={selectedFile}
+                  alt="Preview"
+                  className="h-[400px] w-[400px] object-contain rounded-md"
                 />
-              )}
+              </div>
+            ) : (
+              <div>
+                {model.image && (
+                  <img
+                    src={model.image}
+                    alt={model.name}
+                    className="h-[400px] w-[400px] object-contain rounded-md"
+                  />
+                )}
+              </div>
+            )
+          }
+
             </div>
           )
         }
