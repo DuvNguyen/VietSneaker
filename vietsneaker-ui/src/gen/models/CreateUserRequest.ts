@@ -3,8 +3,9 @@
 /* tslint:disable */
 /* eslint-disable */
 export type CreateUserRequest = {
-  email: string;
-  password: string;
-  passwordConfirmation?: string;
-  name?: string;
+    email: string;
+    password: string;
+    passwordConfirmation?: string;
+    name?: string;
 };
+

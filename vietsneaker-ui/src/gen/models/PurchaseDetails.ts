@@ -2,8 +2,9 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { PurchaseItemDetails } from "./PurchaseItemDetails";
+import type { PurchaseItemDetails } from './PurchaseItemDetails';
 export type PurchaseDetails = {
-  purchaseId?: number;
-  items?: Array<PurchaseItemDetails>;
+    purchaseId?: number;
+    items?: Array<PurchaseItemDetails>;
 };
+

@@ -2,12 +2,13 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { PurchaseItem } from "./PurchaseItem";
-import type { User } from "./User";
+import type { PurchaseItem } from './PurchaseItem';
+import type { User } from './User';
 export type Purchase = {
-  purchaseId?: number;
-  items?: Array<PurchaseItem>;
-  createdAt?: string;
-  totalPrice?: number;
-  createdBy?: User;
+    purchaseId?: number;
+    items?: Array<PurchaseItem>;
+    createdAt?: string;
+    totalPrice?: number;
+    createdBy?: User;
 };
+

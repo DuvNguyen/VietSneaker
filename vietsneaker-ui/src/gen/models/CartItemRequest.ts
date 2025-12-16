@@ -3,6 +3,7 @@
 /* tslint:disable */
 /* eslint-disable */
 export type CartItemRequest = {
-  quantity?: number;
-  productId?: number;
+    quantity?: number;
+    productId?: number;
 };
+

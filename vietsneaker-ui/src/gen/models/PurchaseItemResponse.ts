@@ -3,8 +3,9 @@
 /* tslint:disable */
 /* eslint-disable */
 export type PurchaseItemResponse = {
-  productId?: number;
-  quantity?: number;
-  price?: number;
-  supplierId?: number;
+    productId?: number;
+    quantity?: number;
+    price?: number;
+    supplierId?: number;
 };
+

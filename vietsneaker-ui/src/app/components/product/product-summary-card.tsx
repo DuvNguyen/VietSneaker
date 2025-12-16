@@ -11,18 +11,27 @@ const ProductSummaryCard = ({
 }) => {
   return (
     <Link href={`/product/${product.productId}`}>
-      <div className="card bg-base-100 w-50 shadow-sm cursor-pointer transition-transform hover:scale-105 border border-gray-200 rounded-none">
-        <figure className="pt-6">
-          {
-            <Thumbnail className="h-[18rem] w-[18rem]">
-              <ProductImage data={product.image} />
-            </Thumbnail>
-          }
+      <div className="card bg-base-100 w-72 shadow-sm cursor-pointer transition-transform hover:scale-105 border border-gray-200 rounded-none">
+
+        <figure className="p-4">
+          <Thumbnail className="w-full aspect-[1/1]">
+            <ProductImage
+              data={product.image}
+              className="w-full h-full object-cover"
+            />
+          </Thumbnail>
         </figure>
-        <div className="card-body flex items-center justify-center text-center">
-          <b className="text-xl">{product.name}</b>
-          <h2 className="card-title text-red-500">{formatVND(product.sellPrice)}</h2>
+
+        <div className="card-body items-center text-center p-4">
+          <b className="text-lg min-h-[48px] line-clamp-2">
+            {product.name}
+          </b>
+
+          <h2 className="text-xl text-red-500 font-semibold">
+            {formatVND(product.sellPrice)}
+          </h2>
         </div>
+
       </div>
     </Link>
   );
@@ -30,9 +39,9 @@ const ProductSummaryCard = ({
 
 export const ProductSummaryPreload = () => {
   return (
-    <div className="card skeleton bg-base-100 w-50 shadow-sm cursor-pointer transition-transform hover:scale-105">
-      <figure className="pt-6">
-        {<Thumbnail className="h-[18rem] w-[18rem] skeleton"></Thumbnail>}
+    <div className="card skeleton bg-base-100 w-72 shadow-sm rounded-none">
+      <figure className="p-4">
+        <Thumbnail className="w-full aspect-[1/1] skeleton"></Thumbnail>
       </figure>
     </div>
   );
