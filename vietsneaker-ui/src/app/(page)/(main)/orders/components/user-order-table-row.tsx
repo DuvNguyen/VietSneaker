@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import ConfirmModal from "@/app/components/modal/confirm-modal";
 import { OrderControllerService, OrderSummaryResponse } from "@/gen";
 import Thumbnail from "@/app/components/common/thumbnail";
-import { ProductImage } from "@/app/components/common/base-64-image";
+import { ProductImage } from "@/app/components/common/ProductImage";
 import { OrderStatus as OrderStatusType } from "@/gen/backend";
 import { logger } from "@/util/logger";
 import { enableCancelOrder, getOrderStatusLabel } from "@/util/order-utils";

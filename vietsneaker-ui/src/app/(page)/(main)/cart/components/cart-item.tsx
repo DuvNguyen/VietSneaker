@@ -5,7 +5,7 @@ import { useCart } from "@/lib/hooks/use-cart";
 import ConfirmModal from "@/app/components/modal/confirm-modal";
 import Link from "next/link";
 import { formatVND } from "@/util/currency";
-import { ProductImage } from "@/app/components/common/base-64-image";
+import { ProductImage } from "@/app/components/common/ProductImage";
 import Thumbnail from "@/app/components/common/thumbnail";
 
 interface CartItemProps {

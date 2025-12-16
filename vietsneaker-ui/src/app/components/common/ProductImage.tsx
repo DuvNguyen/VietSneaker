@@ -3,32 +3,20 @@ import Zoom from "yet-another-react-lightbox/plugins/zoom";
 import Lightbox from "yet-another-react-lightbox";
 import "yet-another-react-lightbox/styles.css";
 
-export const base64ImageMap = (bytes: string) => {
-  return `data:image/png;base64,${bytes}`;
-};
-
-type ImageProps = {
-  data: string;
+type ProductImageProps = {
+  src?: string;          // URL Cloudinary
   className?: string;
 };
-const Base64Image = ({ data, className }: ImageProps) => {
-  return (
-    <>
-      <img className={`${className}`} src={base64ImageMap(data)} />
-    </>
-  );
-};
 
-const defaultProductImage = "nike-airforce1.jpg";
+const DEFAULT_PRODUCT_IMAGE = "/nike-airforce1.jpg"; // nằm trong public/
+
 export const ProductImage = ({
-  data,
+  src,
   className,
-}: {
-  data?: string;
-  className?: string;
-}) => {
+}: ProductImageProps) => {
   const [isOpen, setIsOpen] = useState(false);
-  const imageSrc = data ? base64ImageMap(data) : defaultProductImage;
+
+  const imageSrc = src || DEFAULT_PRODUCT_IMAGE;
 
   return (
     <>
@@ -50,4 +38,5 @@ export const ProductImage = ({
     </>
   );
 };
-export default Base64Image;
+
+export default ProductImage;
