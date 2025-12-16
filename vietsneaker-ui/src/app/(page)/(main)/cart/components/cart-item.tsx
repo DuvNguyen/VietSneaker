@@ -67,7 +67,7 @@ const CartItem: React.FC<CartItemProps> = ({ item }) => {
       />
       <div className="size-[5rem] bg-gray-100 rounded-md overflow-hidden">
         <Thumbnail className="size-[5rem]">
-          <ProductImage data={item.image} />
+          <ProductImage src={item.image} />
         </Thumbnail>
       </div>
 
