@@ -14,7 +14,7 @@ import lombok.Setter;
 public class ProductDetailsResponse {
   private Long productId;
   private String name;
-  private byte[] image;
+  private String image;
   private Double sellPrice;
   private String description;
   private BrandDTO brand;

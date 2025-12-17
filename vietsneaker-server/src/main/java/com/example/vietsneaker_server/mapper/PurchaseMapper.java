@@ -1,12 +1,12 @@
 package com.example.vietsneaker_server.mapper;
 
 import lombok.RequiredArgsConstructor;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import com.example.vietsneaker_server.entity.Purchase;
 import com.example.vietsneaker_server.entity.PurchaseItem;
-import com.example.vietsneaker_server.file.FileStorageService;
 import com.example.vietsneaker_server.payload.response.PurchaseItemDetails;
 import com.example.vietsneaker_server.payload.response.PurchaseItemResponse;
 import com.example.vietsneaker_server.payload.response.PurchaseResponse;
@@ -16,8 +16,8 @@ import com.example.vietsneaker_server.payload.response.PurchaseSummary;
 @Service
 @RequiredArgsConstructor
 public class PurchaseMapper {
+
   private final ModelMapper mapper;
-  private final FileStorageService fileStorageService;
 
   public PurchaseItemResponse purchaseItemToResponse(PurchaseItem item) {
     PurchaseItemResponse destItem = mapper.map(item, PurchaseItemResponse.class);
@@ -41,8 +41,7 @@ public class PurchaseMapper {
   public PurchaseItemDetails purchaseToDetails(PurchaseItem item) {
     var itemDetails = MapperUtil.mapObject(item, PurchaseItemDetails.class);
     itemDetails.setProductName(item.getProduct().getName());
-    itemDetails.setProductImage(
-        fileStorageService.readFileFromLocation(item.getProduct().getImageUrl()));
+    itemDetails.setProductImage(item.getProduct().getImageUrl());
     itemDetails.setSupplierName(item.getSupplier().getName());
     return itemDetails;
   }

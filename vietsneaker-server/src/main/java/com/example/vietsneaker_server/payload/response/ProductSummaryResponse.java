@@ -12,7 +12,7 @@ import lombok.Setter;
 public class ProductSummaryResponse {
   private Long productId;
   private String name;
-  private byte[] image;
+  private String image;
   private Double sellPrice;
   private String type;
   private String shoeSize;

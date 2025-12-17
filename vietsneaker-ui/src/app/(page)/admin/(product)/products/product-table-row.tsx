@@ -1,5 +1,5 @@
 "use client";
-import { ProductImage } from "@/app/components/common/base-64-image";
+import { ProductImage } from "@/app/components/common/ProductImage";
 import Thumbnail from "@/app/components/common/thumbnail";
 import ConfirmModal from "@/app/components/modal/confirm-modal";
 import { AdminProductResponse } from "@/gen/models/AdminProductResponse";

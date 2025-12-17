@@ -162,6 +162,14 @@
       <scope>test</scope>
     </dependency>
 
+    <dependency>
+      <groupId>com.cloudinary</groupId>
+      <artifactId>cloudinary-http44</artifactId>
+      <version>1.36.0</version>
+    </dependency>
+
+
+
   <!-- Testcontainers: Core + JUnit + MySQL -->
   <!-- <dependency>
       <groupId>org.testcontainers</groupId>
