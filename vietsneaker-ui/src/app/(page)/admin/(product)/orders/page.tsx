@@ -1,6 +1,7 @@
 "use client";
+
 import { OrderStatusDict } from "@/model/OrderStatus";
-import { ChangeEvent, Fragment, useState } from "react";
+import { ChangeEvent, useState } from "react";
 import { OrderStatus as OrderStatusType } from "@/gen/backend";
 import AdminMainCard from "@/app/components/card/admin-card";
 import { getOrderStatusLabel } from "@/util/order-utils";
@@ -10,8 +11,9 @@ import {
   PageResponseAdminOrderSummaryResponse,
 } from "@/gen";
 import PageController from "@/app/components/common/page-controller";
-import AdminOrderTable from "./components/admin-order-table";
 import { usePage } from "@/lib/hooks/use-page-search";
+// 👇 IMPORT COMPONENT BẢNG ĐÃ CÓ NÚT BẤM
+import AdminOrderTable from "./components/admin-order-table"; 
 
 const OrderSummaryPage = () => {
   const [currentStatus, setCurrentStatus] = useState<OrderStatusType>();
@@ -26,8 +28,8 @@ const OrderSummaryPage = () => {
         currentStatus,
         page - 1
       );
-      if (pageInfo) setPageInfo(resp);
-      return pageInfo;
+      if (resp) setPageInfo(resp);
+      return resp;
     } catch (error) {
       console.warn(error);
     }
@@ -39,6 +41,7 @@ const OrderSummaryPage = () => {
       dependencies: [currentStatus],
     });
 
+  // Hàm này sẽ được gọi khi AdminOrderTable cập nhật trạng thái đơn hàng thành công
   function handleOrdersChange(newOrders: AdminOrderSummaryResponse[]): void {
     setPageInfo({
       ...pageInfo,
@@ -48,93 +51,74 @@ const OrderSummaryPage = () => {
 
   return (
     <AdminMainCard title="DANH SÁCH ĐƠN HÀNG" goBack={false}>
-      <div className="w-full min-h-screen flex flex-col items-center bg-white px-10 py-8">
-        {/* 🧭 Tabs hiển thị trạng thái đơn hàng */}
-        <div className="w-full flex flex-wrap justify-center gap-3 mb-6">
-          {/* Tab “Tất cả” */}
-          <label className="cursor-pointer">
-            <input
-              type="radio"
-              name="status"
-              className="hidden"
-              onChange={() => setCurrentStatus(undefined)}
-              defaultChecked
-            />
-            <div
-              className={`px-5 py-2 text-sm font-medium rounded-full border ${
-                currentStatus === undefined
-                  ? "bg-[#e20000] text-white border-[#e20000]"
-                  : "bg-white text-gray-700 border-gray-300 hover:bg-gray-100"
-              } transition-colors duration-200`}
-            >
-              Tất cả
-            </div>
-          </label>
+      {/* Wrapper chính */}
+      <div className="w-full bg-white p-6 md:p-8 shadow-lg rounded-xl min-h-[80vh]">
+        
+        {/* 🛠️ Bộ lọc trạng thái */}
+        <div className="flex flex-col md:flex-row items-center justify-between mb-6 gap-4">
+          <div className="flex flex-wrap gap-2">
+            <span className="flex items-center text-sm font-semibold text-gray-700 mr-2 uppercase h-9">
+              <i className="fa fa-filter mr-2"></i> Trạng thái:
+            </span>
 
-          {/* Các tab trạng thái khác */}
-          {Object.entries(OrderStatusDict).map(([status, value]) => {
-            const isActive = currentStatus === value;
-            return (
-              <label key={status} className="cursor-pointer">
-                <input
-                  type="radio"
-                  name="status"
-                  className="hidden"
-                  value={value}
-                  onChange={handleStatusChange}
-                />
-                <div
-                  className={`px-5 py-2 text-sm font-medium rounded-full border ${
-                    isActive
-                      ? "bg-[#e20000] text-white border-[#e20000]"
-                      : "bg-white text-gray-700 border-gray-300 hover:bg-gray-100"
-                  } transition-colors duration-200`}
-                >
-                  {getOrderStatusLabel(status as OrderStatusType)}
-                </div>
-              </label>
-            );
-          })}
-        </div>
-
-        {/* 🧾 Giữ nguyên cấu trúc gốc — logic cũ hoạt động */}
-        <div className="container mx-auto p-10 overflow-x-auto">
-          <div className="tabs tabs-lift tabs-xl">
-            {/* Tab “Tất cả” */}
-            <input
-              type="radio"
-              name="status-table"
-              className="tab hidden"
-              aria-label="Tất cả"
-              defaultChecked
-            />
-            <AdminOrderTable
-              orders={pageInfo.content || []}
-              onOrdersChange={handleOrdersChange}
-            />
+            {/* Tab Tất cả */}
+            <label className="cursor-pointer select-none">
+              <input
+                type="radio"
+                name="status"
+                className="hidden"
+                onChange={() => setCurrentStatus(undefined)}
+                checked={currentStatus === undefined}
+              />
+              <div
+                className={`px-4 py-1.5 text-sm font-medium rounded-lg border transition-all duration-200 ${
+                  currentStatus === undefined
+                    ? "bg-[#e20000] text-white border-[#e20000] shadow-md"
+                    : "bg-white text-gray-600 border-gray-300 hover:bg-gray-50"
+                }`}
+              >
+                Tất cả
+              </div>
+            </label>
 
             {/* Các tab trạng thái khác */}
-            {Object.entries(OrderStatusDict).map(([status, value]) => (
-              <Fragment key={status}>
-                <input
-                  type="radio"
-                  name="status-table"
-                  className="tab hidden"
-                  value={value}
-                  aria-label={getOrderStatusLabel(status as OrderStatusType)}
-                />
-                <AdminOrderTable
-                  key={status}
-                  orders={pageInfo.content || []}
-                  onOrdersChange={handleOrdersChange}
-                />
-              </Fragment>
-            ))}
+            {Object.entries(OrderStatusDict).map(([status, value]) => {
+              const isActive = currentStatus === value;
+              return (
+                <label key={status} className="cursor-pointer select-none">
+                  <input
+                    type="radio"
+                    name="status"
+                    className="hidden"
+                    value={value}
+                    onChange={handleStatusChange}
+                    checked={isActive}
+                  />
+                  <div
+                    className={`px-4 py-1.5 text-sm font-medium rounded-lg border transition-all duration-200 ${
+                      isActive
+                        ? "bg-[#e20000] text-white border-[#e20000] shadow-md"
+                        : "bg-white text-gray-600 border-gray-300 hover:bg-gray-50"
+                    }`}
+                  >
+                    {getOrderStatusLabel(status as OrderStatusType)}
+                  </div>
+                </label>
+              );
+            })}
           </div>
         </div>
 
-        {/* 📄 Bộ phân trang */}
-        <div className="flex justify-center mt-6">
+        {/* ✅ THAY THẾ BẢNG CŨ BẰNG COMPONENT AdminOrderTable 
+            Component này đã chứa logic nút bấm (Duyệt, Hủy, Giao...) và giao diện chuẩn
+        */}
+        <AdminOrderTable 
+            orders={pageInfo.content || []} 
+            onOrdersChange={handleOrdersChange} 
+        />
+
+        {/* 📄 Phân trang */}
+        <div className="w-full mt-8 flex justify-center items-center">
           <PageController setPage={setPage} page={pageInfo} />
         </div>
       </div>

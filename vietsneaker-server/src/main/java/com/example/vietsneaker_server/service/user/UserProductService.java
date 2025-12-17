@@ -29,7 +29,8 @@ public class UserProductService {
   @Autowired private ProductRepository productRepository;
 
   @Autowired private ProductMapper productMapper;
-  @Autowired private FileStorageService fileStorageService;
+
+  // @Autowired private FileStorageService fileStorageService;
 
   // Lấy danh sách sản phẩm của user có phân trang
   public Page<ProductSummaryResponse> getAllProducts(
@@ -87,7 +88,7 @@ public class UserProductService {
         (product) -> {
           ProductSummaryResponse productSummary =
               MapperUtil.mapObject(product, ProductSummaryResponse.class);
-          productSummary.setImage(fileStorageService.readFileFromLocation(product.getImageUrl()));
+          productSummary.setImage(product.getImageUrl());
           return productSummary;
         });
     // return MapperUtil.mapPageResponse(products,

@@ -3,9 +3,10 @@
 /* tslint:disable */
 /* eslint-disable */
 export type CreateLoginRequest = {
-  email: string;
-  password: string;
-  passwordConfirmation?: string;
-  name?: string;
-  roles?: Array<string>;
+    email: string;
+    password: string;
+    passwordConfirmation?: string;
+    name?: string;
+    roles?: Array<string>;
 };
+

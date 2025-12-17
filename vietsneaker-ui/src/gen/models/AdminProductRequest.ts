@@ -3,12 +3,13 @@
 /* tslint:disable */
 /* eslint-disable */
 export type AdminProductRequest = {
-  name: string;
-  description?: string;
-  actualPrice: number;
-  sellPrice: number;
-  type?: string;
-  brandId: number;
-  visible?: boolean;
-  active?: boolean;
+    name: string;
+    description?: string;
+    actualPrice: number;
+    sellPrice: number;
+    type?: string;
+    brandId: number;
+    visible?: boolean;
+    active?: boolean;
 };
+

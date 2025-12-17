@@ -1,4 +1,4 @@
-import { ProductImage } from "@/app/components/common/base-64-image";
+import { ProductImage } from "@/app/components/common/ProductImage";
 import Thumbnail from "@/app/components/common/thumbnail";
 import ErrorText from "@/app/components/typography/error-text";
 import {
@@ -230,7 +230,7 @@ const EditPurchaseItemModal = ({
                       return (
                         <div className="flex items-center px-5 space-10">
                           <Thumbnail className="size-[4rem]">
-                            <ProductImage data={option.image} />
+                            <ProductImage src={option.image} />
                           </Thumbnail>
                           <div className="text-bold font-medium px-10">
                             <h3>{option.name}</h3>

@@ -3,7 +3,8 @@
 /* tslint:disable */
 /* eslint-disable */
 export type MonthlyRevenueDTO = {
-  year?: number;
-  month?: number;
-  revenue?: number;
+    year?: number;
+    month?: number;
+    revenue?: number;
 };
+

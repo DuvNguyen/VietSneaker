@@ -1,5 +1,5 @@
 "use client";
-import { ProductImage } from "@/app/components/common/base-64-image";
+import { ProductImage } from "@/app/components/common/ProductImage";
 import Thumbnail from "@/app/components/common/thumbnail";
 import ConfirmModal from "@/app/components/modal/confirm-modal";
 import { AdminProductResponse } from "@/gen/models/AdminProductResponse";
@@ -49,7 +49,7 @@ const ProductTableRow = ({ item, refreshCallBack }: ProductRowProps) => {
       <td className="py-3 px-4 border-b border-gray-200">
         {item.image ? (
           <Thumbnail className="h-[90px] w-[90px] mx-auto">
-            <ProductImage data={item.image} />
+            <ProductImage src={item.image} />
           </Thumbnail>
         ) : (
           <span className="text-gray-400 italic">Không có ảnh</span>

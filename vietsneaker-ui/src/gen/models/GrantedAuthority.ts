@@ -3,5 +3,6 @@
 /* tslint:disable */
 /* eslint-disable */
 export type GrantedAuthority = {
-  authority?: string;
+    authority?: string;
 };
+

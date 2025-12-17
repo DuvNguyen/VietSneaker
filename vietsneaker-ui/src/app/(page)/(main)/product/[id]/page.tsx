@@ -1,5 +1,5 @@
 "use client";
-import { ProductImage } from "@/app/components/common/base-64-image";
+import { ProductImage } from "@/app/components/common/ProductImage";
 import { ProductDetailsResponse, UserProductControllerService } from "@/gen";
 import { useAuth } from "@/lib/hooks/use-auth";
 import { useCart } from "@/lib/hooks/use-cart";
@@ -104,7 +104,7 @@ export default function ProductDetailsPage() {
           {/* Hình sản phẩm (luôn có khung cố định) */}
           <div className="w-full bg-gray-50 border rounded-lg flex items-center justify-center min-h-[300px]">
             {product.image ? (
-              <ProductImage data={product.image} />
+              <ProductImage src={product.image} />
             ) : (
               <span className="text-gray-400 text-sm italic">
                 Không có hình ảnh sản phẩm

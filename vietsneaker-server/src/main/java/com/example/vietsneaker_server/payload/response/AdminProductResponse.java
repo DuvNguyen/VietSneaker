@@ -24,5 +24,5 @@ public class AdminProductResponse {
   private BrandDTO brand;
   private Boolean isActive;
   private Boolean visible;
-  private byte[] image;
+  private String image;
 }

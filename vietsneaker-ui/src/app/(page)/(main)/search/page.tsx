@@ -127,23 +127,42 @@ export default function ProductFilterPage() {
       <div className="flex flex-col w-full mx-20 mt-10">
         {/* Top bar */}
         <div className="flex justify-between items-center mb-4 ">
-          <div className="flex gap-2 flex-wrap">
-             {/* Hiển thị các tag đang lọc */}
-             {selectedFilters.shoeSize && (
-                <div className="badge badge-neutral gap-2 text-white p-3">
-                    Size: {selectedFilters.shoeSize}
-                    {/* Nút xóa lọc size */}
-                    <button onClick={() => setSelectedFilters(prev => ({...prev, shoeSize: ""}))}>✕</button>
-                </div>
-             )}
-             {selectedFilters.brand?.brandId && (
-                <div className="badge badge-primary gap-2 text-white p-3">
-                    Brand ID: {selectedFilters.brand.brandId}
-                    {/* Nút xóa lọc brand */}
-                    <button onClick={() => setSelectedFilters(prev => ({...prev, brand: {brandId: undefined, name: ""}}))}>✕</button>
-                </div>
-             )}
-          </div>
+         <div className="flex gap-2 flex-wrap">
+  
+          {/* Tag Size */}
+          {selectedFilters.shoeSize && (
+            <div className="flex items-center gap-2 px-3 py-1 border border-gray-300 rounded-full text-sm bg-white shadow-sm">
+              <span className="text-gray-700">Size: {selectedFilters.shoeSize}</span>
+              <button
+                className="text-gray-500 hover:text-black"
+                onClick={() => setSelectedFilters(prev => ({ ...prev, shoeSize: "" }))}
+              >
+                ✕
+              </button>
+            </div>
+          )}
+
+          {/* Tag Brand – HIỂN THỊ TÊN HÃNG */}
+          {selectedFilters.brand?.brandId && (
+            <div className="flex items-center gap-2 px-3 py-1 border border-gray-300 rounded-full text-sm bg-white shadow-sm">
+              <span className="text-gray-700">
+                {selectedFilters.brand.name}
+              </span>
+
+              <button
+                className="text-gray-500 hover:text-black"
+                onClick={() => setSelectedFilters(prev => ({
+                  ...prev,
+                  brand: { brandId: undefined, name: "" }
+                }))}
+              >
+                ✕
+              </button>
+            </div>
+          )}
+
+        </div>
+
 
           <select
             className="select select-bordered w-40"

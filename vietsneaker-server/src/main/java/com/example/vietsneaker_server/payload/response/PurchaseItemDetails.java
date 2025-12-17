@@ -16,7 +16,7 @@ import lombok.Setter;
 public class PurchaseItemDetails {
   private String productName;
   private String supplierName;
-  private byte[] productImage;
+  private String productImage;
   private Long quantity;
   private Double price;
 }

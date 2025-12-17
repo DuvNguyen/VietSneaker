@@ -57,14 +57,22 @@ public class SecurityConfiguration {
         .authorizeHttpRequests(reg -> reg
             // 👇 PHẢI permit OPTIONS cho mọi đường dẫn để preflight không bị chặn
             .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+
+            // 🌟 Đảm bảo API Docs được permit trước các quy tắc khác
             .requestMatchers(
+                antMatcher("/v3/api-docs/**"), // Endpoint quan trọng cho code gen
                 antMatcher("/swagger-ui/**"),
-                antMatcher("/v3/api-docs/**"),
                 antMatcher("/swagger-resources/**"),
-                antMatcher("/webjars/**"),
-                antMatcher("/api/chat/**")
+                antMatcher("/webjars/**")
             ).permitAll()
+            
+            // Các API khác
+            .requestMatchers(antMatcher("/api/chat/**")).permitAll()
+            
+            // Quy tắc bảo vệ
             .requestMatchers(antMatcher("/admin/**")).authenticated()
+            
+            // Các đường dẫn còn lại
             .anyRequest().permitAll()
         );
 

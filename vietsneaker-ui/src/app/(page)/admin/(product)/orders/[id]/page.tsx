@@ -12,7 +12,7 @@ import { mockDetailOrderItems, OrderItem } from "./mock/order_item";
 import { promises } from "dns";
 import { set } from "date-fns";
 import Thumbnail from "@/app/components/common/thumbnail";
-import { ProductImage } from "@/app/components/common/base-64-image";
+import { ProductImage } from "@/app/components/common/ProductImage";
 
 const OrderDetail = () => {
   const [order, setOrder] = useState<AdminOrderSummaryResponse>();
@@ -126,7 +126,7 @@ const OrderDetail = () => {
                       <td>
                         {product.image && (
                           <Thumbnail className="h-[100px] w-[100px]">
-                            <ProductImage data={product.image} />
+                            <ProductImage src={product.image} />
                           </Thumbnail>
                         )}
                         ;

@@ -14,6 +14,9 @@ import { logger } from "@/util/logger";
 import { useLocalStorage } from "usehooks-ts";
 import { getRefreshToken } from "../http-client";
 import { RoleName } from "@/gen/backend";
+import { OpenAPI } from "@/gen";
+
+OpenAPI.TOKEN = async () => AuthManager.getAccessToken() ?? "";
 
 type UserDetails = Omit<JwtTokenResponse, "accessToken" | "refreshToken">;
 type AuthContextType = {

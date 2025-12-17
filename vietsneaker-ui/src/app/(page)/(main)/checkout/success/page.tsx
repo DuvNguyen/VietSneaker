@@ -16,7 +16,7 @@ const CheckoutSuccessPage = () => {
           </p>
           <div className="flex items-center justify-center">
             <Link href="/orders">
-              <PrimaryButton>
+              <PrimaryButton className="bg-red-500">
                 <ShoppingBag />
                 Quản lý đơn hàng
               </PrimaryButton>
