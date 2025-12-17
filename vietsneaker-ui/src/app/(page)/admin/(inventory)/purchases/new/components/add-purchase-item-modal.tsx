@@ -229,7 +229,7 @@ const AddPurchaseItemModal = ({
                       return (
                         <div className="flex items-center px-5 space-10">
                           <Thumbnail className="size-[4rem]">
-                            <ProductImage data={option.image} />
+                            <ProductImage src={option.image} />
                           </Thumbnail>
                           <div className="text-bold font-medium px-10">
                             <h3>{option.name}</h3>

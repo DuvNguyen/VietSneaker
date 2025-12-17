@@ -79,7 +79,7 @@ const CheckoutAddressPage = () => {
               <img src={item.image} alt={item.name} className="w-20 h-20 object-contain" />
                 */}
               <Thumbnail className="size-[8rem]">
-                <ProductImage data={item.image} />
+                <ProductImage src={item.image} />
               </Thumbnail>
               <div className="flex-1">
                 <h3 className="text-bold font-medium mb-2">{item.name}</h3>
