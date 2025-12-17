@@ -148,7 +148,16 @@ export const MainHeader = ({ searchBar = true, filter = true }) => {
 
                   {/* User Dropdown */}
                   <div className="dropdown dropdown-end">
-                    <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar placeholder">
+                    <div
+                      tabIndex={0}
+                      role="button"
+                      className="
+                        btn btn-ghost btn-circle
+                        p-0 min-h-0
+                        w-9 h-9
+                        flex items-center justify-center
+                      "
+                    >
                       <div className="bg-slate-100 text-slate-700 rounded-full w-9 h-9 flex items-center justify-center border hover:border-slate-300">
                         <User className="w-5 h-5" />
                       </div>
