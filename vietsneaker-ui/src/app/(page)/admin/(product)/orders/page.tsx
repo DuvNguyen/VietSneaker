@@ -109,9 +109,6 @@ const OrderSummaryPage = () => {
           </div>
         </div>
 
-        {/* ✅ THAY THẾ BẢNG CŨ BẰNG COMPONENT AdminOrderTable 
-            Component này đã chứa logic nút bấm (Duyệt, Hủy, Giao...) và giao diện chuẩn
-        */}
         <AdminOrderTable 
             orders={pageInfo.content || []} 
             onOrdersChange={handleOrdersChange} 
