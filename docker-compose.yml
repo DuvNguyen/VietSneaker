@@ -1,9 +1,6 @@
 version: '3.8'
 
 services:
-  # ----------------------------
-  # 1. DATABASE (MySQL)
-  # ----------------------------
   mysqldb:
     image: mysql:8.0
     container_name: vietsneaker-db
@@ -39,9 +36,9 @@ services:
       # Cấu hình HTTPS
       - SERVER_PORT=8083
       - SERVER_SSL_ENABLED=true
-      - SERVER_SSL_KEY_STORE=classpath:keystore/vietsneaker-localhost-new.p12
-      - SERVER_SSL_KEY_STORE_PASSWORD=changeit
-      - SERVER_SSL_KEY_STORE_TYPE=PKCS12
+      - SERVER_SSL_KEY_STORE=${SERVER_SSL_KEY_STORE}
+      - SERVER_SSL_KEY_STORE_PASSWORD=${SERVER_SSL_KEY_STORE_PASSWORD}
+      - SERVER_SSL_KEY_STORE_TYPE=${SERVER_SSL_KEY_STORE_TYPE}
       # Kết nối DB (Dùng tên service 'mysqldb' thay vì localhost)
       - DB_HOST=mysqldb
       - DB_USERNAME=${DB_USERNAME}
@@ -52,8 +49,12 @@ services:
       - MAIL_USERNAME=${MAIL_USERNAME}
       - MAIL_PASSWORD=${MAIL_PASSWORD}
       # CORS: Cho phép Frontend gọi vào
-      - APP_ALLOWED_ORIGINS=*
-      - APP_BASE_URL=*
+      - APP_ALLOWED_ORIGINS=${APP_ALLOWED_ORIGINS}
+      - APP_BASE_URL=${APP_BASE_URL}
+      #Cloud dinary lưu ảnh
+      - CLOUDINARY_CLOUD_NAME=${CLOUDINARY_CLOUD_NAME}
+      - CLOUDINARY_API_KEY=${CLOUDINARY_API_KEY}
+      - CLOUDINARY_API_SECRET=${CLOUDINARY_API_SECRET}
     networks:
       - vietsneaker-net
 
@@ -70,25 +71,8 @@ services:
     depends_on:
       - vietsneaker-server
     environment:
-      # URL Backend khi gọi từ Server-Side (SSR)
-      - HOST=https://vietsneaker-server:8083
-      - CONTEXT_API=/api
-      # QUAN TRỌNG: Vì Backend dùng HTTPS tự ký, Nodejs sẽ chặn.
-      # Dòng này bắt Nodejs bỏ qua lỗi bảo mật khi gọi nội bộ.
+      - BACKEND_URL=https://vietsneaker-server:8083 # Gọi nội bộ qua Docker Network cho nhanh
       - NODE_TLS_REJECT_UNAUTHORIZED=0
-    networks:
-      - vietsneaker-net
-
-  # ----------------------------
-  # 4. CLOUDFLARE TUNNEL
-  # ----------------------------
-  tunnel:
-    image: cloudflare/cloudflared:latest
-    container_name: cloudflare-tunnel
-    restart: unless-stopped
-    command: tunnel run
-    environment:
-      - TUNNEL_TOKEN=${TUNNEL_TOKEN}
     networks:
       - vietsneaker-net
 

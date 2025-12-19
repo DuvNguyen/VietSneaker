@@ -20,9 +20,6 @@ WORKDIR /app
 # Lưu ý: Lệnh này tự tìm file jar trong target, bất kể tên version là gì
 COPY --from=build /app/target/*.jar app.jar
 
-#ảnh
-COPY --from=build /app/upload ./upload
-
 # Tạo user non-root để bảo mật hơn (Best practice)
 RUN addgroup -S spring && adduser -S spring -G spring
 USER spring:spring

@@ -11,10 +11,11 @@ const nextConfig: NextConfig = {
 
   // 🔥 REWRITE API → BACKEND CONTAINER
   async rewrites() {
+    const backendUrl = process.env.BACKEND_URL || "https://4.241.131.190";
     return [
       {
         source: "/api/:path*",
-        destination: "https://3.27.137.145:8083/api/:path*",
+        destination: `${backendUrl}/api/:path*`,
       },
     ];
   },
