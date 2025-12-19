@@ -40,7 +40,7 @@ const PurchaseTableRow = ({
       <tr className="whitespace-nowrap text-center">
         <td>
           <Thumbnail className="size-[4rem]">
-            <ProductImage data={item.productImage} />
+            <ProductImage src={item.productImage} />
           </Thumbnail>
         </td>
         <td>{item.productName}</td>

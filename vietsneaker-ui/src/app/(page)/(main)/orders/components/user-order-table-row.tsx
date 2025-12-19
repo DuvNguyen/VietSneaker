@@ -49,7 +49,7 @@ const OrderRow = ({
             {order.orderItems?.map((item) => (
               <div key={item.productId} className="flex items-start gap-4">
                 <Thumbnail className="size-[6rem]">
-                  <ProductImage data={item.image} />
+                  <ProductImage src={item.image} />
                 </Thumbnail>
                 <div className="flex-1">
                   <Link href={`/product/${item.productId}`}>

@@ -49,7 +49,7 @@ const ProductTableRow = ({ item, refreshCallBack }: ProductRowProps) => {
       <td className="py-3 px-4 border-b border-gray-200">
         {item.image ? (
           <Thumbnail className="h-[90px] w-[90px] mx-auto">
-            <ProductImage data={item.image} />
+            <ProductImage src={item.image} />
           </Thumbnail>
         ) : (
           <span className="text-gray-400 italic">Không có ảnh</span>
