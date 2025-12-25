@@ -1,0 +1,112 @@
+name: Deploy to Azure VM
+
+on:
+  push:
+    branches: [ "deploy" ] # Chạy khi code được push vào nhánh deploy
+  workflow_dispatch:       # Cho phép chạy thủ công bằng nút bấm trên GitHub
+
+env:
+  REGISTRY: ghcr.io
+  # Tên Image sẽ là: ghcr.io/tên-github/tên-repo/vietsneaker-server
+  # Lưu ý: GitHub tự điền user và repo, bạn không cần sửa dòng này
+  IMAGE_NAME: ${{ github.repository }}
+
+jobs:
+  # 1. BUILD VÀ PUSH BACKEND
+  build-push-backend:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      # Bước này chuyển tên repo thành chữ thường để tránh lỗi Docker
+      - name: Lowercase Repo Name
+        run: echo "IMAGE_NAME_LOWER=${IMAGE_NAME,,}" >> $GITHUB_ENV
+
+      - name: Build and Push Backend
+        uses: docker/build-push-action@v5
+        with:
+          context: ./vietsneaker-server
+          file: ./vietsneaker-server/Dockerfile
+          push: true
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_LOWER }}/vietsneaker-server:latest
+
+  # 2. BUILD VÀ PUSH FRONTEND
+  build-push-ui:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Lowercase Repo Name
+        run: echo "IMAGE_NAME_LOWER=${IMAGE_NAME,,}" >> $GITHUB_ENV
+
+      - name: Build and Push UI
+        uses: docker/build-push-action@v5
+        with:
+          context: ./vietsneaker-ui
+          file: ./vietsneaker-ui/Dockerfile
+          push: true
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_LOWER }}/vietsneaker-ui:latest
+
+  # 3. DEPLOY LÊN AZURE
+  deploy-to-vm:
+    needs: [build-push-backend, build-push-ui]
+    runs-on: ubuntu-latest
+    permissions:
+      packages: read
+    steps:
+      # 1. Cần checkout code để lấy file docker-compose.yml mới nhất
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # 2. Copy file docker-compose.yml lên server
+      - name: Copy docker-compose to VM
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.AZURE_HOST }}
+          username: ${{ secrets.AZURE_USERNAME }}
+          key: ${{ secrets.AZURE_SSH_KEY }}
+          source: "docker-compose.yml"
+          target: "/home/azureuser/vietsneaker"
+
+      - name: SSH and Deploy
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.AZURE_HOST }}
+          username: ${{ secrets.AZURE_USERNAME }}
+          key: ${{ secrets.AZURE_SSH_KEY }}
+          script: |
+            # Login vào GHCR trên VM (dùng token tự sinh của GitHub)
+            echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+            
+            cd /home/azureuser/vietsneaker
+            
+            # Kéo ảnh mới về
+            docker compose pull
+            
+            # Chạy lại container
+            docker compose up -d --remove-orphans
+            
+            # Xóa ảnh cũ cho nhẹ máy
+            docker image prune -f
