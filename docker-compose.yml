@@ -25,8 +25,8 @@ services:
   # 2. BACKEND (Spring Boot HTTPS)
   # ----------------------------
   vietsneaker-server:
-    # Sửa để khớp với GHCR trong deploy.yml
-    image: ghcr.io/vuthanhdat04/vietsneaker/vietsneaker-server:latest
+    # Sửa vuthanhdat04 thành duvnguyen (tên github của bạn)
+    image: ghcr.io/duvnguyen/vietsneaker/vietsneaker-server:latest
     container_name: vietsneaker-server
     restart: unless-stopped
     depends_on:
@@ -64,8 +64,8 @@ services:
   # ----------------------------
   vietsneaker-ui:
     # Build từ thư mục hiện tại (chứa Dockerfile bạn gửi)
-    # Sửa để khớp với GHCR trong deploy.yml
-    image: ghcr.io/vuthanhdat04/vietsneaker/vietsneaker-ui:latest
+    # Sửa vuthanhdat04 thành duvnguyen
+    image: ghcr.io/duvnguyen/vietsneaker/vietsneaker-ui:latest
     container_name: vietsneaker-ui
     ports:
       - "3000:3000"
