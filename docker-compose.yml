@@ -28,6 +28,8 @@ services:
     # Sửa vuthanhdat04 thành duvnguyen (tên github của bạn)
     image: ghcr.io/duvnguyen/vietsneaker/vietsneaker-server:latest
     container_name: vietsneaker-server
+    ports:
+      - "8083:8083"
     restart: unless-stopped
     depends_on:
       mysqldb:
