@@ -109,10 +109,10 @@ jobs:
             cd /home/azureuser/vietsneaker
             
             # Kéo ảnh mới về
-            docker compose pull
+            docker-compose pull
             
             # Chạy lại container
-            docker compose up -d --remove-orphans
+            docker-compose up -d --remove-orphans
             
             # Xóa ảnh cũ cho nhẹ máy
             docker image prune -f
