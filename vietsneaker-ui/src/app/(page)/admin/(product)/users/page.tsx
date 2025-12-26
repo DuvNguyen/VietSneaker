@@ -108,17 +108,6 @@ export default function UserAdminPage() {
             </thead>
 
             <tbody>
-<<<<<<< HEAD
-              {(pageInfo?.content || []).length > 0 ? (
-                pageInfo?.content?.map((item: UserDetailResponse, index: number) => (
-                  <UserTableRow
-                    key={index}
-                    item={item}
-                    roleName={userRoles[item.userId!] || ""}
-                    refreshCallBack={fetchUsers}
-                  />
-                ))
-=======
               {(pageInfo?.content ?? []).length > 0 ? (
                 pageInfo!.content!.map(
                   (item: UserDetailResponse, index: number) => (
@@ -130,7 +119,6 @@ export default function UserAdminPage() {
                     />
                   ),
                 )
->>>>>>> dat
               ) : (
                 <tr>
                   <td
