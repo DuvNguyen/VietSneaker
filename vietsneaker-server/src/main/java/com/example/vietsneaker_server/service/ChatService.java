@@ -1,6 +1,7 @@
 package com.example.vietsneaker_server.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
@@ -25,6 +26,7 @@ import java.util.regex.Pattern;
 
 @Service
 @RequiredArgsConstructor
+@Log4j2
 public class ChatService {
 
     private final ProductRepository productRepository;
@@ -49,6 +51,7 @@ public class ChatService {
 
     public String processMessage(String message) {
         final String msg = message == null ? "" : message.trim();
+        log.info("ChatService processing message: {}", msg);
 
         // 1) Intent: lọc sản phẩm theo giá (dưới / trên / bằng / khoảng)
         PriceFilter priceFilter = tryParsePriceFilter(msg);
@@ -137,6 +140,7 @@ public class ChatService {
                 .retrieve()
                 .bodyToMono(OpenAIChatResponse.class)
                 .onErrorResume(e -> {
+                    log.error("Error calling OpenAI API: ", e);
                     OpenAIChatResponse fallback = new OpenAIChatResponse();
                     OpenAIChatResponse.Message m = new OpenAIChatResponse.Message();
                     m.setRole("assistant");
