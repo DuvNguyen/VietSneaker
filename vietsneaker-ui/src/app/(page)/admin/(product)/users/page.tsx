@@ -1,7 +1,6 @@
 "use client";
 import React, { useState, ChangeEvent } from "react";
 import AdminMainCard from "@/app/components/card/admin-card";
-import DataTable from "@/app/components/common/data-table";
 import UserTableRow from "./components/user-table-row";
 import {
   AdminUserControllerService,
@@ -18,7 +17,7 @@ export default function UserAdminPage() {
       fetchData: fetchUsers,
     });
 
-  // 🔍 Hàm lấy danh sách user
+  // 🔍 Hàm lấy danh sách user (GIỮ NGUYÊN LOGIC)
   async function fetchUsers() {
     try {
       const resp = await AdminUserControllerService.getAllUsers(page - 1, undefined);
@@ -26,7 +25,6 @@ export default function UserAdminPage() {
 
       const users = resp.content || [];
 
-      // Gọi song song để lấy vai trò từng user
       const roleResults = await Promise.all(
         users.map(async (user) => {
           try {
@@ -44,7 +42,6 @@ export default function UserAdminPage() {
         }),
       );
 
-      // Map userId -> role
       const roleMap: Record<number, string> = {};
       roleResults.forEach(({ userId, role }) => {
         roleMap[userId!] = role;
@@ -57,23 +54,24 @@ export default function UserAdminPage() {
     }
   }
 
-  // Xử lý tìm kiếm
   function onChangeSearchQuery(event: ChangeEvent<HTMLInputElement>): void {
     setQuery(event.target.value);
   }
 
   return (
     <AdminMainCard title="NGƯỜI DÙNG" goBack={false}>
-      <div className="w-full min-h-screen flex flex-col items-center bg-white px-10 py-5">
+      {/* Wrapper giống Supplier */}
+      <div className="w-full bg-white p-6 md:p-8 shadow-lg rounded-xl min-h-[80vh]">
+
         {/* 🔍 Thanh tìm kiếm */}
-        <div className="w-full flex justify-center mb-5">
-          <div className="w-full max-w-[500px]">
-            <div className="flex items-center border border-gray-300 bg-white h-10 px-3 rounded-none shadow-none">
-              <i className="fa fa-search mr-2 text-gray-500"></i>
+        <div className="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
+          <div className="w-full md:w-3/5 lg:w-2/5">
+            <div className="flex items-center border border-gray-300 bg-white h-11 px-3 rounded-lg shadow-sm">
+              <i className="fa fa-search mr-2 text-gray-400"></i>
               <input
                 value={query || ""}
                 onChange={onChangeSearchQuery}
-                className="w-full focus:outline-none text-sm text-gray-700"
+                className="w-full focus:outline-none text-sm text-gray-700 bg-white placeholder-gray-400"
                 placeholder="Tìm kiếm người dùng..."
               />
             </div>
@@ -81,35 +79,36 @@ export default function UserAdminPage() {
         </div>
 
         {/* 📋 Bảng danh sách người dùng */}
-        <div className="w-full overflow-x-auto">
-          <table className="w-full border-collapse table-fixed text-left text-[15px]">
-            <thead className="bg-[#ffcccc] text-gray-800">
+        <div className="w-full overflow-x-auto border border-gray-200 rounded-xl shadow-sm">
+          <table className="min-w-full border-collapse table-auto text-left text-[14px]">
+            <thead className="bg-gray-100 text-gray-700 sticky top-0">
               <tr>
-                <th className="p-3 border-b border-gray-300 text-center w-[40px]">
+                <th className="p-3 border-b border-gray-300 text-center w-[40px] font-semibold">
                   #
                 </th>
-                <th className="p-3 border-b border-gray-300 text-center w-[22%]">
+                <th className="p-3 border-b border-gray-300 text-center font-semibold">
                   Tên người dùng
                 </th>
-                <th className="p-3 border-b border-gray-300 text-center w-[25%]">
+                <th className="p-3 border-b border-gray-300 text-center font-semibold">
                   Email
                 </th>
-                <th className="p-3 border-b border-gray-300 text-center w-[20%]">
+                <th className="p-3 border-b border-gray-300 text-center font-semibold">
                   Vai trò
                 </th>
-                <th className="p-3 border-b border-gray-300 text-center w-[15%]">
+                <th className="p-3 border-b border-gray-300 text-center font-semibold">
                   Trạng thái
                 </th>
-                <th className="p-3 border-b border-gray-300 text-center w-[8%]">
-                  Khoá/Mở
+                <th className="p-3 border-b border-gray-300 text-center w-[8%] font-semibold">
+                  Khoá / Mở
                 </th>
-                <th className="p-3 border-b border-gray-300 text-center w-[8%]">
+                <th className="p-3 border-b border-gray-300 text-center w-[8%] font-semibold">
                   Chi tiết
                 </th>
               </tr>
             </thead>
 
             <tbody>
+<<<<<<< HEAD
               {(pageInfo?.content || []).length > 0 ? (
                 pageInfo?.content?.map((item: UserDetailResponse, index: number) => (
                   <UserTableRow
@@ -119,11 +118,24 @@ export default function UserAdminPage() {
                     refreshCallBack={fetchUsers}
                   />
                 ))
+=======
+              {(pageInfo?.content ?? []).length > 0 ? (
+                pageInfo!.content!.map(
+                  (item: UserDetailResponse, index: number) => (
+                    <UserTableRow
+                      key={index}
+                      item={item}
+                      roleName={userRoles[item.userId!] || ""}
+                      refreshCallBack={fetchUsers}
+                    />
+                  ),
+                )
+>>>>>>> dat
               ) : (
                 <tr>
                   <td
-                    colSpan={5}
-                    className="text-center py-6 text-gray-500 italic"
+                    colSpan={7}
+                    className="text-center py-10 text-gray-500 italic bg-gray-50"
                   >
                     Không tìm thấy người dùng nào
                   </td>
@@ -133,8 +145,8 @@ export default function UserAdminPage() {
           </table>
         </div>
 
-        {/* 📄 Bộ điều khiển phân trang */}
-        <div className="w-full mt-5 flex justify-center items-center rounded-none">
+        {/* 📄 Phân trang */}
+        <div className="w-full mt-8 flex justify-center items-center">
           <PageController setPage={setPage} page={pageInfo} />
         </div>
       </div>

@@ -7,8 +7,7 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  # Tên Image sẽ là: ghcr.io/tên-github/tên-repo/vietsneaker-server
-  # Lưu ý: GitHub tự điền user và repo, bạn không cần sửa dòng này
+
   IMAGE_NAME: ${{ github.repository }}
 
 jobs:

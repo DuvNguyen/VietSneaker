@@ -23,7 +23,7 @@ import com.example.vietsneaker_server.message.MessageKey;
 
 import org.springframework.web.bind.annotation.CrossOrigin;
 
-@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
+@CrossOrigin(origins = "https://4.241.131.190", allowCredentials = "true")
 /** AuthController */
 @RestController
 @RequiredArgsConstructor
@@ -60,9 +60,17 @@ public class AuthController {
 
   @PostMapping("/refresh")
   public ResponseEntity<RefreshTokenResponse> refreshAccessToken(
-      @CookieValue(name = ApplicationConstants.REFRESH_COOKIE_NAME, required = false)
-          String refreshToken,
+      @CookieValue(
+          name = ApplicationConstants.REFRESH_COOKIE_NAME,
+          required = false
+      ) String refreshToken,
       HttpServletResponse response) {
+
+    // ✅ CHẶN LỖI NGAY TỪ CONTROLLER
+    if (refreshToken == null) {
+      return ResponseEntity.status(401).build();
+    }
+
     RefreshTokenResponse resp = authService.refresh(refreshToken, response);
     return ResponseEntity.ok(resp);
   }

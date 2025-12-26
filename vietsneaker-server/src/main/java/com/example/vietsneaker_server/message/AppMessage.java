@@ -1,113 +1,80 @@
 package com.example.vietsneaker_server.message;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.EnumMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.example.vietsneaker_server.config.ApplicationProperties;
-import com.example.vietsneaker_server.util.ApplicationContextProvider;
+import org.springframework.core.io.ClassPathResource;
 
 /**
- * TODO: change to MessageSource for i18n AppMessage Centralize application message with csv file -
- * application prorperties ${app.messages-file} This class provide helper method to get message from
- * this config file You have to provide new message in {@link MessageKey} and provide semantic
- * message ${app.messages-file}
+ * Class quản lý thông báo lỗi/thành công.
+ * Đã sửa để chạy an toàn trên Docker (Read-only mode).
  */
 public class AppMessage {
 
-  // Enum map is better for enum lookup
+  private static final Logger logger = LoggerFactory.getLogger(AppMessage.class);
   private static final Map<MessageKey, String> messages = new EnumMap<>(MessageKey.class);
 
-  private static final Set<MessageKey> missingKeys = new HashSet<>();
+  // Tên file cấu hình (Đặt cứng ở đây cho an toàn, thay vì gọi Bean trong static block)
+  private static final String MESSAGES_FILE = "messages.csv";
 
-  // Init loading message to map as cache
   static {
     loadMessages();
   }
 
-  /**
-   * In this ${app.messages-file} content may be RESOURCE_NOT_FOUND,Resource is not found
-   *
-   * <p>Usage: AppMessage.of(MessageKey.RESOURCE_NOT_FOUND)
-   *
-   * @param key the message key (enum)
-   * @return the corresponding message, or the enum name if missing
-   */
   public static String of(MessageKey key) {
+    // Nếu tìm thấy thì trả về message, không thì trả về tên Enum
     return messages.getOrDefault(key, key.name());
   }
 
   private static void loadMessages() {
+    try {
+      // 1. Dùng ClassPathResource để lấy file từ trong JAR (An toàn cho Docker)
+      ClassPathResource resource = new ClassPathResource(MESSAGES_FILE);
+      
+      if (!resource.exists()) {
+        logger.error("CRITICAL: Không tìm thấy file {} trong resources! Sử dụng tên Enum mặc định.", MESSAGES_FILE);
+        return; // Không ném lỗi để tránh sập App, chỉ log lỗi thôi
+      }
 
-    Logger logger = LoggerFactory.getLogger(AppMessage.class);
-    ApplicationProperties applicationProperties =
-        ApplicationContextProvider.bean(ApplicationProperties.class);
-    String messagesFile = applicationProperties.getMessagesFile();
+      // 2. Đọc file
+      try (BufferedReader reader = new BufferedReader(
+          new InputStreamReader(resource.getInputStream(), StandardCharsets.UTF_8))) {
+        
+        String line;
+        while ((line = reader.readLine()) != null) {
+          // Bỏ qua dòng trống hoặc comment (nếu cần)
+          if (line.trim().isEmpty()) continue;
 
-    // Using outer try for close resource automatically
-    try (BufferedReader reader =
-        new BufferedReader(
-            new InputStreamReader(
-                AppMessage.class.getClassLoader().getResourceAsStream(messagesFile),
-                StandardCharsets.UTF_8))) {
-      String line;
-
-      // Read message from csv file as 2 part
-      while ((line = reader.readLine()) != null) {
-        String[] parts = line.split(",", 2);
-        if (parts.length == 2) {
-          try {
-            String appMsg = parts[0].trim();
-            String businessMsg = parts[1].trim();
-            MessageKey messageKey = MessageKey.valueOf(appMsg);
-
-            messages.put(messageKey, businessMsg);
-          } catch (IllegalArgumentException e) {
-            logger.info("Ignoring invalid message key: {}", line);
+          String[] parts = line.split(",", 2);
+          if (parts.length == 2) {
+            try {
+              String appMsg = parts[0].trim();
+              String businessMsg = parts[1].trim();
+              
+              // Map từ String trong CSV sang Enum
+              MessageKey messageKey = MessageKey.valueOf(appMsg);
+              messages.put(messageKey, businessMsg);
+              
+            } catch (IllegalArgumentException e) {
+              logger.warn("Ignoring invalid message key in CSV: {}", line);
+            }
           }
         }
       }
-
-      // Default message as enum key when it not define in csv
-
-      // Write to csv file missing key
-      try (BufferedWriter writer =
-          new BufferedWriter(
-              new FileWriter(
-                  new File(AppMessage.class.getClassLoader().getResource(messagesFile).toURI()),
-                  true))) {
-
-        for (MessageKey key : MessageKey.values()) {
-          if (!messages.containsKey(key)) {
-
-            missingKeys.add(key);
-            // Use message key enum name as default name
-            messages.put(key, key.name());
-
-            // Write append to csv message storeage file
-            writer.write(key.name() + "," + key.name());
-            writer.newLine();
-          }
-        }
-
-      } catch (IOException e) {
-        System.err.println("Unable to write missing application message: " + e.getMessage());
-      }
-
-      logger.info("Load application message from file {}", messagesFile);
-
+      
+      logger.info("Successfully loaded messages from {}", MESSAGES_FILE);
+      
+      // --- QUAN TRỌNG: ĐÃ XÓA PHẦN GHI FILE (BufferedWriter) ---
+      // Lý do: Trên Docker chạy file .jar là Read-Only, cố ghi file sẽ gây lỗi 500 Crashing App.
+      
     } catch (Exception e) {
-      throw new RuntimeException("Failed to load messages from CSV", e);
+      // Catch tất cả lỗi để App vẫn khởi động được, chỉ log error ra console
+      logger.error("Failed to load messages from CSV", e);
     }
   }
 }

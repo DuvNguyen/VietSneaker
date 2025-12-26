@@ -104,7 +104,8 @@ public class SecurityConfiguration {
     config.setAllowedOriginPatterns(List.of(
       "http://localhost:3000", 
       "https://localhost:3000",
-      "https://*.trycloudflare.com"
+      "https://*.trycloudflare.com",
+      "https://4.241.131.190"
     ));
     config.setAllowedMethods(List.of("GET","POST","PUT","DELETE","OPTIONS","PATCH"));
     config.setAllowedHeaders(List.of("Content-Type","Authorization","X-Requested-With","Accept","Origin"));

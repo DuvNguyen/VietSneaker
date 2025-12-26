@@ -1,5 +1,6 @@
 package com.example.vietsneaker_server.auth.service.impl;
-
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.List;
@@ -136,13 +137,16 @@ public class AuthenticationServiceImpl implements AuthenticationService {
   @Override
   public void addRefreshTokenAsCookie(
       String cookieName, String refreshToken, HttpServletResponse response) {
-    Cookie refreshTokenCookie = new Cookie(cookieName, refreshToken);
-    refreshTokenCookie.setHttpOnly(true);
-    // Required https
-    // refreshTokenCookie.setSecure(true);
-    refreshTokenCookie.setPath("/");
-    refreshTokenCookie.setMaxAge(applicationProperties.getJwtRefreshTokenExpDays() * 24 * 60 * 60);
-    response.addCookie(refreshTokenCookie);
+    
+   ResponseCookie cookie = ResponseCookie.from(cookieName, refreshToken)
+    .httpOnly(true)
+    .secure(true)
+    .sameSite("None")
+    .path("/")
+    .maxAge(applicationProperties.getJwtRefreshTokenExpDays() * 24L * 60 * 60)
+    .build();
+
+    response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
   }
 
   @Override
