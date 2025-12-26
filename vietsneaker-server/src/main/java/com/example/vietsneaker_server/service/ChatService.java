@@ -31,7 +31,7 @@ public class ChatService {
 
     private static final String SHOP_BASE_URL =
             Optional.ofNullable(System.getenv("SHOP_BASE_URL"))
-                    .orElse("http://localhost:3000");
+                    .orElse("https://4.241.131.190");
 
     @Value("${openai.api.key}")
     private String apiKey;
