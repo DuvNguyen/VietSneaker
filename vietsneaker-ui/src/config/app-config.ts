@@ -1,4 +1,4 @@
-export const HOST = process.env.HOST || `https://localhost:8083`;
+export const HOST = process.env.HOST || `https://localhost:8081`;
 export const CONTEXT_API = process.env.CONTEXT_API || `/api`;
 export const API_BASE = HOST + CONTEXT_API;
 
