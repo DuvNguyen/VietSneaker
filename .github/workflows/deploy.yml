@@ -2,7 +2,7 @@ name: Deploy to Azure VM
 
 on:
   push:
-    branches: [ "deploy" ] # Chạy khi code được push vào nhánh deploy
+    branches: [ "deploy1" ] # Chạy khi code được push vào nhánh deploy
   workflow_dispatch:       # Cho phép chạy thủ công bằng nút bấm trên GitHub
 
 env:

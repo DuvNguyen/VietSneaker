@@ -1,9 +1,11 @@
 package com.example.vietsneaker_server.payload.response;
 
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
 
 @Setter
 @Getter
@@ -12,7 +14,7 @@ import lombok.Setter;
 public class ProductSummaryResponse {
   private Long productId;
   private String name;
-  private String image;
+  private byte[] image;
   private Double sellPrice;
   private String type;
   private String shoeSize;

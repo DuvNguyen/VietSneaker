@@ -1,5 +1,6 @@
 package com.example.vietsneaker_server.repository;
 
+
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -8,8 +9,10 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+
 import com.example.vietsneaker_server.entity.Order;
 import com.example.vietsneaker_server.entity.OrderStatus;
+
 
 @Repository
 public interface OrderRepository
@@ -25,6 +28,7 @@ public interface OrderRepository
           + "ORDER BY YEAR(o.createdAt), MONTH(o.createdAt)")
   List<Object[]> getMonthlyRevenue();
 
+
   @Query(
       "SELECT COALESCE(SUM((COALESCE(p.sellPrice, 0) - COALESCE(p.actualPrice, 0)) * COALESCE(oi.quantity, 0)), 0) as revenue "
           + "FROM Order o "
@@ -35,23 +39,31 @@ public interface OrderRepository
           + "AND MONTH(o.createdAt) = :month")
   Optional<Double> getRevenueByMonthAndYear(@Param("year") int year, @Param("month") int month);
 
+
   @Query(
       "SELECT SUM(o.totalPrice)"
           + "FROM Order o WHERE o.status = 'SHIPPED' AND YEAR(o.createdAt) = :year "
           + "AND MONTH(o.createdAt) = :month")
   Double sumTotalPriceSale(@Param("year") int year, @Param("month") int month);
 
+
   @Query("SELECT COUNT(o) FROM Order o WHERE YEAR(o.createdAt) = :year")
   Long countOrdersByYear(@Param("year") int year);
 
+
   @Query("SELECT COUNT(o) FROM Order o WHERE YEAR(o.createdAt) = :year AND o.status = :status")
   Long countOrdersByYearAndStatus(@Param("year") int year, @Param("status") OrderStatus status);
+
 
   @Query(
       "SELECT o from Order o JOIN FETCH  o.orderItems WHERE o.orderId = :orderId AND o.user.userId = :userId")
   Optional<Order> findByUserIdAndOrderIdWithItems(
       @Param("userId") Long userId, @Param("orderId") Long orderId);
 
+
   // Page<Order> findAll( Specification<Order> specification, Pageable pageable);
+    @Query("SELECT o FROM Order o LEFT JOIN FETCH o.orderItems WHERE o.user.userId = :userId")
+    List<Order> findAllByUserId(@Param("userId") Long userId);
+
 
 }

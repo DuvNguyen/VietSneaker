@@ -1,5 +1,6 @@
 package com.example.vietsneaker_server.service.user;
 
+
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +9,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+
 
 import com.example.vietsneaker_server.entity.Product;
 import com.example.vietsneaker_server.exception.ResourceNotFoundException;
@@ -23,19 +25,22 @@ import com.example.vietsneaker_server.repository.ProductRepository;
 import com.example.vietsneaker_server.specification.ProductSpecification;
 import com.example.vietsneaker_server.vo.BestSellerProductVo;
 
+
 @Service
 @RequiredArgsConstructor
 public class UserProductService {
   @Autowired private ProductRepository productRepository;
 
-  @Autowired private ProductMapper productMapper;
 
-  // @Autowired private FileStorageService fileStorageService;
+  @Autowired private ProductMapper productMapper;
+  @Autowired private FileStorageService fileStorageService;
+
 
   // Lấy danh sách sản phẩm của user có phân trang
   public Page<ProductSummaryResponse> getAllProducts(
       int page, int size, String name, String type, String shoeSize,
       Double maxPrice, Long brandId, String sortBy) {
+
 
     Specification<Product> specification =
         Specification.where(ProductSpecification.searchByName(name))
@@ -46,11 +51,15 @@ public class UserProductService {
             .and(ProductSpecification.sortBy(sortBy))
             .and(ProductSpecification.belowPrice(maxPrice));
 
+
     Pageable pageable = PageRequest.of(page, size);
     Page<Product> products = productRepository.findAll(specification, pageable);
 
+
     return products.map(productMapper::productToProductSummary);
   }
+
+
 
 
   // Lấy sản phẩm theo id
@@ -64,8 +73,10 @@ public class UserProductService {
       throw new ResourceNotFoundException(AppMessage.of(MessageKey.PRIVATE_PRODUCT));
     }
 
+
     return productMapper.productToProductDetails(product);
   }
+
 
   // Lay san pham moi nhat
   public PageResponse<ProductSummaryResponse> getLatestProducts(int page, int size) {
@@ -74,11 +85,14 @@ public class UserProductService {
             .and(ProductSpecification.isVisiable())
             .and(ProductSpecification.latest());
 
+
     Pageable pageable = PageRequest.of(page, size);
     Page<Product> products = productRepository.findAll(specification, pageable);
 
+
     return MapperUtil.mapPageResponse(products, productMapper::productToProductSummary);
   }
+
 
   // lay san pham ban chay nhat
   public List<ProductSummaryResponse> getBestSellingProducts(int page, int size) {
@@ -88,7 +102,7 @@ public class UserProductService {
         (product) -> {
           ProductSummaryResponse productSummary =
               MapperUtil.mapObject(product, ProductSummaryResponse.class);
-          productSummary.setImage(product.getImageUrl());
+          productSummary.setImage(fileStorageService.readFileFromLocation(product.getImageUrl()));
           return productSummary;
         });
     // return MapperUtil.mapPageResponse(products,

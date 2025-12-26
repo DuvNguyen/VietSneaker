@@ -1,5 +1,6 @@
 package com.example.vietsneaker_server.controller.user;
 
+
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,18 +12,22 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+
 import com.example.vietsneaker_server.config.ApplicationConstants;
 import com.example.vietsneaker_server.payload.PageResponse;
 import com.example.vietsneaker_server.payload.response.ProductDetailsResponse;
 import com.example.vietsneaker_server.payload.response.ProductSummaryResponse;
 import com.example.vietsneaker_server.service.user.UserProductService;
 
+
 @RestController
 @RequestMapping("/user/products")
 @RequiredArgsConstructor
 public class UserProductController {
 
+
   @Autowired UserProductService userProductService;
+
 
   @GetMapping
   public ResponseEntity<Page<ProductSummaryResponse>> getAllProducts(
@@ -36,10 +41,12 @@ public class UserProductController {
       @RequestParam(value = "brandId", required = false) Long brandId,
       @RequestParam(value = "sortBy", defaultValue = "") String sortBy) {
 
+
     Page<ProductSummaryResponse> products =
         userProductService.getAllProducts(page, size, name, type, shoeSize, maxPrice, brandId, sortBy);
     return ResponseEntity.ok(products);
   }
+
 
   @GetMapping("/latest")
   public ResponseEntity<PageResponse<ProductSummaryResponse>> getLatestProducts(
@@ -50,6 +57,7 @@ public class UserProductController {
     return ResponseEntity.ok(products);
   }
 
+
   @GetMapping("/best-selling")
   public ResponseEntity<List<ProductSummaryResponse>> getBestSellingProducts(
       @RequestParam(defaultValue = ApplicationConstants.PAGE_NUMBER) int page,
@@ -57,6 +65,7 @@ public class UserProductController {
     List<ProductSummaryResponse> products = userProductService.getBestSellingProducts(page, size);
     return ResponseEntity.ok(products);
   }
+
 
   @GetMapping("/{id}")
   public ResponseEntity<ProductDetailsResponse> getProductById(@PathVariable Long id) {

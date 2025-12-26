@@ -1,10 +1,13 @@
 package com.example.vietsneaker_server.specification;
 
+
 import ch.qos.logback.core.util.StringUtil;
 import org.springframework.data.jpa.domain.Specification;
 import com.example.vietsneaker_server.entity.Product;
 
+
 public class ProductSpecification {
+
 
   public static Specification<Product> searchByName(String name) {
     if (StringUtil.isNullOrEmpty(name)) {
@@ -13,6 +16,7 @@ public class ProductSpecification {
     return (root, query, builder) -> builder.like(root.get("name"), "%" + name + "%");
   }
 
+
   public static Specification<Product> searchByType(String type) {
     type.strip();
     if (StringUtil.isNullOrEmpty(type)) {
@@ -20,6 +24,7 @@ public class ProductSpecification {
     }
     return (root, query, builder) -> builder.equal(root.get("type"), type);
   }
+
 
   // --- PHẦN ĐÃ SỬA ---
   public static Specification<Product> searchByShoeSize(String shoeSize) {
@@ -32,6 +37,7 @@ public class ProductSpecification {
   }
   // -------------------
 
+
   public static Specification<Product> belowPrice(Double maxPrice) {
     if (Double.compare(maxPrice, 0) == 0) {
       return null;
@@ -39,9 +45,11 @@ public class ProductSpecification {
     return (root, query, builder) -> builder.lessThanOrEqualTo(root.get("sellPrice"), maxPrice);
   }
 
+
   public static Specification<Product> isNotDeleted() {
     return (root, query, builder) -> builder.isFalse(root.get("isDeleted"));
   }
+
 
   public static Specification<Product> latest() {
     return (root, query, criteriaBuilder) -> {
@@ -50,13 +58,16 @@ public class ProductSpecification {
     };
   }
 
+
   public static Specification<Product> isActive() {
     return (root, query, cb) -> cb.isTrue(root.get("isActive"));
   }
 
+
   public static Specification<Product> isVisiable() {
     return (root, query, cb) -> cb.isTrue(root.get("visible"));
   }
+
 
   public static Specification<Product> sortBy(String sortProperty, String sortDirection) {
     if (sortDirection == null || sortProperty == null) {
@@ -72,6 +83,7 @@ public class ProductSpecification {
     };
   }
 
+
   public static Specification<Product> sortBy(String sortQuery) {
     if (StringUtil.isNullOrEmpty(sortQuery)) {
       return null;
@@ -82,12 +94,13 @@ public class ProductSpecification {
         return null;
       }
       String sortProperty = sortQuery.substring(0, separateIndex);
-      String sortDirection = sortQuery.substring(separateIndex + 1); 
+      String sortDirection = sortQuery.substring(separateIndex + 1);
       return sortBy(sortProperty, sortDirection);
     } catch (Exception e) {
       return null;
     }
   }
+
 
   public static Specification<Product> searchByBrandId(Long brandId) {
     if (brandId == null) {
