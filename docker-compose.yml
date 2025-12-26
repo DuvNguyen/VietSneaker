@@ -48,6 +48,7 @@ services:
       - DB_PASSWORD=${DB_PASSWORD}
       # Các key khác từ file .env
       - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - OPENAI_API_URL=${OPENAI_API_URL}
       - JWT_SECRET=${JWT_SECRET}
       - MAIL_HOST=${MAIL_HOST}
       - MAIL_PORT=${MAIL_PORT}
