@@ -38,12 +38,15 @@ public class ChatService {
     @Value("${openai.api.key}")
     private String apiKey;
 
+    @Value("${openai.api.url:https://api.openai.com/v1}")
+    private String apiUrl;
+
     private WebClient openai;
 
     @PostConstruct
     public void init() {
         this.openai = WebClient.builder()
-                .baseUrl("https://api.openai.com/v1")
+                .baseUrl(apiUrl)
                 .defaultHeader(HttpHeaders.AUTHORIZATION, "Bearer " + apiKey)
                 .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                 .build();
