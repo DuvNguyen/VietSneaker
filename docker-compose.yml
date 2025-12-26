@@ -55,6 +55,8 @@ services:
       - MAIL_PASSWORD=${MAIL_PASSWORD}
       - MAIL_SMTP_AUTH=${MAIL_SMTP_AUTH}
       - MAIL_SMTP_STARTTLS=${MAIL_SMTP_STARTTLS}
+      - SHOP_BASE_URL=https://4.241.131.190
+
       # CORS: Cho phép Frontend gọi vào
       - APP_ALLOWED_ORIGINS=${APP_ALLOWED_ORIGINS}
       - APP_BASE_URL=${APP_BASE_URL}

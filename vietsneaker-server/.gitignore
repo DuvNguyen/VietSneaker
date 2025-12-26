@@ -33,3 +33,6 @@ build/
 ### VS Code ###
 .vscode/
 .idea/
+
+# Ignore local configuration files (contains secrets)
+src/main/resources/application-local.propeties

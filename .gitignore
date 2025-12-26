@@ -6,6 +6,3 @@ init.sql/
 openapi.json
 .vscode/
 /*.sh
-
-# Ignore local configuration files (contains secrets)
-**/application-local.properties
