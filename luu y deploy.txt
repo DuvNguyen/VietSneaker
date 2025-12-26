@@ -263,3 +263,28 @@ export const API_BASE = CONTEXT_API;
 export const USERNAME_COOKIE_KEY = "user";
 export const ROLES_COOKIE_KEY = "roles";
 export const UNIT = 1000000;
+
+
+SPRING_PROFILES_ACTIVE=prod
+# Cấu hình HTTPS
+SERVER_PORT=8083
+SERVER_SSL_ENABLED=true
+SERVER_SSL_KEY_STORE=classpath:keystore/vietsneaker-localhost-new.p12
+SERVER_SSL_KEY_STORE_PASSWORD=changeit
+SERVER_SSL_KEY_STORE_TYPE=PKCS12
+# Kết nối DB
+DBMS_HOST=mysqldb
+DB_PORT=3306
+DB_USERNAME=admin
+DB_PASSWORD=example_123
+
+#Các key
+
+OPENAI_API_KEY=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
+
+SHOP_BASE_URL=https://4.241.131.190
+JWT_SECRET=X8s7BPFUGSrDDiPvcxQMpOtXz8W14DV9IvEInh7l1dhtw
+OPENAI_API_URL=https://openrouter.ai/api/v1
+#MAIL
+MAIL_HOST=smtp.gmail.com
+MAIL_PORT=587
