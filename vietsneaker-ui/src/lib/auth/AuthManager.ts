@@ -23,7 +23,6 @@ export class AuthManager {
     this.accessToken = null;
     if (typeof window !== 'undefined') {
       localStorage.removeItem("access_token");
-      // Lưu ý: Không xóa username/roles ở đây để AuthProvider vẫn biết là "đã từng login"
     }
     this.#notifyListeners();
   }
