@@ -88,7 +88,7 @@ export default function HomePage() {
       {/* Gợi ý riêng */}
       {isAuthenticated && recommendedProducts.length > 0 && (
         <div className="lg:w-3/4 mx-auto">
-          <h3 className="text-2xl font-bold text-center p-10 text-blue-600">
+          <h3 className="text-2xl font-bold text-center p-10 text-indigo-900/80">
             Gợi ý dành riêng cho bạn
           </h3>
 
