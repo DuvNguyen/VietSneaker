@@ -54,6 +54,20 @@ INSERT INTO roles_users (user_id, role_id)
          (7, 3),
          (7, 2);
 
+-- Thêm tài khoản User Test (Mật khẩu: User@123)
+INSERT INTO users (user_id, email, password, name, phone, address, is_deleted, is_verified, enabled)
+VALUES (
+  8,
+  'test.user@gmail.com',
+  '$2a$10$L1NCuZpSXk83cDSSR/C9Hu3kEtI4fnQ5FngLpBwjzj2zB3aLcuejW', -- bcrypt("User@123")
+  'Người Dùng Thử Nghiệm',
+  '0988888888',
+  '789 Cách Mạng Tháng 8, TP.HCM',
+  0,
+  1,
+  1 -- Thêm trường enabled nếu bảng của bạn có dùng Spring Security
+);
+
 -- Products (sneakers)
 INSERT INTO products 
 (name, description, image_url, actual_price, sell_price, type, shoe_size, stock, brand_id, is_active, visible, is_deleted) 
