@@ -11,6 +11,7 @@ import { ProtectedRoute } from "@/app/components/route/protected";
 const OrderHistoryPage = () => {
   const [currentStatus, setCurrentStatus] = useState<OrderStatusType>();
   const [orders, setOrders] = useState<OrderSummaryResponse[]>([]);
+
   const handleStatusChange = (event: ChangeEvent<HTMLInputElement>) => {
     setCurrentStatus(event.target.value as OrderStatusType);
   };
@@ -23,54 +24,49 @@ const OrderHistoryPage = () => {
       logger.warn(error);
     }
   };
+
+  // Hàm này sẽ được gọi từ OrderTab -> OrderRow
   const handleOrdersChange = (updatedOrders: OrderSummaryResponse[]) => {
-    setOrders(updatedOrders);
+    setOrders([...updatedOrders]); // Force re-render với mảng mới
   };
+
   useEffect(() => {
     fetchOrderByStatus(currentStatus);
   }, [currentStatus]);
-  return (
-    <>
-      <ProtectedRoute>
-        <div className="container mx-auto p-10">
-          <div className="tabs tabs-lift tabs-xl">
-            {/* All status order */}
-            <input
-              type="radio"
-              name="status"
-              className="tab"
-              aria-label="Tất cả"
-              onChange={() => {
-                setCurrentStatus(undefined);
-              }}
-              defaultChecked
-            />
-            <OrderTab orders={orders} onOrdersChange={handleOrdersChange} />
 
-            {
-              // Filter for each order status
-              Object.entries(OrderStatusDict).map(([status, value]) => (
-                <Fragment key={status}>
-                  <input
-                    type="radio"
-                    name="status"
-                    className="tab"
-                    value={value}
-                    aria-label={getOrderStatusLabel(status as OrderStatusType)}
-                    onChange={handleStatusChange}
-                  />
-                  <OrderTab
-                    key={status}
-                    orders={orders}
-                    onOrdersChange={handleOrdersChange}
-                  />
-                </Fragment>
-              ))
-            }
-          </div>
+  return (
+    <ProtectedRoute>
+      <div className="container mx-auto p-10">
+        <div className="tabs tabs-lift tabs-xl">
+          <input
+            type="radio"
+            name="status"
+            className="tab"
+            aria-label="Tất cả"
+            onChange={() => setCurrentStatus(undefined)}
+            defaultChecked
+          />
+          <OrderTab orders={orders} onOrdersChange={handleOrdersChange} />
+
+          {Object.entries(OrderStatusDict).map(([status, value]) => (
+            <Fragment key={status}>
+              <input
+                type="radio"
+                name="status"
+                className="tab"
+                value={value}
+                aria-label={getOrderStatusLabel(status as OrderStatusType)}
+                onChange={handleStatusChange}
+              />
+              <OrderTab
+                orders={orders}
+                onOrdersChange={handleOrdersChange}
+              />
+            </Fragment>
+          ))}
         </div>
-      </ProtectedRoute>
-    </>
+      </div>
+    </ProtectedRoute>
   );
 };
 

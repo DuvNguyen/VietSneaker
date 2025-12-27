@@ -59,7 +59,7 @@ INSERT INTO users (user_id, email, password, name, phone, address, is_deleted, i
 VALUES (
   8,
   'test.user@gmail.com',
-  '$2a$10$L1NCuZpSXk83cDSSR/C9Hu3kEtI4fnQ5FngLpBwjzj2zB3aLcuejW', -- bcrypt("User@123")
+  '$2a$10$L1NCuZpSXk83cDSSR/C9Hu3kEtI4fnQ5FngLpBwjzj2zB3aLcuejW', -- bcrypt("Admin@123")
   'Người Dùng Thử Nghiệm',
   '0988888888',
   '789 Cách Mạng Tháng 8, TP.HCM',

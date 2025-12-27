@@ -2,9 +2,7 @@
 import React, { useState } from "react";
 import ConfirmModal from "@/app/components/modal/confirm-modal";
 import { OrderControllerService, OrderSummaryResponse } from "@/gen";
-// Import ProductImage để đồng bộ với trang chi tiết
 import { ProductImage } from "@/app/components/common/ProductImage";
-
 import { OrderStatus as OrderStatusType } from "@/gen/backend";
 import { logger } from "@/util/logger";
 import { enableCancelOrder, getOrderStatusLabel } from "@/util/order-utils";
@@ -23,6 +21,31 @@ const OrderRow = ({
   const closeModal = () => setOpen(false);
   const openModal = () => setOpen(true);
 
+  // --- HÀM FIX MÀU SẮC ---
+  const getStatusColorClass = (status: string | undefined) => {
+    // Ép kiểu về viết hoa để tránh lỗi so sánh nếu backend trả về chữ thường
+    const s = status?.toUpperCase(); 
+    
+    switch (s) {
+      case "PENDING":
+        return "text-orange-700 bg-orange-100 border-orange-200";
+      case "CONFIRMED":
+        return "text-blue-700 bg-blue-100 border-blue-200";
+      case "SHIPPING": // Đang giao
+      case "SHIPPED": 
+        return "text-indigo-700 bg-indigo-100 border-indigo-200";
+      case "DELIVERED": // Hoàn thành
+      case "COMPLETED":
+        return "text-green-700 bg-green-100 border-green-200";
+      case "CANCELLED": // Đã hủy
+        return "text-red-700 bg-red-100 border-red-200";
+      case "RETURNED":
+        return "text-purple-700 bg-purple-100 border-purple-200";
+      default:
+        return "text-gray-700 bg-gray-100 border-gray-200";
+    }
+  };
+
   const handleConfirmCancelOrder = async () => {
     try {
       if (!order.orderId) {
@@ -31,8 +54,8 @@ const OrderRow = ({
       }
       await OrderControllerService.cancelOrder(order.orderId);
       toast.success("Đơn hàng đã được hủy");
-      
-      // Cập nhật state với object mới để React nhận biết sự thay đổi
+
+      // Cập nhật UI ngay lập tức
       onOrderChange({
         ...order,
         status: OrderStatusType.CANCELLED
@@ -55,18 +78,13 @@ const OrderRow = ({
           <div className="flex flex-col gap-3 max-w-sm">
             {order.orderItems?.map((item) => (
               <div key={item.productId} className="flex items-center gap-4 bg-gray-50/50 p-2 rounded-lg border border-gray-100">
-                
-                {/* Khung ảnh: Copy logic từ ProductDetailsPage nhưng thu nhỏ */}
                 <div className="w-20 h-20 flex-shrink-0 bg-white border rounded-md flex items-center justify-center overflow-hidden shadow-sm">
                   {item.image ? (
                     <ProductImage src={item.image} />
                   ) : (
-                    <span className="text-[10px] text-gray-400 italic text-center">
-                      No image
-                    </span>
+                    <span className="text-[10px] text-gray-400 italic text-center">No image</span>
                   )}
                 </div>
-
                 <div className="flex-1 min-w-0">
                   <Link href={`/product/${item.productId}`}>
                     <h3 className="text-sm font-bold text-gray-800 hover:text-red-600 truncate transition-colors">
@@ -83,35 +101,24 @@ const OrderRow = ({
           </div>
         </td>
         <td>
-          <span className="badge badge-md font-medium badge-soft badge-neutral">
+          {/* Badge với màu sắc động */}
+          <span className={`badge badge-md font-bold border px-3 py-3 ${getStatusColorClass(order.status)}`}>
             {getOrderStatusLabel(order.status as OrderStatusType)}
           </span>
         </td>
-        <td className="max-w-64 text-sm text-gray-600 leading-snug">
-          {order.address}
-        </td>
-        <td className="font-bold text-gray-900">
-          {formatVND(order.totalPrice)}
-        </td>
-        <td>
-          {/* Chỗ trống cho các nút chức năng khác như Trả hàng */}
-        </td>
-        <td className="p-4">
+        <td className="max-w-64 text-sm text-gray-600 leading-snug">{order.address}</td>
+        <td className="font-bold text-gray-900">{formatVND(order.totalPrice)}</td>
+        <td></td>
+        <td className="p-4 text-right">
           {enableCancelOrder(order.status as OrderStatusType) && (
-            <button 
-              onClick={openModal} 
-              className="btn btn-sm btn-error"
-            >
-              Hủy đơn
-            </button>
+            <button onClick={openModal} className="btn btn-sm btn-error">Hủy đơn</button>
           )}
-
           <ConfirmModal
             isOpen={isOpen}
             onClose={closeModal}
             onConfirm={handleConfirmCancelOrder}
             title={"Xác nhận hủy đơn"}
-            content={"Bạn có chắc chắn muốn hủy đơn hàng này? Thao tác này không thể hoàn tác."}
+            content={"Bạn có chắc chắn muốn hủy đơn hàng này?"}
           />
         </td>
       </tr>
