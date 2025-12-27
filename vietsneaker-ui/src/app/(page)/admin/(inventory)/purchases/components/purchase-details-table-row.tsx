@@ -6,7 +6,7 @@
 "use client";
 import React, { useState } from "react";
 import Thumbnail from "@/app/components/common/thumbnail";
-import { ProductImage } from "@/app/components/common/base-64-image";
+import { ProductImage } from "@/app/components/common/ProductImage";
 import { formatVND } from "@/util/currency";
 import { PurchaseItemDetails } from "@/gen";
 
@@ -19,7 +19,7 @@ const PurchaseDetailsTableRow = ({ item }: PurchaseTableRowProps) => {
     <tr>
       <td>
         <Thumbnail className="size-[4rem]">
-          <ProductImage data={item.productImage} />
+          <ProductImage src={item.productImage} />
         </Thumbnail>
       </td>
       <td>{item.productName}</td>

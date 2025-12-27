@@ -1,6 +1,6 @@
 import React from "react";
 import Thumbnail from "../common/thumbnail";
-import { ProductImage } from "../common/base-64-image";
+import { ProductImage } from "../common/ProductImage";
 import { formatVND } from "@/util/currency";
 import { OrderItemSummary } from "@/gen";
 
@@ -8,7 +8,7 @@ const ProductItemList = ({ item }: { item: OrderItemSummary }) => {
   return (
     <>
       <Thumbnail className="size-[4rem]">
-        <ProductImage data={item.image} />
+        <ProductImage src={item.image} />
       </Thumbnail>
       <div className="flex-1">
         <h3 className="text-bold font-medium mb-2">{item.name}</h3>

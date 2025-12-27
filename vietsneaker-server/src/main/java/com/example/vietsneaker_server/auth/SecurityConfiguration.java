@@ -100,7 +100,7 @@ public class SecurityConfiguration {
     CorsConfiguration config = new CorsConfiguration();
     // Dùng allowedOriginPatterns để dev localhost + credentials
     // config.setAllowedOriginPatterns(List.of("http://localhost:3000"));
-    config.setAllowedOriginPatterns(List.of("http://localhost:3000", "https://localhost:3000"));
+    config.setAllowedOriginPatterns(List.of("https://localhost:3000", "http://localhost:3000", "https://localhost:8081", "https://localhost:8080"));
     config.setAllowedMethods(List.of("GET","POST","PUT","DELETE","OPTIONS","PATCH"));
     config.setAllowedHeaders(List.of("Content-Type","Authorization","X-Requested-With","Accept","Origin"));
     config.setExposedHeaders(List.of("Location"));

@@ -2,6 +2,8 @@ package com.example.vietsneaker_server.service.admin;
 
 import jakarta.transaction.Transactional;
 import java.util.Optional;
+import java.util.Map;
+import java.io.IOException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -11,6 +13,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.cloudinary.Cloudinary;
 import com.example.vietsneaker_server.entity.Brand;
 import com.example.vietsneaker_server.entity.Product;
 import com.example.vietsneaker_server.exception.ResourceNotFoundException;
@@ -33,6 +36,9 @@ public class AdminProductService {
   @Autowired private ModelMapper modelMapper;
 
   @Autowired private FileStorageService fileStorageService;
+
+  @Autowired
+  private Cloudinary cloudinary;
 
   @Autowired private ProductMapper productMapper;
 
@@ -128,15 +134,27 @@ public class AdminProductService {
 
   /**
    * Upload image file from form request to system file Product image url will be file path to this
-   * system file
+   * update to use cloudinary
    */
   public void uploadProductImage(Long productId, MultipartFile file) {
-    Product product =
-        productRepository
-            .findById(productId)
-            .orElseThrow(() -> new ResourceNotFoundException("product"));
-    String productImageFilePath = fileStorageService.saveFile(file);
-    product.setImageUrl(productImageFilePath);
+  Product product =
+      productRepository
+          .findById(productId)
+          .orElseThrow(() -> new ResourceNotFoundException("product"));
+
+  try {
+    Map uploadResult =
+        cloudinary.uploader().upload(
+            file.getBytes(),
+            Map.of("folder", "vietsneaker/products"));
+
+    String imageUrl = uploadResult.get("secure_url").toString();
+    product.setImageUrl(imageUrl);
     productRepository.save(product);
+
+  } catch (IOException e) {
+    throw new RuntimeException("Upload image to Cloudinary failed", e);
   }
+}
+
 }

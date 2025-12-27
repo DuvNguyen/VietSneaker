@@ -1,30 +1,33 @@
-/**
- * Handle XSS attack to token via LocalStorage or SessionStorage
- * Use static class to storage global state
- */
 export class AuthManager {
-  // Callback list to notify hook variable change
+  // Lấy ngay từ LocalStorage khi khởi tạo
+  static accessToken: string | null = typeof window !== 'undefined' ? localStorage.getItem("access_token") : null;
   static #listeners: Array<(t: string) => void> = [];
-  static addListener(callbackFn: (newToken: string) => void) {
-    this.#listeners.push(callbackFn);
-  }
-  static removeListener(callbackFn: (newToken: string) => void) {
-    this.#listeners = this.#listeners.filter((cb) => cb !== callbackFn);
-  }
-  static clearAccessToken() {
-    this.accessToken = null;
-  }
 
-  static accessToken: string | null = null;
-  static setAccessToken(token: string | null) {
-    this.accessToken = token;
-    this.#notifyListeners();
-  }
   static getAccessToken() {
+    if (!this.accessToken && typeof window !== 'undefined') {
+      this.accessToken = localStorage.getItem("access_token");
+    }
     return this.accessToken;
   }
 
-  static #notifyListeners() {
-    this.#listeners.forEach((callback) => callback(this.accessToken || ""));
+  static setAccessToken(token: string | null) {
+    this.accessToken = token;
+    if (typeof window !== 'undefined') {
+      if (token) localStorage.setItem("access_token", token);
+      else localStorage.removeItem("access_token");
+    }
+    this.#notifyListeners();
   }
+
+  static clearAccessToken() {
+    this.accessToken = null;
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem("access_token");
+    }
+    this.#notifyListeners();
+  }
+
+  static addListener(cb: (t: string) => void) { this.#listeners.push(cb); }
+  static removeListener(cb: (t: string) => void) { this.#listeners = this.#listeners.filter(c => c !== cb); }
+  static #notifyListeners() { this.#listeners.forEach(cb => cb(this.accessToken || "")); }
 }

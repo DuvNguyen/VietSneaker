@@ -16,7 +16,7 @@ const ForbiddenPage = () => {
           </p>
           <div className="flex items-center justify-center">
             <Link href="/">
-              <PrimaryButton>Quay lại trang chủ</PrimaryButton>
+              <PrimaryButton className="bg-red-500 hover:bg-red-700">Quay lại trang chủ</PrimaryButton>
             </Link>
           </div>
         </div>

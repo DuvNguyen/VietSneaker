@@ -33,3 +33,12 @@ build/
 ### VS Code ###
 .vscode/
 .idea/
+
+### application-properties files###
+src/main/resources/*.properties
+
+### deploy ###
+.github/workflows/deploy.yml
+
+# Ignore file môi trường 
+.env.local

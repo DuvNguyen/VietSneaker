@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class JwtTokenResponse {
   private String accessToken;
-
+  private String refreshToken;
   private String type = "Bearer";
   private Long userId;
   private String username;

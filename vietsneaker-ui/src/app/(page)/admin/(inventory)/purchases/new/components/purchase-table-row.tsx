@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 import Thumbnail from "@/app/components/common/thumbnail";
-import { ProductImage } from "@/app/components/common/base-64-image";
+import { ProductImage } from "@/app/components/common/ProductImage";
 import { PurchaseItemDetails } from "./model";
 import EditPurchaseItemModal from "./edit-purchase-item-modal";
 import { formatVND } from "@/util/currency";
@@ -40,7 +40,7 @@ const PurchaseTableRow = ({
       <tr className="whitespace-nowrap text-center">
         <td>
           <Thumbnail className="size-[4rem]">
-            <ProductImage data={item.productImage} />
+            <ProductImage src={item.productImage} />
           </Thumbnail>
         </td>
         <td>{item.productName}</td>
