@@ -28,6 +28,11 @@ public class JwtTokenFilter extends OncePerRequestFilter {
       HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
       throws ServletException, IOException {
 
+    // ✅ Skip for refresh token endpoint
+    if ("/api/auth/refresh".equals(request.getRequestURI())) {
+      filterChain.doFilter(request, response);
+      return;
+    }
     // ✅ 1) Luôn cho preflight qua
     if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
       filterChain.doFilter(request, response);

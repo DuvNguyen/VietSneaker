@@ -1,13 +1,12 @@
 package com.example.vietsneaker_server.auth.service.impl;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.ResponseCookie;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.jobrunr.scheduling.BackgroundJobRequest;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -59,9 +58,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         roleRepository
             .findByRoleName(RoleName.CUSTOMER)
             .orElseThrow(
-                () -> {
-                  return ApiException.builder().message("ROLE_NOT_FOUND").status(500).build();
-                });
+                () -> ApiException.builder().message("ROLE_NOT_FOUND").status(500).build());
     User user = new User(req);
     user.setRoles(Set.of(customerRole));
     userRepository.save(user);
@@ -71,102 +68,106 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
   @Transactional
   public void sendVerificationEmail(User user) {
-    // Save token to check if user active email
     VerificationCode verification = new VerificationCode(user);
     user.setVerificationCode(verification);
     verificationCodeRepository.save(verification);
 
-    // Sent email async
     SendWelcomeEmailJob sendWelcomeEmailJob = new SendWelcomeEmailJob(user.getUserId());
     BackgroundJobRequest.enqueue(sendWelcomeEmailJob);
   }
 
   @Override
   public JwtTokenResponse login(LoginRequest req, HttpServletResponse response) {
-    // Authenticate with username password
-    UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
+    // 1. Xác thực người dùng
+    UsernamePasswordAuthenticationToken authRequest =
         new UsernamePasswordAuthenticationToken(req.getEmail(), req.getPassword());
+    Authentication auth = authenticationManager.authenticate(authRequest);
+    SecurityContextHolder.getContext().setAuthentication(auth);
 
-    Authentication auth = authenticationManager.authenticate(usernamePasswordAuthenticationToken);
-    // After authenticate via filter, save context if authenticated user
-    SecurityContext context = SecurityContextHolder.getContext();
-    context.setAuthentication(auth);
-    SecurityContextHolder.setContext(context);
-
-    // Build jwt token for REST stateless
     User currentUser = (User) auth.getPrincipal();
-    List<String> roles =
-        currentUser.getRoles().stream()
-            .map(
-                (role) -> {
-                  return role.getRoleName().getName();
-                })
-            .collect(Collectors.toList());
 
+    // 2. Tạo Token
     String jwtToken = jwtTokenProvider.genenerateToken(currentUser);
     String refreshToken = jwtTokenProvider.generateRefreshToken(currentUser);
 
-    var resp = MapperUtil.mapObject(currentUser, JwtTokenResponse.class);
-    resp.setAccessToken(jwtToken);
-    resp.setRoles(currentUser.getRoles().stream().map(Role::getAuthority).toList());
-
+    // 3. Vẫn duy trì ghi Cookie (Dự phòng cho các trình duyệt chấp nhận)
     addRefreshTokenAsCookie(ApplicationConstants.REFRESH_COOKIE_NAME, refreshToken, response);
 
-    return resp;
-  }
+    // 4. Map dữ liệu trả về DTO
+    var resp = MapperUtil.mapObject(currentUser, JwtTokenResponse.class);
+    resp.setAccessToken(jwtToken);
+    
+    // QUAN TRỌNG: Gán refreshToken vào body để Frontend lưu vào LocalStorage (Fix Ảnh 12)
+    resp.setRefreshToken(refreshToken); 
+    
+    resp.setUserId(currentUser.getUserId());
+    resp.setUsername(currentUser.getEmail());
+    resp.setRoles(currentUser.getRoles().stream().map(Role::getAuthority).toList());
+    resp.setVerified(currentUser.isVerified());
 
+    return resp;
+}
+
+  @Override
   public RefreshTokenResponse refresh(String refreshToken, HttpServletResponse response) {
-    if (refreshToken == null) {
+    // Chấp nhận refreshToken truyền vào từ body/param nếu Cookie bị trống
+    if (refreshToken == null || refreshToken.isEmpty()) {
       throw new BadCredentialsException(AppMessage.of(MessageKey.MISSING_REFRESH_TOKEN));
     }
+    
     String userEmail = jwtTokenProvider.getUsername(refreshToken);
-    User user = userRepository.findByEmail(userEmail).orElse(null);
+    User user = userRepository.findByEmail(userEmail)
+        .orElseThrow(() -> new BadCredentialsException(AppMessage.of(MessageKey.INVALID_REFRESH_TOKEN)));
 
     if (!jwtTokenProvider.isValidRefreshToken(refreshToken, user)) {
       throw new BadCredentialsException(AppMessage.of(MessageKey.INVALID_REFRESH_TOKEN));
     }
 
     String newAccessToken = jwtTokenProvider.genenerateToken(user);
+    
+    // Cập nhật lại Cookie
+    addRefreshTokenAsCookie(ApplicationConstants.REFRESH_COOKIE_NAME, refreshToken, response);
+
     var tokenResponse = MapperUtil.mapObject(user, RefreshTokenResponse.class);
     tokenResponse.setAccessToken(newAccessToken);
     tokenResponse.setRoles(user.getRoles().stream().map(Role::getAuthority).toList());
     return tokenResponse;
   }
 
-  /** Save refresh token to http only cookie on response */
   @Override
-  public void addRefreshTokenAsCookie(
-      String cookieName, String refreshToken, HttpServletResponse response) {
-    
-   ResponseCookie cookie = ResponseCookie.from(cookieName, refreshToken)
-    .httpOnly(true)
-    .secure(true)
-    .sameSite("None")
-    .path("/")
-    .maxAge(applicationProperties.getJwtRefreshTokenExpDays() * 24L * 60 * 60)
-    .build();
+  public void addRefreshTokenAsCookie(String cookieName, String refreshToken, HttpServletResponse response) {
+      // Dùng SameSite=Lax cho môi trường localhost
+      ResponseCookie cookie = ResponseCookie.from(cookieName, refreshToken)
+          .httpOnly(true)
+          .secure(false) 
+          .path("/")
+          .maxAge(applicationProperties.getJwtRefreshTokenExpDays() * 24 * 60 * 60)
+          .sameSite("Lax")
+          .build();
 
-    response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
+      response.setHeader(HttpHeaders.SET_COOKIE, cookie.toString());
   }
 
   @Override
   public void clearRefreshTokenCookie(String cookieName, HttpServletResponse response) {
-    Cookie cookie = new Cookie(cookieName, null);
-    cookie.setMaxAge(0);
-    cookie.setSecure(true);
-    cookie.setHttpOnly(true);
-    cookie.setPath("/");
-    response.addCookie(cookie);
+    ResponseCookie cookie = ResponseCookie.from(cookieName, "")
+        .httpOnly(true)
+        .secure(false)
+        .path("/")
+        .maxAge(0)
+        .sameSite("Lax")
+        .build();
+    response.setHeader(HttpHeaders.SET_COOKIE, cookie.toString());
   }
 
   @Override
   public void verify(Long userId, int tokenCode) {
-    User user =
-        userRepository
-            .findByIdWithVerificationCode(userId)
+    User user = userRepository.findByIdWithVerificationCode(userId)
             .orElseThrow(() -> new ResourceNotFoundException("user"));
+    
     VerificationCode verificationCode = user.getVerificationCode();
     boolean matchToken = verificationCode.getCode().equals(String.valueOf(tokenCode));
+    
     if (!matchToken) {
       throw ApiException.builder()
           .status(400)

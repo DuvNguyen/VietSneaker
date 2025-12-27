@@ -4,13 +4,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CookieValue;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.example.vietsneaker_server.auth.dto.CreateUserRequest;
 import com.example.vietsneaker_server.auth.dto.JwtTokenResponse;
@@ -53,11 +47,13 @@ public class AuthController {
 
   @GetMapping("/logout")
   public ResponseEntity<?> logoutUser(HttpServletResponse response) {
-    // Clear cookie
     authService.clearRefreshTokenCookie(ApplicationConstants.REFRESH_COOKIE_NAME, response);
     return ResponseEntity.accepted().build();
   }
 
+  /**
+   * FIX: Thay đổi từ @CookieValue sang @RequestParam để nhận token từ LocalStorage của Frontend gửi lên
+   */
   @PostMapping("/refresh")
   public ResponseEntity<RefreshTokenResponse> refreshAccessToken(
       @CookieValue(
@@ -74,7 +70,4 @@ public class AuthController {
     RefreshTokenResponse resp = authService.refresh(refreshToken, response);
     return ResponseEntity.ok(resp);
   }
-
-  // public ResponseEntity<?> sendResetPassword(){
-  // }
 }
