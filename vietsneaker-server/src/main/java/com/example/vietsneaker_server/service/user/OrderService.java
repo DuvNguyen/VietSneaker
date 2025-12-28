@@ -1,4 +1,5 @@
 package com.example.vietsneaker_server.service.user;
+import com.example.vietsneaker_server.payload.response.ProductHistoryDTO;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
@@ -37,11 +38,11 @@ import com.example.vietsneaker_server.specification.OrderSpecification;
 public class OrderService {
   private final OrderMapper mapper;
   private final ProductRepository productRepository;
-
+  
   private final CartRepository cartRepository;
   private final OrderItemRepository orderItemRepository;
   private final OrderRepository orderRepository;
-
+  
   public List<OrderSummaryResponse> getAllByUser(User user, OrderStatus status) {
 
     Specification<Order> specification =
@@ -149,4 +150,35 @@ public class OrderService {
     // Alternative, change flag to not display in user cart instead delete
     cartRepository.deleteAll(pendingDeleteCartItems);
   }
+
+public List<ProductHistoryDTO> getPurchaseHistory(User user) {
+    // Lấy tất cả order của user
+    List<Order> orders = orderRepository.findAllByUserId(user.getUserId());
+
+    List<ProductHistoryDTO> history = new ArrayList<>();
+
+    for (Order order : orders) {
+
+        // Mỗi order chứa nhiều OrderItem
+        for (OrderItem item : order.getOrderItems()) {
+
+            Product product = item.getProduct();
+
+            history.add(new ProductHistoryDTO(
+                product.getProductId(),
+                product.getName(),
+                product.getType(),
+                item.getProduct().getBrand().getName(),
+                item.getQuantity(),
+                item.getPrice()
+            ));
+        }
+    }
+
+    return history;
 }
+
+}
+
+
+

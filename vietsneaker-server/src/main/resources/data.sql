@@ -54,21 +54,34 @@ INSERT INTO roles_users (user_id, role_id)
          (7, 3),
          (7, 2);
 
+-- Thêm tài khoản User Test (Mật khẩu: User@123)
+INSERT INTO users (user_id, email, password, name, phone, address, is_deleted, is_verified, enabled)
+VALUES (
+  8,
+  'test.user@gmail.com',
+  '$2a$10$L1NCuZpSXk83cDSSR/C9Hu3kEtI4fnQ5FngLpBwjzj2zB3aLcuejW', -- bcrypt("Admin@123")
+  'Người Dùng Thử Nghiệm',
+  '0988888888',
+  '789 Cách Mạng Tháng 8, TP.HCM',
+  0,
+  1,
+  1 -- Thêm trường enabled nếu bảng của bạn có dùng Spring Security
+);
+
 -- Products (sneakers)
-INSERT INTO products
-(name, description, image_url, actual_price, sell_price, type, shoe_size, stock, brand_id, is_active, visible, is_deleted)
-VALUES
+INSERT INTO products 
+(name, description, image_url, actual_price, sell_price, type, shoe_size, stock, brand_id, is_active, visible, is_deleted) 
+VALUES 
 ('Nike Air Force 1', 'Giày sneaker huyền thoại của Nike – hàng 2hand chính hãng, vân đế gần full, form giữ chuẩn, upper đẹp như mới, chỉ vài vết sử dụng nhẹ.', 'https://res.cloudinary.com/dxvg97ojw/image/upload/v1765895265/nike_airforce1_zg95sz.jpg', 700000, 950000, 'Casual', '40.5', 50, 1, 1, 1, 0),
-('Adidas Ultraboost 22', 'Giày chạy bộ hiệu năng cao của Adidas – hàng 2hand, đế vẫn còn bám tốt, form chưa xẹp, upper còn rất đẹp.', 'https://res.cloudinary.com/dxvg97ojw/image/upload/v1765895265/adidas_ultraboost_z24uqf.jpg', 4500000, 3800000, 'Running', '36', 30, 2, 1, 1, 0),
-('Puma Suede Classic', 'Thiết kế retro đường phố của Puma – hàng 2hand chính hãng, vân đế rõ nét, form vẫn giữ tốt, suede chỉ vài vết sử dụng nhỏ.', 'https://res.cloudinary.com/dxvg97ojw/image/upload/v1765895266/puma_suede_uddlgu.jpg', 2000000, 1600000, 'Lifestyle', '40', 40, 3, 1, 1, 0),
-('Converse Chuck Taylor 70s', 'Mẫu giày canvas cổ điển – hàng 2hand, form ổn, đế chưa mòn nhiều, vải và đế giữ rất tốt.', 'https://res.cloudinary.com/dxvg97ojw/image/upload/v1765895265/converse_chuck70_q7z5fj.jpg', 1800000, 1400000, 'Casual', '36.5', 60, 4, 1, 1, 0),
-('Vans Old Skool', 'Sneaker skate nổi tiếng – hàng 2hand chính hãng, đế hơi ngả màu theo thời gian nhưng form vẫn chuẩn, upper còn đẹp.', 'https://res.cloudinary.com/dxvg97ojw/image/upload/v1765895266/vans_oldskool_yoqvks.jpg', 1900000, 1500000, 'Skate', '37', 55, 5, 1, 1, 0),
-('New Balance 550', 'Phong cách retro basketball của NB – hàng 2hand, mid-sole còn dày, upper chỉ hơi nhăn, form vẫn chắc.', 'https://res.cloudinary.com/dxvg97ojw/image/upload/v1765895265/newbalance_550_otvhsj.jpg', 3200000, 2500000, 'Lifestyle', '40.5', 25, 6, 1, 1, 0),
-('Reebok Classic Leather', 'Phong cách vintage từ thập niên 80 – hàng 2hand, da upper giữ tốt, chỉ có vết gấp nhỏ ở mũi, form vẫn đẹp.', 'https://res.cloudinary.com/dxvg97ojw/image/upload/v1765895266/reebok_classic_e1d3hg.jpg', 2200000, 1700000, 'Lifestyle', '40', 35, 7, 1, 1, 0),
-('ASICS Gel-Kayano 29', 'Giày chạy bộ bền bỉ – hàng 2hand, đế chưa bị sờn, form chưa xẹp, chỉ có vài vết nhỏ, cực hợp tập hoặc đi bộ.', 'https://res.cloudinary.com/dxvg97ojw/image/upload/v1765895265/asics_kayano_qcybl8.jpg', 4000000, 3300000, 'Running', '38', 20, 8, 1, 1, 0),
-('Fila Disruptor II', 'Thiết kế chunky hầm hố Streetwear – hàng 2hand chính hãng, đế vẫn cao rõ, upper còn đẹp, form giữ tốt.', 'https://res.cloudinary.com/dxvg97ojw/image/upload/v1765895265/fila_disruptor_qzkjas.jpg', 2600000, 2000000, 'Streetwear', '40', 30, 9, 1, 1, 0),
-('Under Armour Curry Flow 10', 'Giày bóng rổ của Stephen Curry – hàng 2hand, độ mòn đế thấp, form vẫn rất đẹp, phù hợp chơi bóng hoặc diện hàng ngày.', 'https://res.cloudinary.com/dxvg97ojw/image/upload/v1765895266/ua_curry10_bngms4.jpg', 4200000, 3400000, 'Basketball', '44', 15, 10, 1, 1, 0);
--- ('Nike GT Cut Academy', 'Giày bóng rổ huyền thoại dòng GT Cut – hàng 2hand, đế gần full, form ok, xẹp zoom,phù hợp chơi bóng hoặc diện hàng ngày.', 'https://res.cloudinary.com/dxvg97ojw/image/upload/v1765892656/vietsneaker/products/wecotcnrk9zhggnhmfby.avif', 1000000, 1400000, 'Basketball', '44', 15, 10, 1, 1, 0);
+('Adidas Ultraboost 22', 'Giày chạy bộ hiệu năng cao của Adidas – hàng 2hand, đế vẫn còn bám tốt, form chưa xẹp, upper còn rất đẹp.', 'https://res.cloudinary.com/dxvg97ojw/image/upload/v1765895265/adidas_ultraboost_z24uqf.jpg', 1800000, 2500000, 'Running', '36', 30, 2, 1, 1, 0),
+('Puma Suede Classic', 'Thiết kế retro đường phố của Puma – hàng 2hand chính hãng, vân đế rõ nét, form vẫn giữ tốt, suede chỉ vài vết sử dụng nhỏ.', 'https://res.cloudinary.com/dxvg97ojw/image/upload/v1765895266/puma_suede_uddlgu.jpg', 800000, 1200000, 'Lifestyle', '40', 40, 3, 1, 1, 0),
+('Converse Chuck Taylor 70s', 'Mẫu giày canvas cổ điển – hàng 2hand, form ổn, đế chưa mòn nhiều, vải và đế giữ rất tốt.', 'https://res.cloudinary.com/dxvg97ojw/image/upload/v1765895265/converse_chuck70_q7z5fj.jpg', 650000, 950000, 'Casual', '36.5', 60, 4, 1, 1, 0),
+('Vans Old Skool', 'Sneaker skate nổi tiếng – hàng 2hand chính hãng, đế hơi ngả màu theo thời gian nhưng form vẫn chuẩn, upper còn đẹp.', 'https://res.cloudinary.com/dxvg97ojw/image/upload/v1765895266/vans_oldskool_yoqvks.jpg', 600000, 850000, 'Skate', '37', 55, 5, 1, 1, 0),
+('New Balance 550', 'Phong cách retro basketball của NB – hàng 2hand, mid-sole còn dày, upper chỉ hơi nhăn, form vẫn chắc.', 'https://res.cloudinary.com/dxvg97ojw/image/upload/v1765895265/newbalance_550_otvhsj.jpg', 1200000, 1800000, 'Lifestyle', '40.5', 25, 6, 1, 1, 0),
+('Reebok Classic Leather', 'Phong cách vintage từ thập niên 80 – hàng 2hand, da upper giữ tốt, chỉ có vết gấp nhỏ ở mũi, form vẫn đẹp.', 'https://res.cloudinary.com/dxvg97ojw/image/upload/v1765895266/reebok_classic_e1d3hg.jpg', 900000, 1350000, 'Lifestyle', '40', 35, 7, 1, 1, 0),
+('ASICS Gel-Kayano 29', 'Giày chạy bộ bền bỉ – hàng 2hand, đế chưa bị sờn, form chưa xẹp, chỉ có vài vết nhỏ, cực hợp tập hoặc đi bộ.', 'https://res.cloudinary.com/dxvg97ojw/image/upload/v1765895265/asics_kayano_qcybl8.jpg', 1500000, 2200000, 'Running', '38', 20, 8, 1, 1, 0),
+('Fila Disruptor II', 'Thiết kế chunky hầm hố Streetwear – hàng 2hand chính hãng, đế vẫn cao rõ, upper còn đẹp, form giữ tốt.', 'https://res.cloudinary.com/dxvg97ojw/image/upload/v1765895265/fila_disruptor_qzkjas.jpg', 700000, 1100000, 'Streetwear', '40', 30, 9, 1, 1, 0),
+('Under Armour Curry Flow 10', 'Giày bóng rổ của Stephen Curry – hàng 2hand, độ mòn đế thấp, form vẫn rất đẹp, phù hợp chơi bóng hoặc diện hàng ngày.', 'https://res.cloudinary.com/dxvg97ojw/image/upload/v1765895266/ua_curry10_bngms4.jpg', 1800000, 2600000, 'Basketball', '44', 15, 10, 1, 1, 0);
 
 -- Cart Items
 INSERT INTO cart_items (product_id, user_id, quantity)

@@ -16,7 +16,6 @@ export type { CartDetailsResponse } from './models/CartDetailsResponse';
 export type { CartItemDetails } from './models/CartItemDetails';
 export type { CartItemRequest } from './models/CartItemRequest';
 export type { ChangePasswordRequest } from './models/ChangePasswordRequest';
-export type { ChatRequest } from './models/ChatRequest';
 export type { CreateLoginRequest } from './models/CreateLoginRequest';
 export type { CreateOrderRequest } from './models/CreateOrderRequest';
 export type { CreatePurchaseRequest } from './models/CreatePurchaseRequest';
@@ -73,7 +72,6 @@ export { AdminUserControllerService } from './services/AdminUserControllerServic
 export { AuthControllerService } from './services/AuthControllerService';
 export { BrandControllerService } from './services/BrandControllerService';
 export { CartControllerService } from './services/CartControllerService';
-export { ChatControllerService } from './services/ChatControllerService';
 export { FinancialReportControllerService } from './services/FinancialReportControllerService';
 export { IamControllerService } from './services/IamControllerService';
 export { OrderControllerService } from './services/OrderControllerService';

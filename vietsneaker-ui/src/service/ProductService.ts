@@ -34,4 +34,14 @@ export class ProductService {
 
     return response;
   }
+    /**
+   * Lấy thông tin sản phẩm theo ID
+   * @param id
+   * @returns Product detail
+   */
+  public static getProductById(id: number): Promise<AxiosResponse<any, any>> {
+    const url = `/products/${id}`;
+    return httpClient.get(url);
+  }
+
 }

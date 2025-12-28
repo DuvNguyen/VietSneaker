@@ -32,6 +32,25 @@ import VietSneakerModal from "@/app/components/modal/modal";
  * For user to add single purchase item in a list
  * Before purchase creation
  */
+
+const noRadiusSelectStyles = {
+  control: (base: any) => ({
+    ...base,
+    borderRadius: 0,      // ❌ bỏ bo tròn
+    minHeight: "3rem",
+    boxShadow: "none",
+    borderColor: "#d1d5db", // giống input-bordered
+  }),
+  menu: (base: any) => ({
+    ...base,
+    borderRadius: 0,
+  }),
+  option: (base: any) => ({
+    ...base,
+    borderRadius: 0,
+  }),
+};
+
 const AddPurchaseItemModal = ({
   isOpen,
   onClose,
@@ -213,7 +232,8 @@ const AddPurchaseItemModal = ({
 
                 return (
                   <Select
-                    className="w-full validator"
+                    styles={noRadiusSelectStyles}
+                    className="w-full validator "
                     options={
                       productPage?.content?.map(
                         mapProductSummaryToSelectOption,
@@ -229,7 +249,7 @@ const AddPurchaseItemModal = ({
                       return (
                         <div className="flex items-center px-5 space-10">
                           <Thumbnail className="size-[4rem]">
-                            <ProductImage data={option.image} />
+                            <ProductImage src={option.image} />
                           </Thumbnail>
                           <div className="text-bold font-medium px-10">
                             <h3>{option.name}</h3>
@@ -278,7 +298,8 @@ const AddPurchaseItemModal = ({
 
               return (
                 <Select
-                  className="w-full validator"
+                  styles={noRadiusSelectStyles}
+                  className="w-full validator "
                   options={
                     supplierPage?.content?.map(
                       mapSupplierSummaryToSelectOption,
@@ -313,7 +334,7 @@ const AddPurchaseItemModal = ({
             </label>
             <input
               type="number"
-              className="input input-bordered w-full"
+              className="input input-bordered w-full rounded-none"
               placeholder="2000000"
               {...register("price", {
                 valueAsNumber: true,
@@ -331,7 +352,7 @@ const AddPurchaseItemModal = ({
           </label>
           <input
             type="number"
-            className="input input-bordered w-full"
+            className="input input-bordered w-full rounded-none"
             placeholder="0"
             {...register("quantity", {
               valueAsNumber: true,
@@ -360,7 +381,7 @@ const AddPurchaseItemModal = ({
             </div>
           </div>
 
-          <button type="submit" className="btn btn-primary tex-white">
+          <button type="submit" className="btn text-white rounded-none bg-red-500 hover:bg-red-700">
             Thêm
           </button>
         </fieldset>

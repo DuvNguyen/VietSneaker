@@ -126,7 +126,7 @@ const OrderDetail = () => {
                       <td>
                         {product.image && (
                           <Thumbnail className="h-[100px] w-[100px]">
-                            <ProductImage data={product.image} />
+                            <ProductImage src={product.image} />
                           </Thumbnail>
                         )}
                         ;

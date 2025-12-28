@@ -53,5 +53,7 @@ public interface OrderRepository
       @Param("userId") Long userId, @Param("orderId") Long orderId);
 
   // Page<Order> findAll( Specification<Order> specification, Pageable pageable);
+    @Query("SELECT o FROM Order o LEFT JOIN FETCH o.orderItems WHERE o.user.userId = :userId")
+    List<Order> findAllByUserId(@Param("userId") Long userId);
 
 }

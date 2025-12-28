@@ -18,8 +18,8 @@ import { ChangeEvent, Dispatch, SetStateAction, useState, useEffect } from "reac
 import { useDebounceCallback } from "usehooks-ts";
 
 const types = ["Specialty", "General", "Luxury", "Local"];
-const DEFAULT_MAX_PRICE = 100;
-const MAX_PRICE = 500;
+const DEFAULT_MAX_PRICE = 5;
+const MAX_PRICE = 10;
 
 type FilterProps = {
   type: string;
@@ -79,6 +79,24 @@ export default function ProductFilterPage() {
     });
   }, [searchParam]);
   // -------------------------------------
+
+useEffect(() => {
+  const urlBrandId = searchParam.get("brandId");
+  const urlType = searchParam.get("type");
+  const urlMin = searchParam.get("minPrice") ?? 0;
+  const urlMax = searchParam.get("maxPrice") ?? DEFAULT_MAX_PRICE;
+
+  setSelectedFilters(prev => ({
+    ...prev,
+    brand: {
+      brandId: urlBrandId ? Number(urlBrandId) : undefined,
+      name: "" // sẽ không dùng ở BE nên không cần
+    },
+    type: urlType ?? "",
+    minPrice: Number(urlMin),
+    maxPrice: Number(urlMax),
+  }));
+}, [searchParam]);
 
   const fetchProducts = async () => {
     try {
@@ -220,15 +238,14 @@ const FilterSidebar = ({
     }));
   }
 
-  const handleMaxPriceChange = useDebounceCallback(
-    (event: ChangeEvent<HTMLInputElement>) => {
-      setSelectedFilters((prev) => ({
-        ...prev,
-        maxPrice: Number(event.target.value),
-      }));
-    },
-    300,
-  );
+  const handleMaxPriceChange = (event: ChangeEvent<HTMLInputElement>) => {
+  const value = Number(event.target.value);
+
+  setSelectedFilters(prev => ({
+    ...prev,
+    maxPrice: value
+  }));
+};
 
   return (
     <div className="w-80 p-4 bg-base-200 h-screen overflow-auto sticky top-0">
