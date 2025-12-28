@@ -20,10 +20,10 @@ const CheckoutAddressPage = () => {
   } = useCart();
   const router = useRouter();
 
-  const createOrderHanler = (event: MouseEvent<HTMLButtonElement>) => {
+  const createOrderHanler = async (event: MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
     try {
-      OrderControllerService.createOrder({
+      await OrderControllerService.createOrder({
         phone: deliveryDetails.phone,
         address: String(deliveryDetails.address),
         items: selectedItems.map((item) => ({
@@ -32,12 +32,12 @@ const CheckoutAddressPage = () => {
         })),
       });
       router.push("/checkout/success");
+      // Refresh cart details
+      fetchCart();
     } catch (error) {
       logger.error(error);
       toast.error("Có lỗi xảy ra vui lòng thử lại");
     }
-    // Refresh cart details
-    fetchCart();
   };
 
   return (
