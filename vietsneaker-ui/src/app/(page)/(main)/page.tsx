@@ -12,6 +12,7 @@ import { logger } from "@/util/logger";
 import ProductCollection, {
   ProductCollectionPreload,
 } from "@/app/components/product/product-collection";
+import Banner from "@/app/components/common/Banner";
 
 import RecommandService from "@/service/recommand.service";
 import OrderService from "@/service/order.service";   // ⭐ đúng file
@@ -79,11 +80,7 @@ export default function HomePage() {
 
   return (
     <>
-      <img
-        src="/dat1.jpg"
-        className="w-full h-[500px] object-cover"
-        alt="carousel"
-      />
+      <Banner />
 
       {/* Gợi ý riêng */}
       {isAuthenticated && recommendedProducts.length > 0 && (
